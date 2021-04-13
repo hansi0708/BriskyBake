@@ -28,10 +28,12 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        android:tint="@color/white"
-        app:srcCompat="@drawable/cart"
         android:backgroundTint="@color/buttoncolor"
-        tools:ignore="UnusedAttribute,VectorDrawableCompat"
-        android:contentDescription="@string/cartfab" />
+        android:contentDescription="@string/cartfab"
+        app:tint="@color/white"
+        android:visibility="visible"
+        app:backgroundTintMode="add"
+        app:srcCompat="@drawable/cart"
+        tools:ignore="UnusedAttribute,VectorDrawableCompat" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
