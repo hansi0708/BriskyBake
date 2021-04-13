@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="@color/backgroundcolor">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:gravity="center"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+    <ImageView
+        android:id="@+id/appiconsignup"
+        android:layout_width="150dp"
+        android:layout_height="100dp"
+        android:layout_gravity="center"
+        android:src="@drawable/bblogo"
+        android:contentDescription="@string/applogo" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+
+        <EditText
+            android:id="@+id/TextNamesignup"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/outline"
+            android:drawableStart="@drawable/tbicon_name"
+            android:drawableLeft="@drawable/tbicon_name"
+            android:ems="10"
+            android:layout_gravity="start"
+            android:hint="@string/name"
+            android:inputType="textPersonName"
+            android:textAlignment="viewStart"
+            android:textSize="15sp"
+            tools:ignore="Autofill" />
+
+        <EditText
+            android:id="@+id/TextEmailsignup"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/outline"
+            android:drawableStart="@drawable/tbicon_email"
+            android:drawableLeft="@drawable/tbicon_email"
+            android:ems="10"
+            android:layout_gravity="start"
+            android:hint="@string/email"
+            android:inputType="textEmailAddress"
+            android:textSize="15sp"
+            tools:ignore="Autofill" />
+
+        <EditText
+            android:id="@+id/TextPhonesignup"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/outline"
+            android:drawableStart="@drawable/tbicon_phone"
+            android:drawableLeft="@drawable/tbicon_phone"
+            android:ems="10"
+            android:layout_gravity="start"
+            android:hint="@string/phone"
+            android:inputType="phone"
+            android:textSize="15sp"
+            tools:ignore="Autofill" />
+
+        <EditText
+            android:id="@+id/TextPasswordsignup"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/outline"
+            android:drawableStart="@drawable/tbiconpassword"
+            android:drawableLeft="@drawable/tbiconpassword"
+            android:ems="10"
+            android:layout_gravity="start"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:textSize="15sp"
+            tools:ignore="Autofill" />
+
+        <Button
+            android:id="@+id/btnsignup"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/btncorners"
+            android:text="@string/sign_up"
+            app:backgroundTint="@color/buttoncolor" />
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/directtosignin"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/already_have_an_account_signin_here"
+        android:textAllCaps="false"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        app:backgroundTint="@color/backgroundcolor"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        />
+
+</LinearLayout>
