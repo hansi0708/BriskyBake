@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,6 +30,7 @@ import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Category;
 import com.hv.briskybake.ViewHolder.MenuViewHolder;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -88,22 +90,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     private void loadMenu() {
         FirebaseRecyclerOptions<Category> options=new FirebaseRecyclerOptions.Builder<Category>().setQuery(category,Category.class).build();
-        FirebaseRecyclerAdapter<Category, MenuViewHolder> adapter=new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
-
-            @Override
-            public void startListening() {
-                super.startListening();
-            }
-
-            @Override
-            public void stopListening() {
-                super.stopListening();
-            }
+        FirebaseRecyclerAdapter<Category,MenuViewHolder> adapter=new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
 
             @Override
             protected void onBindViewHolder(@NonNull MenuViewHolder holder, int position, @NonNull Category model) {
                 holder.textMenuName.setText(model.getName());
-                Picasso.get().load(model.getImage()).into(holder.imageView);
+                Picasso.get().load(model.getImage()).into(holder.imageView, new Callback() {
+                    @Override
+                    public void onSuccess() {
+
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+
+                    }
+                });
                 final Category clickItem=model;
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
@@ -120,6 +122,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 return new MenuViewHolder(view);
             }
         };
+        GridLayoutManager gridLayoutManager=new GridLayoutManager(getApplicationContext(),1);
+        recycler_menu.setLayoutManager(gridLayoutManager);
+        adapter.startListening();
         recycler_menu.setAdapter(adapter);
     }
 
