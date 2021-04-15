@@ -52,7 +52,8 @@
             android:paddingLeft="5dp"
             android:textAlignment="viewStart"
             android:textSize="15sp"
-            tools:ignore="Autofill" />
+            tools:ignore="Autofill,RtlSymmetry"
+            android:paddingStart="5dp" />
 
         <EditText
             android:id="@+id/TextEmailsignup"
@@ -68,7 +69,8 @@
             android:inputType="textEmailAddress"
             android:paddingLeft="5dp"
             android:textSize="15sp"
-            tools:ignore="Autofill" />
+            tools:ignore="Autofill,RtlSymmetry"
+            android:paddingStart="5dp" />
 
         <EditText
             android:id="@+id/TextPhonesignup"
@@ -84,7 +86,8 @@
             android:inputType="phone"
             android:paddingLeft="5dp"
             android:textSize="15sp"
-            tools:ignore="Autofill" />
+            tools:ignore="Autofill,RtlSymmetry"
+            android:paddingStart="5dp" />
 
         <EditText
             android:id="@+id/TextPasswordsignup"
@@ -101,7 +104,7 @@
             android:paddingLeft="5dp"
             android:password="true"
             android:textSize="15sp"
-            tools:ignore="Autofill" />
+            tools:ignore="Autofill,Deprecated" />
 
         <Button
             android:id="@+id/btnsignup"
