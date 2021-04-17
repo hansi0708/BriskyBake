@@ -23,4 +23,5 @@
     <string name="cartfab">Cartfab</string>
     <string name="name_of_menu">Name of Menu</string>
     <string name="open">Open navigation drawer</string>
+    <string name="name_of_item">Name of Item</string>
 </resources>
