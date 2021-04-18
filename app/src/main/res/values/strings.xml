@@ -24,4 +24,10 @@
     <string name="name_of_menu">Name of Menu</string>
     <string name="open">Open navigation drawer</string>
     <string name="name_of_item">Name of Item</string>
+    <string name="food_pic">Food pic</string>
+    <string name="food_name">Food Name</string>
+    <string name="cart">Cart</string>
+    <string name="_100">100</string>
+    <string name="rupee">rupee</string>
+    <string name="description">Description</string>
 </resources>
