@@ -7,7 +7,7 @@
     <string name="name">Name</string>
     <string name="sign_up">Sign Up</string>
     <string name="already_have_an_account_signin_here"><u>Already have an account? Sign in here</u></string>
-    <string name="log_in">Log in</string>
+    <string name="log_in">Log In</string>
     <string name="not_registered_sign_up_here"><u>Not registered? Sign up here</u></string>
     <string name="title_activity_home">Home</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -30,4 +30,6 @@
     <string name="_100">100</string>
     <string name="rupee">rupee</string>
     <string name="description">Description</string>
+    <string name="forget_password">Forget Password</string>
+    <string name="forgot_password"><u>Forgot Password?</u></string>
 </resources>

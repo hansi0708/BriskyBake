@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
                                         }
                                     }
                                 });
-                                startActivity(new Intent(MainActivity.this,MainActivity2.class));
+                                startActivity(new Intent(MainActivity.this, SplashScreen.class));
                                 finish();
                             }
                         }

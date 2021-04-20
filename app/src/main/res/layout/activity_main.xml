@@ -7,78 +7,89 @@
     android:orientation="vertical"
     android:layout_height="match_parent"
     tools:context=".MainActivity"
-    android:background="@color/backgroundcolor">
+    android:background="@color/buttoncolor">
 
     <LinearLayout
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="80dp"
-        android:gravity="center"
-        android:layout_gravity="center"
-        android:orientation="vertical"
-        tools:ignore="UselessParent">
-
-    <ImageView
-        android:id="@+id/appiconsignup"
-        android:layout_width="150dp"
-        android:layout_height="100dp"
-        android:layout_gravity="center"
-        android:src="@drawable/bblogo"
-        android:contentDescription="@string/applogo" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="340dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/outline"
+        android:backgroundTint="@color/backgroundcolor"
         android:gravity="center"
         android:orientation="vertical"
         tools:ignore="UselessParent">
 
+        <ImageView
+            android:id="@+id/appiconsignup"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:src="@drawable/bblogo"
+            android:contentDescription="@string/applogo" />
 
-        <EditText
-            android:id="@+id/TextNamesignup"
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="start"
-            android:layout_marginTop="15dp"
-            android:background="@drawable/outline"
-            android:drawableStart="@drawable/tbicon_name"
-            android:drawableLeft="@drawable/tbicon_name"
-            android:ems="10"
-            android:hint="@string/name"
-            android:inputType="textPersonName"
-            android:paddingLeft="5dp"
-            android:textAlignment="viewStart"
-            android:textSize="15sp"
-            tools:ignore="Autofill,RtlSymmetry"
-            android:paddingStart="5dp" />
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            >
 
-        <EditText
-            android:id="@+id/TextEmailsignup"
+            <EditText
+                android:id="@+id/TextNamesignup"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="15dp"
+                android:drawableStart="@drawable/tbicon_name"
+                android:drawableLeft="@drawable/tbicon_name"
+                android:ems="10"
+                android:hint="@string/name"
+                android:inputType="textPersonName"
+                android:paddingLeft="5dp"
+                android:textSize="15sp"
+                tools:ignore="Autofill,RtlSymmetry"
+                android:paddingStart="5dp" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="start"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/outline"
-            android:drawableStart="@drawable/tbicon_email"
-            android:drawableLeft="@drawable/tbicon_email"
-            android:ems="10"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:paddingLeft="5dp"
-            android:textSize="15sp"
-            tools:ignore="Autofill,RtlSymmetry"
-            android:paddingStart="5dp" />
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            >
+
+            <EditText
+                android:id="@+id/TextEmailsignup"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:drawableStart="@drawable/tbicon_email"
+                android:drawableLeft="@drawable/tbicon_email"
+                android:ems="10"
+                android:hint="@string/email"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                android:inputType="textEmailAddress"
+                android:textSize="15sp"
+                tools:ignore="Autofill,RtlSymmetry"
+                 />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            >
 
         <EditText
             android:id="@+id/TextPhonesignup"
-            android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="start"
+            android:layout_width="330dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:layout_marginTop="10dp"
-            android:background="@drawable/outline"
             android:drawableStart="@drawable/tbicon_phone"
             android:drawableLeft="@drawable/tbicon_phone"
             android:ems="10"
@@ -89,29 +100,41 @@
             tools:ignore="Autofill,RtlSymmetry"
             android:paddingStart="5dp" />
 
-        <EditText
-            android:id="@+id/TextPasswordsignup"
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="40dp"
-            android:layout_gravity="start"
-            android:layout_marginTop="10dp"
-            android:background="@drawable/outline"
-            android:drawableStart="@drawable/tbiconpassword"
-            android:drawableLeft="@drawable/tbiconpassword"
-            android:ems="10"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:paddingLeft="5dp"
-            android:password="true"
-            android:textSize="15sp"
-            tools:ignore="Autofill,Deprecated" />
+            android:layout_height="wrap_content"
+            app:passwordToggleEnabled="true"
+            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+            >
+
+            <EditText
+                android:id="@+id/TextPasswordsignup"
+                android:layout_width="330dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="10dp"
+                android:drawableStart="@drawable/tbiconpassword"
+                android:drawableLeft="@drawable/tbiconpassword"
+                android:ems="10"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
+                android:password="true"
+                android:textSize="15sp"
+                tools:ignore="Autofill,Deprecated,RtlSymmetry" />
+
+        </com.google.android.material.textfield.TextInputLayout>
 
         <Button
             android:id="@+id/btnsignup"
-            android:layout_width="match_parent"
+            android:layout_width="330dp"
             android:layout_height="40dp"
             android:layout_marginTop="10dp"
             android:background="@drawable/btncorners"
+            android:layout_marginBottom="20dp"
             android:text="@string/sign_up"
             app:backgroundTint="@color/buttoncolor" />
 
@@ -128,7 +151,7 @@
         android:gravity="center"
         android:layout_marginTop="20dp"
         app:backgroundTint="@color/backgroundcolor"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
         android:textSize="12sp"
         />
 

@@ -2,6 +2,7 @@ package com.hv.briskybake;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ public class Login extends AppCompatActivity {
     EditText temail,tpassword;
     Button btnSignIn;
     Button bsignup;
+    Button bfp;
 
     FirebaseAuth mFirebaseAuth;
     FirebaseAuth.AuthStateListener mAuthStateListener;
@@ -34,6 +36,7 @@ public class Login extends AppCompatActivity {
         mFirebaseAuth=FirebaseAuth.getInstance();
 
         bsignup=findViewById(R.id.directtosignup);
+        bfp=findViewById(R.id.directtofrgpass);
 
         temail=findViewById(R.id.TextEmailsignin);
         tpassword=findViewById(R.id.TextPasswordsignin);
@@ -110,6 +113,14 @@ public class Login extends AppCompatActivity {
             }
         });
 
+        bfp.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent=new Intent(Login.this,ForgetPassword.class);
+                startActivity(intent);
+            }
+        });
+
         bsignup.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,5 +128,7 @@ public class Login extends AppCompatActivity {
                 startActivity(intent);
             }
         });
+
+
     }
 }

@@ -34,4 +34,8 @@
         <item name="android:textStyle">normal</item>
     </style>
 
+    <style name="buttn" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        <item name="boxStrokeColor">@color/buttoncolor</item>
+        <item name="boxStrokeWidth">2dp</item>
+    </style>
 </resources>

@@ -23,6 +23,7 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -54,7 +55,7 @@ dependencies {
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.firebaseui:firebase-ui-database:7.1.1'
     implementation 'com.amulyakhare:com.amulyakhare.textdrable:1.0.1'
-    implementation 'com:readystatesoftware.sqliteasset:sqliteassethelper:+'
+    implementation 'com:readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
 }
 
 apply plugin: 'com.google.gms.google-services'
