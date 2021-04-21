@@ -4,8 +4,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -15,7 +17,9 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Model.Food;
+import com.hv.briskybake.Model.Order;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
@@ -31,6 +35,7 @@ public class FoodDetail extends AppCompatActivity {
 
     FirebaseDatabase database;
     DatabaseReference foods;
+    Food currentFood;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +49,20 @@ public class FoodDetail extends AppCompatActivity {
         //Init view
         numberButton=findViewById(R.id.number_button);
         btnCart=findViewById(R.id.btnCart);
+
+        btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Database(getBaseContext()).addToCart(new Order(
+                        foodId,
+                        currentFood.getName(),
+                        numberButton.getNumber(),
+                        currentFood.getPrice(),
+                        currentFood.getDiscount()
+                ));
+                Toast.makeText(FoodDetail.this,"Added to Cart", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         food_description=findViewById(R.id.food_description);
         food_name=findViewById(R.id.foodname);
@@ -69,9 +88,9 @@ public class FoodDetail extends AppCompatActivity {
         foods.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                Food food=snapshot.getValue(Food.class);
+                currentFood=snapshot.getValue(Food.class);
 
-                Picasso.get().load(food.getImage()).into(foodimage, new Callback() {
+                Picasso.get().load(currentFood.getImage()).into(foodimage, new Callback() {
                     @Override
                     public void onSuccess() {
 
@@ -83,13 +102,13 @@ public class FoodDetail extends AppCompatActivity {
                     }
                 });
 
-                collapsingToolbarLayout.setTitle(food.getName());
+                collapsingToolbarLayout.setTitle(currentFood.getName());
 
-                food_price.setText(food.getPrice());
+                food_price.setText(currentFood.getPrice());
 
-                food_name.setText(food.getName());
+                food_name.setText(currentFood.getName());
 
-                food_description.setText(food.getDescription());
+                food_description.setText(currentFood.getDescription());
             }
 
             @Override

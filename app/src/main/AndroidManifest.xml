@@ -14,9 +14,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
+        <activity android:name=".Cart"></activity>
         <activity
             android:name=".ForgetPassword"
-            android:label="@string/forget_password"/>
+            android:label="@string/forget_password" />
         <activity android:name=".FoodDetail" />
         <activity android:name=".List" />
         <activity
@@ -24,9 +25,11 @@
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.BriskyBake.NoActionBar" />
         <activity android:name=".SplashScreen" />
-        <activity android:name=".Login"
-            android:label="@string/log_in"/>
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".Login"
+            android:label="@string/log_in" />
+        <activity
+            android:name=".MainActivity"
             android:label="@string/sign_up">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

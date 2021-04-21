@@ -47,6 +47,17 @@ public class Database extends SQLiteOpenHelper {
         return result;
     }
 
+    public void addToCart(Order order){
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("INSER INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount)VALUES('%s','%s','%s','%s','%s');",order.getProductId(),order.getProductNmae(),order.getQuality(),order.getDiscount(),order.getPrice());
+        db.execSQL(query);
+    }
+    public void cleanCart(){
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("DELETE FROM OrderDetail");
+        db.execSQL(query);
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
 
