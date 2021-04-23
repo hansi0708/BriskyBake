@@ -11,6 +11,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.amulyakhare.textdrawable.TextDrawable;
 import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.R;
@@ -33,9 +34,9 @@ class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickList
 
     public CartViewHolder(@NonNull View itemView) {
         super(itemView);
-        txt_cart_name = (TextView)itemView.findViewById(R.id.cart_item_name);
-        txt_price = (TextView)itemView.findViewById(R.id.cart_item_Price);
-        img_cart_count = (ImageView)itemView.findViewById(R.id.cart_item_count);
+        txt_cart_name = itemView.findViewById(R.id.cart_item_name);
+        txt_price = itemView.findViewById(R.id.cart_item_Price);
+        img_cart_count = itemView.findViewById(R.id.cart_item_count);
     }
 
     @Override
@@ -65,14 +66,14 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
 
         TextDrawable drawable = TextDrawable.builder()
-                .buildRound(""+listData.get(position).getQuality(), Color.RED);
+                .buildRound(""+listData.get(position).getQuantity(), Color.RED);
         holder.img_cart_count.setImageDrawable(drawable);
 
         Locale locale = new Locale("en","US");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
-        int price = (Integer.parseInt(listData.get(position).getPrice()))*(Integer.parseInt(listData.get(position).getQuality()));
+        int price = (Integer.parseInt(listData.get(position).getPrice()))*(Integer.parseInt(listData.get(position).getQuantity()));
         holder.txt_price.setText(fmt.format(price));
-        holder.txt_cart_name.setText(listData.get(position).getProductNmae());
+        holder.txt_cart_name.setText(listData.get(position).getProductName());
 
     }
 

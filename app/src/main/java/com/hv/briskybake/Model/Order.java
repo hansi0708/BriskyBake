@@ -2,18 +2,18 @@ package com.hv.briskybake.Model;
 
 public class Order {
     private String ProductId;
-    private String ProductNmae;
-    private String Quality;
+    private String ProductName;
+    private String Quantity;
     private String Price;
     private String Discount;
 
     public Order() {
     }
 
-    public Order(String productId, String productNmae, String quality, String price, String discount) {
+    public Order(String productId, String productName, String quantity, String price, String discount) {
         ProductId = productId;
-        ProductNmae = productNmae;
-        Quality = quality;
+        ProductName = productName;
+        Quantity = quantity;
         Price = price;
         Discount = discount;
     }
@@ -26,20 +26,20 @@ public class Order {
         ProductId = productId;
     }
 
-    public String getProductNmae() {
-        return ProductNmae;
+    public String getProductName() {
+        return ProductName;
     }
 
-    public void setProductNmae(String productNmae) {
-        ProductNmae = productNmae;
+    public void setProductName(String productName) {
+        ProductName = productName;
     }
 
-    public String getQuality() {
-        return Quality;
+    public String getQuantity() {
+        return Quantity;
     }
 
-    public void setQuality(String quality) {
-        Quality = quality;
+    public void setQuantity(String quantity) {
+        Quantity = quantity;
     }
 
     public String getPrice() {

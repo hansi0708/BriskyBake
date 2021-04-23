@@ -1,8 +1,5 @@
 package com.hv.briskybake;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -10,11 +7,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.auth.AuthResult;
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.FirebaseDatabase;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -81,29 +76,33 @@ public class MainActivity extends AppCompatActivity {
                 }
                 else if(!(email.isEmpty() && pwd.isEmpty() && name.isEmpty() && phone.isEmpty()))
                 {
-                    mFirebaseAuth.createUserWithEmailAndPassword(email,pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                        public void onComplete(@NonNull Task<AuthResult> task) {
-                            if (!task.isSuccessful()) {
-                                Toast.makeText(MainActivity.this, "Sign up unsuccessful", Toast.LENGTH_SHORT).show();
-                            }
-                            else
-                            {
-                                User user=new User(name,email,phone);
-                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<Void> task) {
-                                        if(task.isSuccessful())
-                                        {
-                                            Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                });
-                                startActivity(new Intent(MainActivity.this, SplashScreen.class));
-                                finish();
-                            }
-                        }
-                    });
+                    Intent intent=new Intent(MainActivity.this,VerifyPhoneNo.class);
+                    intent.putExtra("phone",phone);
+                    startActivity(intent);
+
+                  //  mFirebaseAuth.createUserWithEmailAndPassword(email,pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                   //     @Override
+                   //     public void onComplete(@NonNull Task<AuthResult> task) {
+                    //        if (!task.isSuccessful()) {
+                    //            Toast.makeText(MainActivity.this, "Sign up unsuccessful", Toast.LENGTH_SHORT).show();
+                    //        }
+                   //         else
+                    //        {
+                      //          User user=new User(name,email,phone);
+                      //          FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                      //              @Override
+                      //              public void onComplete(@NonNull Task<Void> task) {
+                      //                  if(task.isSuccessful())
+                       //                 {
+                      //                      Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
+                       //                 }
+                       //             }
+                       //         });
+                               // startActivity(new Intent(MainActivity.this, SplashScreen.class));
+                              //  finish();
+                        //    }
+                      //  }
+                   // });
                 }
                 else
                 {

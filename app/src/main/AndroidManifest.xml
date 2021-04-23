@@ -5,6 +5,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_SMS"/>
 
     <application
         android:allowBackup="true"
@@ -14,12 +15,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
-        <activity android:name=".Cart"></activity>
+        <activity android:name=".VerifyPhoneNo" />
         <activity
             android:name=".ForgetPassword"
             android:label="@string/forget_password" />
         <activity android:name=".FoodDetail" />
         <activity android:name=".List" />
+        <activity android:name=".Cart" />
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
@@ -29,8 +31,7 @@
             android:name=".Login"
             android:label="@string/log_in" />
         <activity
-            android:name=".MainActivity"
-            android:label="@string/sign_up">
+            android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
