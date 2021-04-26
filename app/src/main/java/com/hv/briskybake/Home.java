@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -24,12 +23,10 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Category;
 import com.hv.briskybake.ViewHolder.MenuViewHolder;
@@ -67,7 +64,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent cartIntent = new Intent(Home.this,Cart.class);
+                Intent cartIntent=new Intent(Home.this,Cart.class);
                 startActivity(cartIntent);
             }
         });
@@ -177,11 +174,15 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         if(id==R.id.nav_menu){
 
         }else if(id==R.id.nav_orders){
-
+            Intent orderIntent=new Intent(Home.this,OrderStatus.class);
+            startActivity(orderIntent);
         }else if(id==R.id.nav_cart){
-
+            Intent cartIntent=new Intent(Home.this,Cart.class);
+            startActivity(cartIntent);
         }else if(id==R.id.nav_logout){
-
+            //Logout
+            Intent logoutIntent=new Intent(Home.this,Login.class);
+            logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
         }
 
         DrawerLayout drawer=findViewById(R.id.drawer_layout);

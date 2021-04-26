@@ -1,10 +1,5 @@
 package com.hv.briskybake;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -14,7 +9,11 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hv.briskybake.Common.Common;
@@ -84,7 +83,7 @@ public class Cart extends AppCompatActivity {
         );
         edtAddress.setLayoutParams(lp);
         alertDialog.setView(edtAddress);// Add edit Text to alert Dialog
-        alertDialog.setIcon(R.drawable.cart);
+        alertDialog.setIcon(R.drawable.carticon);
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

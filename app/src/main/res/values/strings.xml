@@ -26,10 +26,14 @@
     <string name="name_of_item">Name of Item</string>
     <string name="food_pic">Food pic</string>
     <string name="food_name">Food Name</string>
-    <string name="cart">Cart</string>
     <string name="_100">100</string>
     <string name="rupee">rupee</string>
     <string name="description">Description</string>
     <string name="forget_password">Forget Password</string>
     <string name="forgot_password"><u>Forgot Password?</u></string>
+    <string name="search_title">Search</string>
+    <string name="logout">Logout</string>
+    <string name="orders">Orders</string>
+    <string name="cart">Cart</string>
+    <string name="menu">Menu</string>
 </resources>

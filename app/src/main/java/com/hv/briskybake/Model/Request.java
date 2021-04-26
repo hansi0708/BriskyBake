@@ -3,29 +3,31 @@ package com.hv.briskybake.Model;
 import java.util.List;
 
 public class Request {
-    private String name;
     private String phone;
+    private String name;
     private String address;
     private String total;
-    private List<Order> foods; //List of food order
+    private String status;
+    private List<Order> foods;  //list of food ordered
 
     public Request() {
     }
 
-    public Request(String name, String phone, String address, String total, List<Order> foods) {
-        this.name = name;
+    public Request(String phone, String name, String address, String total, List<Order> foods) {
         this.phone = phone;
+        this.name = name;
         this.address = address;
         this.total = total;
         this.foods = foods;
+        this.status="0";   //Default is 0. 0 Placed 1 Shipping 2 Shipped
     }
 
-    public String getName() {
-        return name;
+    public String getStatus() {
+        return status;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getPhone() {
@@ -34,6 +36,14 @@ public class Request {
 
     public void setPhone(String phone) {
         this.phone = phone;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getAddress() {

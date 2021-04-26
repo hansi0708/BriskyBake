@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -18,6 +19,11 @@
             android:background="?attr/colorPrimary"
             app:popupTheme="@style/Theme.BriskyBake.PopupOverlay" />
 
+        <View
+            android:id="@+id/anchor_dropdown"
+            android:layout_width="match_parent"
+            android:layout_height="0dp" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include layout="@layout/content_main" />
@@ -33,7 +39,7 @@
         app:tint="@color/white"
         android:visibility="visible"
         app:backgroundTintMode="add"
-        app:srcCompat="@drawable/cart"
+        app:srcCompat="@drawable/carticon"
         tools:ignore="UnusedAttribute,VectorDrawableCompat" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
