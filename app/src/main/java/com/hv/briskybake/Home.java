@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -27,6 +28,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Category;
 import com.hv.briskybake.ViewHolder.MenuViewHolder;
@@ -34,6 +36,8 @@ import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import java.util.Objects;
+
+import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -59,6 +63,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //Init Firebase
         database=FirebaseDatabase.getInstance();
         category= database.getReference("Category");
+
+        Paper.init(this);
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +96,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager=new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        loadMenu();
+        if(Common.isConnectToInternet(getBaseContext()))
+            loadMenu();
+        else{
+            Toast.makeText(Home.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
     }
 
     private void loadMenu() {
@@ -160,8 +172,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
 
-        if(id==R.id.action_settings) {
-            return true;
+        if(id==R.id.nav_refresh) {
+            loadMenu();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -180,6 +192,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             Intent cartIntent=new Intent(Home.this,Cart.class);
             startActivity(cartIntent);
         }else if(id==R.id.nav_logout){
+            //Delete Remember user & pwd
+            Paper.book().destroy();
             //Logout
             Intent logoutIntent=new Intent(Home.this,Login.class);
             logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);

@@ -1,13 +1,13 @@
 package com.hv.briskybake;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
@@ -17,6 +17,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Model.Food;
 import com.hv.briskybake.Model.Order;
@@ -79,7 +80,12 @@ public class FoodDetail extends AppCompatActivity {
             foodId=getIntent().getStringExtra("FoodId");
         if(!foodId.isEmpty())
         {
-            getDetailFood(foodId);
+            if(Common.isConnectToInternet(getBaseContext()))
+                getDetailFood(foodId);
+            else{
+                Toast.makeText(FoodDetail.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
     }

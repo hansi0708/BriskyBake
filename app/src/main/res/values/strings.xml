@@ -36,4 +36,7 @@
     <string name="orders">Orders</string>
     <string name="cart">Cart</string>
     <string name="menu">Menu</string>
+    <string name="search">Search</string>
+    <string name="refresh">Refresh</string>
+    <string name="remember_me">Remember Me</string>
 </resources>
