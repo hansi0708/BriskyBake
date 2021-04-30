@@ -27,9 +27,12 @@ public class Login extends AppCompatActivity {
     Button bsignup;
     Button bfp;
 
-    CheckBox ckbRemember;
+    String verifictionCodeBySystem;
 
     FirebaseAuth mFirebaseAuth;
+
+    CheckBox ckbRemember;
+
     FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
@@ -90,24 +93,24 @@ public class Login extends AppCompatActivity {
                     } else if (email.isEmpty()) {
                         temail.setError("Please enter email");
                         temail.requestFocus();
-                    } else if (pwd.isEmpty()) {
+                    }else if (pwd.isEmpty()) {
                         tpassword.setError("Please enter password");
                         tpassword.requestFocus();
                     } else if (pwd.length() < 6) {
                         tpassword.setError("Password should be atleast 6 characters");
                         tpassword.requestFocus();
                     } else if (!(email.isEmpty() && pwd.isEmpty())) {
-                        mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                            @Override
-                            public void onComplete(@NonNull Task<AuthResult> task) {
-                                if (!task.isSuccessful()) {
-                                    Toast.makeText(Login.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
+                           mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                        @Override
+                         public void onComplete(@NonNull Task<AuthResult> task) {
+                               if (!task.isSuccessful()) {
+                                  Toast.makeText(Login.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
                                 } else {
-                                    Intent i = new Intent(Login.this, Home.class);
+                                   Intent i = new Intent(Login.this, Home.class);
                                     Common.currentUser = mFirebaseAuth.getCurrentUser();
                                     startActivity(i);
                                     finish();
-                                }
+                              }
                             }
                         });
                     } else {
@@ -137,6 +140,18 @@ public class Login extends AppCompatActivity {
             }
         });
 
-
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // Check if user is signed in (non-null) and update UI accordingly.
+        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
+        if(currentUser != null){
+            reload();
+        }
+    }
+
+    private void reload() { }
+
 }

@@ -18,7 +18,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper {
 
     private static final String DB_NAME="BriskybakeDB.db";  //Database name
-    private static final int DB_VER=3;  // Database Version
+    private static final int DB_VER=4;  // Database Version
     private static final String TABLE_NAME = "OrderDetail";   // Table Name
 
     private static final String UID="_id"; // Column I (Primary Key)
@@ -61,7 +61,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db=getReadableDatabase();
         SQLiteQueryBuilder qb =new SQLiteQueryBuilder();
 
-        String[] sqlSelect={"ProductName","ProductId","Quantity","Price","Discount"};
+        String[] sqlSelect={"ID","ProductName","ProductId","Quantity","Price","Discount"};
         String sqlTable="OrderDetail";
 
         qb.setTables(sqlTable);
@@ -70,7 +70,9 @@ public class Database extends SQLiteOpenHelper {
         final List<Order> result=new ArrayList<>();
         if(c.moveToFirst()){
             do {
-                result.add(new Order(c.getString(c.getColumnIndex("ProductId")),
+                result.add(new Order(
+                        c.getInt(c.getColumnIndex("ID")),
+                        c.getString(c.getColumnIndex("ProductId")),
                         c.getString(c.getColumnIndex("ProductName")),
                         c.getString(c.getColumnIndex("Quantity")),
                         c.getString(c.getColumnIndex("Price")),
@@ -94,4 +96,23 @@ public class Database extends SQLiteOpenHelper {
     }
 
 
+    public int getCountCarts() {
+        int count=0;
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("SELECT COUNT(*) FROM OrderDetail");
+        Cursor cursor=db.rawQuery(query,null);
+        if(cursor.moveToFirst())
+        {
+            do{
+                count=cursor.getInt(0);
+            }while (cursor.moveToNext());
+        }
+        return count;
+    }
+
+    public void updateCart(Order order) {
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("UPDATE OrderDetail[SET Quantity= %s WHERE ID= %d",order.getQuantity(),order.getID());
+        db.execSQL(query);
+    }
 }

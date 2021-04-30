@@ -16,7 +16,6 @@
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
         <activity android:name=".OrderStatus"/>
-        <activity android:name=".VerifyPhoneNo" />
         <activity
             android:name=".ForgetPassword"
             android:label="@string/forget_password" />

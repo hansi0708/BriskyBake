@@ -1,5 +1,6 @@
 package com.hv.briskybake;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,16 +20,18 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hv.briskybake.Common.Common;
+import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Category;
 import com.hv.briskybake.ViewHolder.MenuViewHolder;
@@ -51,14 +54,50 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     FirebaseRecyclerAdapter<Category,MenuViewHolder> adapter;
 
+    SwipeRefreshLayout swipeRefreshLayout;
+
+    CounterFab fab;
+
+    @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
 
+        //View
+        swipeRefreshLayout=findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeColors(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark
+                );
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                if(Common.isConnectToInternet(getBaseContext()))
+                    loadMenu();
+                else{
+                    Toast.makeText(getBaseContext(), "Please check your connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
+        //Default, load for first time
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                if(Common.isConnectToInternet(getBaseContext()))
+                    loadMenu();
+                else{
+                    Toast.makeText(getBaseContext(), "Please check your connection", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
 
         //Init Firebase
         database=FirebaseDatabase.getInstance();
@@ -66,7 +105,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
         Paper.init(this);
 
-        FloatingActionButton fab = findViewById(R.id.fab);
+        fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -74,6 +113,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 startActivity(cartIntent);
             }
         });
+
+        fab.setCount(new Database(this).getCountCarts());
+
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
         drawer.setDrawerListener(toggle);
@@ -96,17 +138,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         layoutManager=new LinearLayoutManager(this);
         recycler_menu.setLayoutManager(layoutManager);
 
-        if(Common.isConnectToInternet(getBaseContext()))
-            loadMenu();
-        else{
-            Toast.makeText(Home.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
     }
 
     private void loadMenu() {
-        FirebaseRecyclerOptions<Category> options=new FirebaseRecyclerOptions.Builder<Category>().setQuery(category,Category.class).build();
+        FirebaseRecyclerOptions<Category> options=new FirebaseRecyclerOptions.Builder<Category>()
+                .setQuery(category,Category.class)
+                .build();
         adapter=new FirebaseRecyclerAdapter<Category, MenuViewHolder>(options) {
 
             @Override
@@ -148,6 +185,16 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setLayoutManager(gridLayoutManager);
         adapter.startListening();
         recycler_menu.setAdapter(adapter);
+
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fab.setCount(new Database(this).getCountCarts());
+        if(adapter!=null)
+            adapter.startListening();
     }
 
     @Override

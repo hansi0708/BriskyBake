@@ -12,6 +12,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
@@ -35,6 +36,9 @@ public class List extends AppCompatActivity {
     String categoryId="";
 
     FirebaseRecyclerAdapter<Food, FoodViewHolder> adapter;
+
+    SwipeRefreshLayout swipeRefreshLayout;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -44,27 +48,60 @@ public class List extends AppCompatActivity {
         database=FirebaseDatabase.getInstance();
         list=database.getReference("Food");
 
+        swipeRefreshLayout=findViewById(R.id.swipe_layout);
+        swipeRefreshLayout.setColorSchemeResources(R.color.colorPrimary,
+                android.R.color.holo_green_dark,
+                android.R.color.holo_orange_dark,
+                android.R.color.holo_blue_dark);
+
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                //Get Intent here
+                if(getIntent()!=null)
+                    categoryId=getIntent().getStringExtra("CategoryId");
+                if(!categoryId.isEmpty())
+                {
+                    if(Common.isConnectToInternet(getBaseContext()))
+                        loadList(categoryId);
+                    else{
+                        Toast.makeText(List.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
+        });
+
+        swipeRefreshLayout.post(new Runnable() {
+            @Override
+            public void run() {
+                //Get Intent here
+                if(getIntent()!=null)
+                    categoryId=getIntent().getStringExtra("CategoryId");
+                if(!categoryId.isEmpty())
+                {
+                    if(Common.isConnectToInternet(getBaseContext()))
+                        loadList(categoryId);
+                    else{
+                        Toast.makeText(List.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                }
+            }
+        });
+
         recyclerView=findViewById(R.id.recycler_list);
         recyclerView.setHasFixedSize(true);
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        //Get Intent here
-        if(getIntent()!=null)
-            categoryId=getIntent().getStringExtra("CategoryId");
-        if(!categoryId.isEmpty())
-        {
-            if(Common.isConnectToInternet(getBaseContext()))
-                loadList(categoryId);
-            else{
-                Toast.makeText(List.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
-                return;
-            }
-        }
+
     }
 
     private void loadList(String categoryId) {
-        FirebaseRecyclerOptions<Food> options=new FirebaseRecyclerOptions.Builder<Food>().setQuery(list.orderByChild("MenuId").equalTo(categoryId),Food.class).build();
+        FirebaseRecyclerOptions<Food> options=new FirebaseRecyclerOptions.Builder<Food>().
+                setQuery(list.orderByChild("MenuId").equalTo(categoryId),Food.class).
+                build();
         adapter=new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
@@ -104,6 +141,15 @@ public class List extends AppCompatActivity {
         recyclerView.setLayoutManager(gridLayoutManager);
         adapter.startListening();
         recyclerView.setAdapter(adapter);
+
+        swipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if(adapter!=null)
+            adapter.startListening();
     }
 }
 

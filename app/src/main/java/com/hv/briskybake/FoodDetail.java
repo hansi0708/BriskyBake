@@ -9,9 +9,9 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -29,7 +29,7 @@ public class FoodDetail extends AppCompatActivity {
     TextView food_name,food_price,food_description;
     ImageView foodimage;
     CollapsingToolbarLayout collapsingToolbarLayout;
-    FloatingActionButton btnCart;
+    CounterFab btnCart;
     ElegantNumberButton numberButton;
 
     String foodId="";
@@ -64,6 +64,8 @@ public class FoodDetail extends AppCompatActivity {
                 Toast.makeText(FoodDetail.this,"Added to Cart", Toast.LENGTH_SHORT).show();
             }
         });
+
+        btnCart.setCount(new Database(this).getCountCarts());
 
         food_description=findViewById(R.id.food_description);
         food_name=findViewById(R.id.foodname);

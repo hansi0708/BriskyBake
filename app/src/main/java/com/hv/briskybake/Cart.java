@@ -37,7 +37,7 @@ public class Cart extends AppCompatActivity {
     FirebaseDatabase database;
     DatabaseReference requests;
 
-    TextView txtTotalPrice;
+    public TextView txtTotalPrice;
     Button btnPlace;
 
     List<Order> cart = new ArrayList<>();
@@ -52,14 +52,14 @@ public class Cart extends AppCompatActivity {
         database = FirebaseDatabase.getInstance();
         requests=database.getReference("Requests");
 
-        //Imit
-        recyclerView = (RecyclerView)findViewById(R.id.listCart);
+        //Init
+        recyclerView =findViewById(R.id.listCart);
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        txtTotalPrice = (TextView)findViewById(R.id.total);
-        btnPlace = (Button) findViewById(R.id.btnPlace);
+        txtTotalPrice =findViewById(R.id.total);
+        btnPlace =findViewById(R.id.btnPlace);
 
         btnPlace.setOnClickListener(new View.OnClickListener() {
             @Override
