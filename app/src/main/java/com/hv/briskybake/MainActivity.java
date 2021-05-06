@@ -27,6 +27,7 @@ import com.google.firebase.auth.PhoneAuthOptions;
 import com.google.firebase.auth.PhoneAuthProvider;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hv.briskybake.Common.Common;
+import com.hv.briskybake.Model.User;
 
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;

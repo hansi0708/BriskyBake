@@ -1,4 +1,4 @@
-package com.hv.briskybake;
+package com.hv.briskybake.Model;
 
 public class User {
     public String name,email,phone;
@@ -7,10 +7,10 @@ public class User {
     {
 
     }
+
     public User(String name, String email) {
         this.name = name;
         this.email = email;
-
     }
 
     public User(String name, String email, String phone) {

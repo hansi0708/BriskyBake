@@ -71,11 +71,12 @@
                 android:drawableStart="@drawable/tbiconpassword"
                 android:drawableLeft="@drawable/tbiconpassword"
                 android:ems="10"
-                android:paddingTop="10dp"
                 android:hint="@string/password"
                 android:inputType="textPassword"
+                android:paddingLeft="5dp"
+                android:paddingStart="5dp"
                 android:textSize="15sp"
-                tools:ignore="Autofill" />
+                tools:ignore="Autofill,RtlSymmetry" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

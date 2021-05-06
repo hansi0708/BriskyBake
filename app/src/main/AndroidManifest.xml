@@ -20,7 +20,7 @@
             android:name=".ForgetPassword"
             android:label="@string/forget_password" />
         <activity android:name=".FoodDetail" />
-        <activity android:name=".List" />
+        <activity android:name=".FoodList" />
         <activity android:name=".Cart" />
         <activity
             android:name=".Home"

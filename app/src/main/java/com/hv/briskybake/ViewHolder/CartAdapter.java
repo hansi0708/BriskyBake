@@ -1,59 +1,26 @@
 package com.hv.briskybake.ViewHolder;
 
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.hv.briskybake.Cart;
-import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
-import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.R;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-class CartViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener,
-View.OnCreateContextMenuListener{
 
-    public TextView txt_cart_name,txt_price;
-    public ElegantNumberButton btn_quantity;
-
-    private ItemClickListener itemClickListener;
-
-    public void setTxt_cart_name(TextView txt_cart_name) {
-        this.txt_cart_name = txt_cart_name;
-    }
-
-    public CartViewHolder(@NonNull View itemView) {
-        super(itemView);
-        txt_cart_name = itemView.findViewById(R.id.cart_item_name);
-        txt_price = itemView.findViewById(R.id.cart_item_Price);
-        btn_quantity = itemView.findViewById(R.id.btn_quantity);
-
-        itemView.setOnCreateContextMenuListener(this);
-    }
-
-    @Override
-    public void onClick(View v) {
-
-    }
-
-    @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-        menu.setHeaderTitle("Select Actions");
-        menu.add(0,0,getAdapterPosition(), Common.DELETE);
-    }
-}
 
 public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
@@ -75,10 +42,25 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
     @Override
     public void onBindViewHolder(@NonNull CartViewHolder holder, int position) {
 
+        Picasso.get().load(listData.get(position).getImage())
+                .resize(70,70)
+                .centerCrop()
+                .into(holder.cart_image, new Callback() {
+            @Override
+            public void onSuccess() {
+
+            }
+
+            @Override
+            public void onError(Exception e) {
+
+            }
+        });
         //TextDrawable drawable = TextDrawable.builder()
                 //.buildRound(""+listData.get(position).getQuantity(), Color.RED);
         //holder.img_cart_count.setImageDrawable(drawable);
-holder.btn_quantity.setNumber(listData.get(position).getQuantity());
+        holder.btn_quantity.setNumber(listData.get(position).getQuantity());
+
         holder.btn_quantity.setOnValueChangeListener(new ElegantNumberButton.OnValueChangeListener() {
             @Override
             public void onValueChange(ElegantNumberButton view, int oldValue, int newValue) {
@@ -91,14 +73,14 @@ holder.btn_quantity.setNumber(listData.get(position).getQuantity());
                 List<Order> orders=new Database(cart).getCarts();
                 for(Order item:orders)
                     total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(item.getQuantity()));
-                Locale locale = new Locale("en","US");
+                Locale locale = new Locale("en","IN");
                 NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
                 cart.txtTotalPrice.setText(fmt.format(total));
             }
         });
 
-        Locale locale = new Locale("en","US");
+        Locale locale = new Locale("en","IN");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
         int price = (Integer.parseInt(listData.get(position).getPrice()))*(Integer.parseInt(listData.get(position).getQuantity()));
         holder.txt_price.setText(fmt.format(price));
@@ -109,5 +91,22 @@ holder.btn_quantity.setNumber(listData.get(position).getQuantity());
     @Override
     public int getItemCount() {
         return listData.size();
+    }
+
+    public Order getItem(int position)
+    {
+        return listData.get(position);
+    }
+
+    public void removeItem(int position)
+    {
+        listData.remove(position);
+        notifyItemRemoved(position);
+    }
+
+    public void restoreItem(Order item,int position)
+    {
+        listData.add(position,item);
+        notifyItemInserted(position);
     }
 }

@@ -122,7 +122,6 @@
                 android:inputType="textPassword"
                 android:paddingLeft="5dp"
                 android:paddingStart="5dp"
-                android:password="true"
                 android:textSize="15sp"
                 tools:ignore="Autofill,Deprecated,RtlSymmetry" />
 

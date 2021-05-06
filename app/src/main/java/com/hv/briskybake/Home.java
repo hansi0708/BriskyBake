@@ -58,6 +58,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     CounterFab fab;
 
+    FirebaseAuth mAuth;
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -102,6 +104,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //Init Firebase
         database=FirebaseDatabase.getInstance();
         category= database.getReference("Category");
+
+        mAuth=FirebaseAuth.getInstance();
 
         Paper.init(this);
 
@@ -165,7 +169,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {
                         //Get CategoryId and send to New Activity
-                        Intent list=new Intent(Home.this,List.class);
+                        Intent list=new Intent(Home.this, FoodList.class);
                         //Because CategoryId is Key, so we take key of the item
                         list.putExtra("CategoryId",adapter.getRef(position).getKey());
                         startActivity(list);
@@ -225,13 +229,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
+
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
 
         if(id==R.id.nav_menu){
-
         }else if(id==R.id.nav_orders){
             Intent orderIntent=new Intent(Home.this,OrderStatus.class);
             startActivity(orderIntent);
@@ -242,8 +245,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             //Delete Remember user & pwd
             Paper.book().destroy();
             //Logout
+            mAuth.signOut();
             Intent logoutIntent=new Intent(Home.this,Login.class);
             logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(logoutIntent);
         }
 
         DrawerLayout drawer=findViewById(R.id.drawer_layout);
