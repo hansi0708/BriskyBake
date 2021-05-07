@@ -18,7 +18,7 @@ import java.util.List;
 public class Database extends SQLiteOpenHelper {
 
     private static final String DB_NAME="BriskybakeDB.db";  //Database name
-    private static final int DB_VER=5;  // Database Version
+    private static final int DB_VER=6;  // Database Version
     private static final String TABLE_NAME = "OrderDetail";   // Table Name
 
     private static final String UID="ID"; // Column I (Primary Key)
@@ -41,6 +41,7 @@ public class Database extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         try {
             db.execSQL(CREATE_TABLE);
+            db.execSQL("CREATE TABLE Favorites (FoodId	TEXT UNIQUE PRIMARY KEY);");
         } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
