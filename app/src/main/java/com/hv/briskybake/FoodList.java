@@ -174,12 +174,13 @@ public class FoodList extends AppCompatActivity {
 
     private void startSearch(CharSequence text) {
         FirebaseRecyclerOptions<Food> options=new FirebaseRecyclerOptions.Builder<Food>().
-                setQuery(list.orderByChild("Name").equalTo(text.toString()),Food.class).
+                setQuery(list.orderByChild("name").equalTo(text.toString()),Food.class).
                 build();
         searchadapter=new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
                 holder.textItemName.setText(model.getName());
+                holder.textItemPrice.setText(String.format("₹ %s",model.getPrice()));
                 Picasso.get().load(model.getImage()).into(holder.imageViewItem, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -218,7 +219,7 @@ public class FoodList extends AppCompatActivity {
     }
 
     private void loadSuggest() {
-        list.orderByChild("MenuId").equalTo(categoryId)
+        list.orderByChild("menuId").equalTo(categoryId)
                 .addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -239,12 +240,13 @@ public class FoodList extends AppCompatActivity {
 
     private void loadList(String categoryId) {
         FirebaseRecyclerOptions<Food> options=new FirebaseRecyclerOptions.Builder<Food>().
-                setQuery(list.orderByChild("MenuId").equalTo(categoryId),Food.class).
+                setQuery(list.orderByChild("menuId").equalTo(categoryId),Food.class).
                 build();
         adapter=new FirebaseRecyclerAdapter<Food, FoodViewHolder>(options) {
             @Override
             protected void onBindViewHolder(@NonNull FoodViewHolder holder, int position, @NonNull Food model) {
                 holder.textItemName.setText(model.getName());
+                holder.textItemPrice.setText(String.format("₹ %s",model.getPrice()));
                 Picasso.get().load(model.getImage()).into(holder.imageViewItem, new Callback() {
                     @Override
                     public void onSuccess() {

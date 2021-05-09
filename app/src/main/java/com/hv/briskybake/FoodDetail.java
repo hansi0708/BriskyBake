@@ -86,7 +86,7 @@ public class FoodDetail extends AppCompatActivity {
             if(Common.isConnectToInternet(getBaseContext()))
                 getDetailFood(foodId);
             else{
-                Toast.makeText(FoodDetail.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FoodDetail.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                 return;
             }
         }

@@ -6,7 +6,7 @@
     android:layout_height="200dp"
     android:layout_margin="10dp"
     app:cardElevation="10dp"
-    app:cardCornerRadius="1dp">
+    app:cardCornerRadius="8dp">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
             android:id="@+id/menu_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
+            android:layout_alignParentBottom="true"
             android:layout_gravity="bottom"
             android:background="@color/backgroundcolor"
             android:fontFamily="@font/poppins_light"
