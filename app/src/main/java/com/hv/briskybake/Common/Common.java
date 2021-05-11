@@ -4,10 +4,10 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-import com.google.firebase.auth.FirebaseUser;
+import com.hv.briskybake.Model.User;
 
 public class Common {
-    public static FirebaseUser currentUser;
+    public static User currentUser;
 
     public static final String DELETE="Delete";
     public static final String USER_KEY="User";

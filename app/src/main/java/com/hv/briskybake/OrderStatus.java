@@ -43,7 +43,7 @@ public class OrderStatus extends AppCompatActivity {
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        loadOrders(currentUser.getPhoneNumber());
+        loadOrders(currentUser.getPhone());
     }
 
     private void loadOrders(String phoneNumber) {
@@ -56,7 +56,7 @@ public class OrderStatus extends AppCompatActivity {
                 holder.txtOrderId.setText(adapter.getRef(position).getKey());
                 holder.txtOrderStatus.setText(convertCodeToStatus(model.getStatus()));
                 holder.txtOrderAddress.setText(model.getAddress());
-                holder.txtOrderPhone.setText(currentUser.getPhoneNumber());
+                holder.txtOrderPhone.setText(currentUser.getPhone());
             }
 
             @NonNull

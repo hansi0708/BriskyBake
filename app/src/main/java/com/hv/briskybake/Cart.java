@@ -109,8 +109,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             public void onClick(DialogInterface dialog, int which) {
                 //Create new Request
                 Request request = new Request(
-                        Common.currentUser.getPhoneNumber(),
-                        Common.currentUser.getDisplayName(),
+                        Common.currentUser.getPhone(),
+                        Common.currentUser.getName(),
                         edtAddress.getText().toString(),
                         txtTotalPrice.getText().toString(),
                         cart
@@ -180,7 +180,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             int deleteIndex=viewHolder.getAdapterPosition();
 
             adapter.removeItem(deleteIndex);
-            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(),Common.currentUser.getPhoneNumber());
+            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(),Common.currentUser.getPhone());
 
             //calculate total price
             int total = 0;

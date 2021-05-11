@@ -93,50 +93,12 @@ public class MainActivity extends AppCompatActivity {
 
                         showAlertDialog(phone);
 
-                        mFirebaseAuth.createUserWithEmailAndPassword(email, pwd)
-                                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
-                                    @Override
-                                    public void onComplete(@NonNull Task<AuthResult> task) {
-                                        if (task.isSuccessful()) {
-                                            // Sign in success, update UI with the signed-in user's information
-                                            Log.d(TAG, "createUserWithEmail:success");
-                                            FirebaseUser Fuser = mFirebaseAuth.getCurrentUser();
-                                            String email = tbemail.getText().toString().trim();
-                                           // String pwd = tbpassword.getText().toString().trim();
-                                            String name = tbname.getText().toString().trim();
-                                            String phone = tbphone.getText().toString().trim();
-
-                                            User user=new User(name,email,phone);
-                                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                @Override
-                                                public void onComplete(@NonNull Task<Void> task) {
-                                                    if(task.isSuccessful())
-                                                    {
-                                                        Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
-                                                    }
-                                                }
-                                            });
-
-                                            Intent intent=new Intent(MainActivity.this,Home.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                            startActivity(intent);
-                                            updateUI(Fuser);
-                                        } else {
-                                            // If sign in fails, display a message to the user.
-                                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                                    Toast.LENGTH_SHORT).show();
-                                            updateUI(null);
-                                        }
-                                    }
-                                });
-
 
                     } else {
-                        Toast.makeText(MainActivity.this, "Error occured", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(MainActivity.this, "Error occurred", Toast.LENGTH_SHORT).show();
                     }
                 } else {
-                    Toast.makeText(MainActivity.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(MainActivity.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }
@@ -156,9 +118,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void reload() { }
 
-    private void updateUI(FirebaseUser Fuser) {
 
-    }
+
     @Override
     public void onStart() {
         super.onStart();
@@ -253,6 +214,47 @@ public class MainActivity extends AppCompatActivity {
 
     private void signInTheUserByCredentials(AuthCredential credential) {
 
+        String email = tbemail.getText().toString().trim();
+        String pwd = tbpassword.getText().toString().trim();
+
+        mFirebaseAuth.createUserWithEmailAndPassword(email, pwd)
+                .addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            // Sign in success, update UI with the signed-in user's information
+                            Log.d(TAG, "createUserWithEmail:success");
+                            FirebaseUser Fuser = mFirebaseAuth.getCurrentUser();
+                            String email = tbemail.getText().toString().trim();
+                            // String pwd = tbpassword.getText().toString().trim();
+                            String name = tbname.getText().toString().trim();
+                            String phone = tbphone.getText().toString().trim();
+
+                            User user=new User(name,email,phone);
+                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if(task.isSuccessful())
+                                    {
+                                        Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+                            });
+
+                            Intent intent=new Intent(MainActivity.this,Home.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                //            updateUI(Fuser);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+               //             updateUI(null);
+                        }
+                    }
+                });
+
 
         Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).linkWithCredential(credential)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
@@ -261,12 +263,11 @@ public class MainActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "linkWithCredential:success");
                             FirebaseUser user = Objects.requireNonNull(task.getResult()).getUser();
-                            updateUI(user);
                         } else {
                             Log.w(TAG, "linkWithCredential:failure", task.getException());
                             Toast.makeText(MainActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
-                            updateUI(null);
+
                         }
                     }
                 });

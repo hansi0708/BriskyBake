@@ -13,7 +13,13 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hv.briskybake.Common.Common;
+import com.hv.briskybake.Model.User;
 
 import java.util.Objects;
 
@@ -22,6 +28,9 @@ import io.paperdb.Paper;
 public class SplashScreen extends AppCompatActivity {
 
     FirebaseAuth mFirebaseAuth;
+
+    FirebaseDatabase db;
+    DatabaseReference users;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,19 +44,23 @@ public class SplashScreen extends AppCompatActivity {
 
         setContentView(R.layout.splash_screen);
 
+        //Init Firebase
+        db = FirebaseDatabase.getInstance();
+        users = db.getReference("Users");
+
         mFirebaseAuth = FirebaseAuth.getInstance();
 
         //Init paper
         Paper.init(this);
 
-        String user = Paper.book().read(Common.USER_KEY);
+        String email = Paper.book().read(Common.USER_KEY);
         String pwd = Paper.book().read(Common.PWD_KEY);
 
         Thread thread = new Thread(){
             public void run(){
                 try{
                     sleep(4*1000);
-                    if (user == null && pwd == null) {
+                    if (email == null && pwd == null) {
                         Intent i=new Intent(getBaseContext(),MainActivity.class);
                         startActivity(i);
                     }
@@ -61,25 +74,40 @@ public class SplashScreen extends AppCompatActivity {
 
         };thread.start();
 
-        if (user != null && pwd != null) {
+        if (email != null && pwd != null) {
 
-            if (!user.isEmpty() && !pwd.isEmpty())
-                login(user, pwd);
+            if (!email.isEmpty() && !pwd.isEmpty())
+                login(email, pwd);
         }
     }
 
-    private void login(String user, String pwd) {
-        mFirebaseAuth.signInWithEmailAndPassword(user, pwd).addOnCompleteListener(SplashScreen.this, new OnCompleteListener<AuthResult>() {
+    private void login(String email, String pwd) {
+        users.addValueEventListener(new ValueEventListener() {
             @Override
-            public void onComplete(@NonNull Task<AuthResult> task) {
-                if (!task.isSuccessful()) {
-                    Toast.makeText(SplashScreen.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
-                } else {
-                    Intent i = new Intent(SplashScreen.this, Home.class);
-                    Common.currentUser = mFirebaseAuth.getCurrentUser();
-                    startActivity(i);
-                    finish();
-                }
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                User user = snapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue(User.class);
+
+                mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(SplashScreen.this, new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (!task.isSuccessful()) {
+                            Toast.makeText(SplashScreen.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
+                        } else {
+
+                            Intent i = new Intent(SplashScreen.this, Home.class);
+                            Common.currentUser =user;
+                            startActivity(i);
+                            finish();
+                        }
+                    }
+                });
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
             }
         });
     }

@@ -16,7 +16,13 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.hv.briskybake.Common.Common;
+import com.hv.briskybake.Model.User;
 
 import io.paperdb.Paper;
 
@@ -33,6 +39,9 @@ public class Login extends AppCompatActivity {
 
     CheckBox ckbRemember;
 
+    FirebaseDatabase db;
+    DatabaseReference users;
+
     FirebaseAuth.AuthStateListener mAuthStateListener;
 
     @Override
@@ -41,6 +50,10 @@ public class Login extends AppCompatActivity {
         setContentView(R.layout.activity_login);
 
         mFirebaseAuth=FirebaseAuth.getInstance();
+
+        //Init Firebase
+        db = FirebaseDatabase.getInstance();
+        users = db.getReference("Users");
 
         bsignup=findViewById(R.id.directtosignup);
         bfp=findViewById(R.id.directtofrgpass);
@@ -100,25 +113,41 @@ public class Login extends AppCompatActivity {
                         tpassword.setError("Password should be atleast 6 characters");
                         tpassword.requestFocus();
                     } else if (!(email.isEmpty() && pwd.isEmpty())) {
-                           mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
-                        @Override
-                         public void onComplete(@NonNull Task<AuthResult> task) {
-                               if (!task.isSuccessful()) {
-                                  Toast.makeText(Login.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
-                                } else {
-                                   Intent i = new Intent(Login.this, Home.class);
-                                    Common.currentUser = mFirebaseAuth.getCurrentUser();
-                                    startActivity(i);
-                                    finish();
-                              }
+
+                        users.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
+
+                                    User user = snapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue(User.class);
+
+                                mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        if (!task.isSuccessful()) {
+                                            Toast.makeText(Login.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
+                                        } else {
+
+                                            Intent i = new Intent(Login.this, Home.class);
+                                            Common.currentUser =user;
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    }
+                                });
+
+                            }
+
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
+
                             }
                         });
                     } else {
-                        Toast.makeText(Login.this, "Error occured", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(Login.this, "Error occurred", Toast.LENGTH_SHORT).show();
                     }
                 }
                 else {
-                    Toast.makeText(Login.this, "Please checck your connection", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(Login.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                     return;
                 }
             }

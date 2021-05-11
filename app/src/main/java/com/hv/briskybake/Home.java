@@ -29,7 +29,6 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hv.briskybake.Common.Common;
@@ -39,8 +38,6 @@ import com.hv.briskybake.Model.Category;
 import com.hv.briskybake.ViewHolder.MenuViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
-
-import java.util.Objects;
 
 import io.paperdb.Paper;
 
@@ -175,8 +172,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //Set Name for User
         View headerView=navigationView.getHeaderView(0);
         textfullname=headerView.findViewById(R.id.textFullName);
-        FirebaseUser user= Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser());
-        textfullname.setText(user.getDisplayName());
+        textfullname.setText(Common.currentUser.getName());
 
         //Load Menu
         recycler_menu=findViewById(R.id.recycler_menu);
