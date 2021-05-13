@@ -13,6 +13,15 @@ public class Common {
     public static final String USER_KEY="User";
     public static final String PWD_KEY="Password";
 
+    public static String convertCodeToStatus(String status) {
+        if (status.equals("0"))
+            return "Placed";
+        else if (status.equals("1"))
+            return "On the Way";
+        else
+            return "Shipped";
+    }
+
     public static boolean isConnectToInternet(Context context)
     {
         ConnectivityManager connectivityManager= (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);

@@ -14,6 +14,7 @@ import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Model.Request;
 import com.hv.briskybake.ViewHolder.OrderViewHolder;
 
@@ -54,7 +55,7 @@ public class OrderStatus extends AppCompatActivity {
             @Override
             protected void onBindViewHolder(@NonNull OrderViewHolder holder, int position, @NonNull Request model) {
                 holder.txtOrderId.setText(adapter.getRef(position).getKey());
-                holder.txtOrderStatus.setText(convertCodeToStatus(model.getStatus()));
+                holder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 holder.txtOrderAddress.setText(model.getAddress());
                 holder.txtOrderPhone.setText(currentUser.getPhone());
             }
@@ -76,12 +77,5 @@ public class OrderStatus extends AppCompatActivity {
         adapter.stopListening();
     }
 
-    private String convertCodeToStatus(String status) {
-        if (status.equals("0"))
-            return "Placed";
-        else if (status.equals("1"))
-            return "On the Way";
-        else
-            return "Shipped";
-    }
+
 }

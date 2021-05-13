@@ -15,7 +15,12 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
-        <activity android:name=".OrderStatus"/>
+        <service
+            android:name=".Services.ListenOrder"
+            android:enabled="true"
+            android:exported="true"></service>
+
+        <activity android:name=".OrderStatus" />
         <activity
             android:name=".ForgetPassword"
             android:label="@string/forget_password" />
@@ -26,7 +31,7 @@
             android:name=".Home"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.BriskyBake.NoActionBar" />
-        <activity android:name=".SplashScreen" >
+        <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -36,7 +41,7 @@
         <activity
             android:name=".Login"
             android:label="@string/log_in" />
-        <activity android:name=".MainActivity"/>
+        <activity android:name=".MainActivity" />
 
         <meta-data
             android:name="preloaded_fonts"

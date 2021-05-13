@@ -35,6 +35,7 @@ import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Category;
+import com.hv.briskybake.Services.ListenOrder;
 import com.hv.briskybake.ViewHolder.MenuViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -99,6 +100,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
                 }
             }
         });
+
+        //Register Service
+        Intent service=new Intent(Home.this, ListenOrder.class);
+        startService(service);
 
         //Init Firebase
         database=FirebaseDatabase.getInstance();
