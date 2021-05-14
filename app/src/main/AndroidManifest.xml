@@ -15,10 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
-        <service
-            android:name=".Services.ListenOrder"
-            android:enabled="true"
-            android:exported="true"></service>
+
 
         <activity android:name=".OrderStatus" />
         <activity

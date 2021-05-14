@@ -20,8 +20,12 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Helper.RecyclerItemTouchHelper;
@@ -118,11 +122,16 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                 //Submit to Firebase
                 //We will using System.CurrentMilli to key
-                requests.child(String.valueOf(System.currentTimeMillis())).setValue(request);
+                String order_number=String.valueOf(System.currentTimeMillis());
+                requests.child(order_number)
+                        .setValue(request);
                 //Delete cart
                 new Database(getBaseContext()).cleanCart();
-                Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
-                finish();
+
+                sendNotificationOrder(order_number);
+
+        //        Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
+         //       finish();
             }
         });
 
@@ -134,6 +143,25 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         });
         alertDialog.show();
 
+    }
+
+    private void sendNotificationOrder(String order_number) {
+        DatabaseReference tokens=FirebaseDatabase.getInstance().getReference("Tokens");
+        Query data=tokens.orderByChild("isServerToken").equalTo(true);
+        data.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                for (DataSnapshot postSnapshot:snapshot.getChildren())
+                {
+              //      Token serverToken=postSnapshot.getValue(Token.this);
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
     }
 
     private void loadListFood(){

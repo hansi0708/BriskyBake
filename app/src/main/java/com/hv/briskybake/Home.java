@@ -27,15 +27,17 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Category;
-import com.hv.briskybake.Services.ListenOrder;
+import com.hv.briskybake.Model.Token;
 import com.hv.briskybake.ViewHolder.MenuViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -101,9 +103,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        //Register Service
-        Intent service=new Intent(Home.this, ListenOrder.class);
-        startService(service);
+        updateToken(FirebaseMessaging.getInstance().getToken());
+
 
         //Init Firebase
         database=FirebaseDatabase.getInstance();
@@ -189,6 +190,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         recycler_menu.setLayoutAnimation(controller);
      //   recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
 
+    }
+
+    private void updateToken(Task<String> token) {
+        FirebaseDatabase db=FirebaseDatabase.getInstance();
+        DatabaseReference tokens=db.getReference("Tokens");
+        Token data=new Token(FirebaseMessaging.getInstance().getToken(),false);
+        tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 
     private void loadMenu() {
