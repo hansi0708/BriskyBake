@@ -192,10 +192,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     }
 
+
     private void updateToken(Task<String> token) {
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference tokens=db.getReference("Tokens");
-        Token data=new Token(FirebaseMessaging.getInstance().getToken(),false);
+        Token data=new Token(token,false);
         tokens.child(Common.currentUser.getPhone()).setValue(data);
     }
 

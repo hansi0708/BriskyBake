@@ -2,6 +2,7 @@ package com.hv.briskybake.Services;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessaging;
@@ -10,17 +11,17 @@ import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Model.Token;
 
 public class MyFirebaseIdServices extends FirebaseMessagingService {
-    @Override
-    public void onNewToken(@NonNull String s) {
-        super.onNewToken(s);
-      //  String tokenRefreshed= FirebaseMessaging.getToken();
-        updateTokenToFirebase();
+
+    public void onNewToken(@NonNull Task<String> s) {
+        super.onNewToken(String.valueOf(s));
+        Task<String> tokenRefreshed= s;
+        updateTokenToFirebase(tokenRefreshed);
     }
 
-    private void updateTokenToFirebase() {
+    private void updateTokenToFirebase(Task<String> tokenRefreshed) {
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference tokens=db.getReference("Tokens");
-        Token token=new Token(FirebaseMessaging.getInstance().getToken(),false);
+        Token token=new Token(tokenRefreshed,false);
         tokens.child(Common.currentUser.getPhone()).setValue(token);
     }
 }

@@ -3,7 +3,7 @@ package com.hv.briskybake.Model;
 import com.google.android.gms.tasks.Task;
 
 public class Token {
-    public String token;
+    public Task<String> token;
     private boolean isServerToken;
 
     public Token(Task<String> token, boolean isServerToken) {
@@ -11,11 +11,11 @@ public class Token {
         this.isServerToken = isServerToken;
     }
 
-    public String getToken() {
+    public Task<String> getToken() {
         return token;
     }
 
-    public void setToken(String token) {
+    public void setToken(Task<String> token) {
         this.token = token;
     }
 

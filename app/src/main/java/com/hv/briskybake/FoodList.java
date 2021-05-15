@@ -212,8 +212,9 @@ public class FoodList extends AppCompatActivity {
             }
         };
 
-        GridLayoutManager gridLayoutManager=new GridLayoutManager(getApplicationContext(),1);
-        recyclerView.setLayoutManager(gridLayoutManager);
+        //GridLayoutManager gridLayoutManager=new GridLayoutManager(getApplicationContext(),1);
+        RecyclerView.LayoutManager layout = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layout);
         searchadapter.startListening();
         recyclerView.setAdapter(searchadapter);
     }
@@ -277,7 +278,7 @@ public class FoodList extends AppCompatActivity {
                         {
                             localDB.removeFromFavorites(adapter.getRef(position).getKey());
                             holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_border_24);
-                            Toast.makeText(FoodList.this, ""+model.getName()+"was emoved from Favorites", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FoodList.this, ""+model.getName()+"was removed from Favorites", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

@@ -32,6 +32,7 @@ import com.hv.briskybake.Helper.RecyclerItemTouchHelper;
 import com.hv.briskybake.Interface.RecyclerItemTouchHelperListener;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.Model.Request;
+import com.hv.briskybake.Model.Token;
 import com.hv.briskybake.ViewHolder.CartAdapter;
 import com.hv.briskybake.ViewHolder.CartViewHolder;
 
@@ -153,7 +154,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 for (DataSnapshot postSnapshot:snapshot.getChildren())
                 {
-              //      Token serverToken=postSnapshot.getValue(Token.this);
+                   Token serverToken=postSnapshot.getValue(Token.class);
+
                 }
             }
 
