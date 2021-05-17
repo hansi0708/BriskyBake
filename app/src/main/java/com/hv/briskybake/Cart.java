@@ -3,11 +3,12 @@ package com.hv.briskybake;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -30,9 +31,13 @@ import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Helper.RecyclerItemTouchHelper;
 import com.hv.briskybake.Interface.RecyclerItemTouchHelperListener;
+import com.hv.briskybake.Model.MyResponse;
+import com.hv.briskybake.Model.Notification;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.Model.Request;
+import com.hv.briskybake.Model.Sender;
 import com.hv.briskybake.Model.Token;
+import com.hv.briskybake.Remote.APIService;
 import com.hv.briskybake.ViewHolder.CartAdapter;
 import com.hv.briskybake.ViewHolder.CartViewHolder;
 
@@ -40,6 +45,10 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
@@ -55,12 +64,17 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
 
+    APIService mServices;
+
     RelativeLayout rootLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
+
+        //Init Service
+        mServices=Common.getFCMService();
 
         rootLayout=findViewById(R.id.rootLayout);
         //Firebase
@@ -101,13 +115,14 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         alertDialog.setTitle("One More Step!");
         alertDialog.setMessage("Enter your Address: ");
 
-        final EditText edtAddress = new EditText(Cart.this);
-        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        edtAddress.setLayoutParams(lp);
-        alertDialog.setView(edtAddress);// Add edit Text to alert Dialog
+
+        LayoutInflater inflater=this.getLayoutInflater();
+        View order_address_comment=inflater.inflate(R.layout.order_address_comment,null);
+
+        EditText tbaddress=order_address_comment.findViewById(R.id.taddress);
+        EditText tbcomment=order_address_comment.findViewById(R.id.tcomment);
+
+        alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.carticon);
         alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
             @Override
@@ -116,8 +131,10 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        edtAddress.getText().toString(),
+                        tbaddress.getText().toString(),
                         txtTotalPrice.getText().toString(),
+                        "0",
+                        tbcomment.getText().toString(),
                         cart
                 );
 
@@ -155,6 +172,30 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 for (DataSnapshot postSnapshot:snapshot.getChildren())
                 {
                    Token serverToken=postSnapshot.getValue(Token.class);
+
+                   //Create raw payload to send
+                    Notification notification=new Notification("BriskyBake","You have an order"+order_number);
+                    Sender content=new Sender(serverToken.getToken(),notification);
+
+                    mServices.sendNotification(content)
+                            .enqueue(new Callback<MyResponse>() {
+                                @Override
+                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
+                                    if (response.body().success==1) {
+                                        Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
+                                        finish();
+                                    }
+                                    else
+                                    {
+                                        Toast.makeText(Cart.this, "Failed!!", Toast.LENGTH_SHORT).show();
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<MyResponse> call, Throwable t) {
+                                    Log.e("ERROR",t.getMessage());
+                                }
+                            });
 
                 }
             }

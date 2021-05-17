@@ -5,9 +5,18 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 import com.hv.briskybake.Model.User;
+import com.hv.briskybake.Remote.APIService;
+import com.hv.briskybake.Remote.RetrofitClient;
 
 public class Common {
     public static User currentUser;
+
+    private static final String BASE_URL="";
+
+    public static APIService getFCMService()
+    {
+        return RetrofitClient.getClient(BASE_URL).create(APIService.class);
+    }
 
     public static final String DELETE="Delete";
     public static final String USER_KEY="User";
