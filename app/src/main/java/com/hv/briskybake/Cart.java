@@ -175,19 +175,21 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                    //Create raw payload to send
                     Notification notification=new Notification("BriskyBake","You have an order"+order_number);
+                    assert serverToken != null;
                     Sender content=new Sender(serverToken.getToken(),notification);
 
                     mServices.sendNotification(content)
                             .enqueue(new Callback<MyResponse>() {
                                 @Override
                                 public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-                                    if (response.body().success==1) {
-                                        Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
-                                        finish();
-                                    }
-                                    else
-                                    {
-                                        Toast.makeText(Cart.this, "Failed!!", Toast.LENGTH_SHORT).show();
+
+                                    if (response.code() == 200){
+                                        if (response.body().success == 1) {
+                                            Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
+                                            finish();
+                                        } else {
+                                            Toast.makeText(Cart.this, "Failed!!", Toast.LENGTH_SHORT).show();
+                                        }
                                     }
                                 }
 

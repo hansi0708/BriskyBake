@@ -6,6 +6,9 @@ public class Token {
     public Task<String> token;
     private boolean isServerToken;
 
+    public Token() {
+    }
+
     public Token(Task<String> token, boolean isServerToken) {
         this.token = token;
         this.isServerToken = isServerToken;

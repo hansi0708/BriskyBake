@@ -11,7 +11,7 @@ import com.hv.briskybake.Remote.RetrofitClient;
 public class Common {
     public static User currentUser;
 
-    private static final String BASE_URL="";
+    private static final String BASE_URL="https://fcm.googleapis.com/";
 
     public static APIService getFCMService()
     {
