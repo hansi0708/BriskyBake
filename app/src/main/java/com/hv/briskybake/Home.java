@@ -42,6 +42,8 @@ import com.hv.briskybake.ViewHolder.MenuViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.util.Objects;
+
 import io.paperdb.Paper;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -211,7 +213,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         swipeRefreshLayout.setRefreshing(false);
 
         //Animation
-        recycler_menu.getAdapter().notifyDataSetChanged();
+        Objects.requireNonNull(recycler_menu.getAdapter()).notifyDataSetChanged();
         recycler_menu.scheduleLayoutAnimation();
     }
 

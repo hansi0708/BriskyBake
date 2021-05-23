@@ -64,6 +64,12 @@ public class SplashScreen extends AppCompatActivity {
                         Intent i=new Intent(getBaseContext(),MainActivity.class);
                         startActivity(i);
                     }
+                    else
+                    {
+                        assert email != null;
+                        if (!email.isEmpty() && !pwd.isEmpty())
+                            login(email, pwd);
+                    }
 
                     finish();
                 }
@@ -73,12 +79,6 @@ public class SplashScreen extends AppCompatActivity {
             }
 
         };thread.start();
-
-        if (email != null && pwd != null) {
-
-            if (!email.isEmpty() && !pwd.isEmpty())
-                login(email, pwd);
-        }
     }
 
     private void login(String email, String pwd) {
@@ -86,7 +86,7 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                User user = snapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue(User.class);
+                User user = snapshot.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).getValue(User.class);
 
                 mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(SplashScreen.this, new OnCompleteListener<AuthResult>() {
                     @Override

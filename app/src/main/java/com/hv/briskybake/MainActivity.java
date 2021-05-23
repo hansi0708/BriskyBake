@@ -18,12 +18,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.FirebaseException;
-import com.google.firebase.auth.ActionCodeSettings;
-import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
-import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.PhoneAuthCredential;
 import com.google.firebase.auth.PhoneAuthOptions;
@@ -32,6 +28,7 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Model.User;
 
+import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
@@ -93,7 +90,6 @@ public class MainActivity extends AppCompatActivity {
                     } else if (!(email.isEmpty() && pwd.isEmpty() && name.isEmpty() && phone.isEmpty())) {
 
                         showAlertDialog(phone);
-
 
                     } else {
                         Toast.makeText(MainActivity.this, "Error occurred", Toast.LENGTH_SHORT).show();
@@ -209,127 +205,65 @@ public class MainActivity extends AppCompatActivity {
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
 
         String email = tbemail.getText().toString().trim();
+        String pwd = tbpassword.getText().toString().trim();
+        String name = tbname.getText().toString().trim();
+        String phone = tbphone.getText().toString().trim();
 
-        mFirebaseAuth.signInWithCredential(phoneAuthCredential)
+        mFirebaseAuth.createUserWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
+                            Log.d(TAG, "createUserWithEmail:success");
+                         //   FirebaseUser user = mAuth.getCurrentUser();
+                            Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).linkWithCredential(phoneAuthCredential)
+                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                                        @Override
+                                        public void onComplete(@NonNull Task<AuthResult> task) {
+                                            if (task.isSuccessful()) {
+                                                Log.d(TAG, "Successfully linked emailLink credential!");
+                                                AuthResult result = task.getResult();
+                                                User user = new User(name, email, phone);
+                                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                    @Override
+                                                    public void onComplete(@NonNull Task<Void> task) {
+                                                        if (task.isSuccessful()) {
+                                                            Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
 
-                            FirebaseUser user = task.getResult().getUser();
-
-                            sendLink(email);
-
-                            linkAccount();
-
-
-                            // Update UI
+                                                Intent intent = new Intent(MainActivity.this, Home.class);
+                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                                startActivity(intent);
+                                                // You can access the new user via result.getUser()
+                                                // Additional user info profile *not* available via:
+                                                // result.getAdditionalUserInfo().getProfile() == null
+                                                // You can check if the user is new or existing:
+                                                // result.getAdditionalUserInfo().isNewUser()
+                                            } else {
+                                                Log.e(TAG, "Error linking emailLink credential", task.getException());
+                                            }
+                                        }
+                                    });
+                          //  updateUI(user);
                         } else {
-                            // Sign in failed, display a message and update the UI
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            if (task.getException() instanceof FirebaseAuthInvalidCredentialsException) {
-                                // The verification code entered was invalid
-                            }
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                           // updateUI(null);
                         }
                     }
                 });
+
+
     }
-
-    private void linkAccount() {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        Intent intent = getIntent();
-        String emailLink = intent.getData().toString();
-        String email = tbemail.getText().toString().trim();
-
-        linkWithSignInLink(email,emailLink);
-    }
-
-    public void linkWithSignInLink(String email, String emailLink) {
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-
-        // [START auth_link_with_link]
-        // Construct the email link credential from the current URL.
-        AuthCredential credential =
-                EmailAuthProvider.getCredentialWithLink(email, emailLink);
-
-       // String email = tbemail.getText().toString().trim();
-       // String pwd = tbpassword.getText().toString().trim();
-        String name = tbname.getText().toString().trim();
-        String phone = tbphone.getText().toString().trim();
-
-        // Link the credential to the current user.
-        auth.getCurrentUser().linkWithCredential(credential)
-                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Successfully linked emailLink credential!");
-                            AuthResult result = task.getResult();
-                            User user = new User(name, email, phone);
-                            FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                @Override
-                                public void onComplete(@NonNull Task<Void> task) {
-                                    if (task.isSuccessful()) {
-                                        Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
-                                    }
-                                }
-                            });
-
-                            Intent intent = new Intent(MainActivity.this, Home.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            // You can access the new user via result.getUser()
-                            // Additional user info profile *not* available via:
-                            // result.getAdditionalUserInfo().getProfile() == null
-                            // You can check if the user is new or existing:
-                            // result.getAdditionalUserInfo().isNewUser()
-                        } else {
-                            Log.e(TAG, "Error linking emailLink credential", task.getException());
-                        }
-                    }
-                });
-        // [END auth_link_with_link]
-    }
-
 
     private void verifyCode(String codeByUser) {
         PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verifictionCodeBySystem, codeByUser);
         signInWithPhoneAuthCredential(credential);
-    }
-
-    public void sendLink(String email) {
-        ActionCodeSettings actionCodeSettings =
-            ActionCodeSettings.newBuilder()
-                    // URL you want to redirect back to. The domain (www.example.com) for this
-                    // URL must be whitelisted in the Firebase Console.
-                    .setUrl("https://www.example.com/finishSignUp?cartId=1234")
-                    // This must be true
-                    .setHandleCodeInApp(true)
-                    .setIOSBundleId("com.example.ios")
-                    .setAndroidPackageName(
-                            "com.example.android",
-                            true, /* installIfNotAvailable */
-                            "12"    /* minimumVersion */)
-                    .build();
-        sendSignInLink(email,actionCodeSettings);
-
-    }
-
-    public void sendSignInLink(String email, ActionCodeSettings actionCodeSettings) {
-        // [START auth_send_sign_in_link]
-        FirebaseAuth auth = FirebaseAuth.getInstance();
-        auth.sendSignInLinkToEmail(email, actionCodeSettings)
-                .addOnCompleteListener(new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Log.d(TAG, "Email sent.");
-                        }
-                    }
-                });
-        // [END auth_send_sign_in_link]
     }
 
 }
