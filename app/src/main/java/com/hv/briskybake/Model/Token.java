@@ -1,24 +1,22 @@
 package com.hv.briskybake.Model;
 
-import com.google.android.gms.tasks.Task;
-
 public class Token {
-    public Task<String> token;
+    public String token;
     private boolean isServerToken;
 
     public Token() {
     }
 
-    public Token(Task<String> token, boolean isServerToken) {
+    public Token(String token, boolean isServerToken) {
         this.token = token;
         this.isServerToken = isServerToken;
     }
 
-    public Task<String> getToken() {
+    public String getToken() {
         return token;
     }
 
-    public void setToken(Task<String> token) {
+    public void setToken(String token) {
         this.token = token;
     }
 

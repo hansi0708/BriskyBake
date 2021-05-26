@@ -24,6 +24,8 @@ import com.google.firebase.database.ValueEventListener;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Model.User;
 
+import java.util.Objects;
+
 import io.paperdb.Paper;
 
 public class Login extends AppCompatActivity {
@@ -118,7 +120,7 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                                    User user = snapshot.child(FirebaseAuth.getInstance().getCurrentUser().getUid()).getValue(User.class);
+                                    User user = snapshot.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).getValue(User.class);
 
                                 mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                     @Override

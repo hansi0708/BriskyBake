@@ -4,7 +4,6 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -12,18 +11,15 @@ import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Model.Token;
 
 public class MyFirebaseIdServices extends FirebaseMessagingService {
-
- //   @Override
-    public void onNewToken(@NonNull Task<String> s) {
-        super.onNewToken(String.valueOf(s));
-        Log.d("NEW_TOKEN", String.valueOf(s));
-        Task<String> token=s;
+    @Override
+    public void onNewToken(@NonNull String s) {
+        super.onNewToken(s);
+        Log.d("NEW_TOKEN",s);
         if (Common.currentUser!=null)
-            updateTokenToFirebase(token);
+            updateTokenToFirebase(s);
     }
 
-
-    private void updateTokenToFirebase(Task<String> token) {
+    private void updateTokenToFirebase(String token) {
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference tokens=db.getReference("Tokens");
 

@@ -223,9 +223,8 @@ public class MainActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d(TAG, "Successfully linked emailLink credential!");
-                                                AuthResult result = task.getResult();
                                                 User user = new User(name, email, phone);
-                                                FirebaseDatabase.getInstance().getReference("Users").child(FirebaseAuth.getInstance().getCurrentUser().getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                                FirebaseDatabase.getInstance().getReference("Users").child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override
                                                     public void onComplete(@NonNull Task<Void> task) {
                                                         if (task.isSuccessful()) {
@@ -247,7 +246,6 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                          //  updateUI(user);
                         } else {
                             // If sign in fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
