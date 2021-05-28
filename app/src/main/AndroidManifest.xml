@@ -15,8 +15,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
-
-
+        <activity android:name=".fortesting"></activity>
         <activity android:name=".OrderStatus" />
         <activity
             android:name=".ForgetPassword"
@@ -39,14 +38,6 @@
             android:name=".Login"
             android:label="@string/log_in" />
         <activity android:name=".MainActivity" />
-
-        <service
-            android:name=".Services.MyFirebaseIdServices"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
 
         <service
             android:name=".Services.MyFirebaseMessaging"

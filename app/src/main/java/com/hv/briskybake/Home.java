@@ -27,14 +27,12 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
-import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.installations.FirebaseInstallations;
-import com.google.firebase.installations.InstallationTokenResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Interface.ItemClickListener;
@@ -187,22 +185,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         textfullname.setText(Common.currentUser.getName());
 
 
-
-        FirebaseInstallations.getInstance().getToken(false).addOnCompleteListener(new OnCompleteListener<InstallationTokenResult>() {
-            @Override
-            public void onComplete(@NonNull Task<InstallationTokenResult> task) {
-                if(!task.isSuccessful()){
-                    return;
-                }
-                // Get new Instance ID token
-               t = Objects.requireNonNull(task.getResult()).getToken();
-
-            }
-        });
-
-
-
-        updateToken(t);
+        updateToken(FirebaseMessaging.getInstance().getToken());
         //Load Menu
         recycler_menu=findViewById(R.id.recycler_menu);
        // recycler_menu.setHasFixedSize(true);
@@ -217,7 +200,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     public static String phone=Common.currentUser.getPhone();
 
-    private void updateToken(String token) {
+    private void updateToken(Task<String> token) {
         FirebaseDatabase db=FirebaseDatabase.getInstance();
         DatabaseReference tokens=db.getReference("Tokens");
         Token data=new Token(token,false);

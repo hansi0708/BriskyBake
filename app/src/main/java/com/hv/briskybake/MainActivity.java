@@ -33,10 +33,10 @@ import java.util.concurrent.TimeUnit;
 
 public class MainActivity extends AppCompatActivity {
 
-    EditText tbname, tbemail, tbphone, tbpassword;
-    Button btnRegister, bsignin;
+    EditText tbName, tbEmail, tbPhone, tbPassword;
+    Button btnRegister, bSignIn;
 
-    String verifictionCodeBySystem;
+    String verificationCodeBySystem;
 
     FirebaseAuth mFirebaseAuth;
 
@@ -49,12 +49,11 @@ public class MainActivity extends AppCompatActivity {
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
-        tbname = findViewById(R.id.TextNamesignup);
-        tbemail = findViewById(R.id.TextEmailsignup);
-        tbphone = findViewById(R.id.TextPhonesignup);
-        tbpassword = findViewById(R.id.TextPasswordsignup);
+        tbName = findViewById(R.id.TextNamesignup);
+        tbEmail = findViewById(R.id.TextEmailsignup);
+        tbPhone = findViewById(R.id.TextPhonesignup);
+        tbPassword = findViewById(R.id.TextPasswordsignup);
         btnRegister = findViewById(R.id.btnsignup);
-
 
         btnRegister.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,31 +61,31 @@ public class MainActivity extends AppCompatActivity {
 
                 if (Common.isConnectToInternet(getBaseContext())) {
 
-                    String email = tbemail.getText().toString().trim();
-                    String pwd = tbpassword.getText().toString().trim();
-                    String name = tbname.getText().toString().trim();
-                    String phone = tbphone.getText().toString().trim();
+                    String email = tbEmail.getText().toString().trim();
+                    String pwd = tbPassword.getText().toString().trim();
+                    String name = tbName.getText().toString().trim();
+                    String phone = tbPhone.getText().toString().trim();
 
                     if (email.isEmpty() && pwd.isEmpty() && name.isEmpty() && phone.isEmpty()) {
                         Toast.makeText(MainActivity.this, "Please enter the details", Toast.LENGTH_SHORT).show();
                     } else if (name.isEmpty()) {
-                        tbname.setError("Please enter name");
-                        tbname.requestFocus();
+                        tbName.setError("Please enter name");
+                        tbName.requestFocus();
                     } else if (email.isEmpty()) {
-                        tbemail.setError("Please enter email");
-                        tbemail.requestFocus();
+                        tbEmail.setError("Please enter email");
+                        tbEmail.requestFocus();
                     } else if (phone.isEmpty()) {
-                        tbphone.setError("Please enter phone number");
-                        tbphone.requestFocus();
+                        tbPhone.setError("Please enter phone number");
+                        tbPhone.requestFocus();
                     } else if (phone.length() != 10) {
-                        tbphone.setError("Phone number should be of 10 digits");
-                        tbphone.requestFocus();
+                        tbPhone.setError("Phone number should be of 10 digits");
+                        tbPhone.requestFocus();
                     } else if (pwd.isEmpty()) {
-                        tbpassword.setError("Please enter password");
-                        tbpassword.requestFocus();
+                        tbPassword.setError("Please enter password");
+                        tbPassword.requestFocus();
                     } else if (pwd.length() < 6) {
-                        tbpassword.setError("Password should be atleast 6 characters");
-                        tbpassword.requestFocus();
+                        tbPassword.setError("Password should be atleast 6 characters");
+                        tbPassword.requestFocus();
                     } else if (!(email.isEmpty() && pwd.isEmpty() && name.isEmpty() && phone.isEmpty())) {
 
                         showAlertDialog(phone);
@@ -96,26 +95,23 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     Toast.makeText(MainActivity.this, "Please check your connection", Toast.LENGTH_SHORT).show();
-                    return;
                 }
             }
         });
 
-        bsignin = findViewById(R.id.directtosignin);
+        bSignIn = findViewById(R.id.directtosignin);
 
-        bsignin.setOnClickListener(new View.OnClickListener() {
+        bSignIn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(MainActivity.this, Login.class));
             }
         });
 
-
     }
 
     private void reload() {
     }
-
 
     @Override
     public void onStart() {
@@ -137,9 +133,11 @@ public class MainActivity extends AppCompatActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
+
         edtOTP.setLayoutParams(lp);
-        alertDialog.setView(edtOTP);
         edtOTP.setInputType(InputType.TYPE_TEXT_VARIATION_PHONETIC);
+        alertDialog.setView(edtOTP);
+
 
         sendVerificationCodeToUser(phoneNo);
 
@@ -153,16 +151,31 @@ public class MainActivity extends AppCompatActivity {
                     edtOTP.requestFocus();
                     return;
                 }
-                verifyCode(code);
+           //     createAccount();
+                PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCodeBySystem, code);
+                String c=credential.getSmsCode();
+                Toast.makeText(MainActivity.this, ""+c, Toast.LENGTH_SHORT).show();
+                if (c.equals(code))
+                {
+                    createAccount(code);
+
+                //    signInWithPhoneAuthCredential(credential);
+
+                }
+
+             //   signInWithPhoneAuthCredential(credential);
+
             }
         });
 
         alertDialog.setNegativeButton("RESEND", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                Toast.makeText(MainActivity.this, "Resending Code", Toast.LENGTH_SHORT).show();
                 sendVerificationCodeToUser(phoneNo);
             }
         });
+
         alertDialog.show();
 
     }
@@ -177,61 +190,86 @@ public class MainActivity extends AppCompatActivity {
                         .setCallbacks(mCallbacks)          // OnVerificationStateChangedCallbacks
                         .build();
         PhoneAuthProvider.verifyPhoneNumber(options);
+
     }
 
     private final PhoneAuthProvider.OnVerificationStateChangedCallbacks mCallbacks = new PhoneAuthProvider.OnVerificationStateChangedCallbacks() {
         @Override
         public void onCodeSent(@NonNull String s, @NonNull PhoneAuthProvider.ForceResendingToken forceResendingToken) {
+            Toast.makeText(MainActivity.this, "Code sent "+s, Toast.LENGTH_SHORT).show();
             super.onCodeSent(s, forceResendingToken);
-            verifictionCodeBySystem = s;
+            verificationCodeBySystem = s;
+          //  Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
         }
 
         @Override
         public void onVerificationCompleted(@NonNull PhoneAuthCredential phoneAuthCredential) {
-            // signInWithPhoneAuthCredential(phoneAuthCredential);
 
-            String code = phoneAuthCredential.getSmsCode();
-            if (code != null) {
-                verifyCode(code);
-            }
+            Toast.makeText(MainActivity.this, "Verification completed", Toast.LENGTH_SHORT).show();
+
+            //createAccount(code);
+
+        //    signInWithPhoneAuthCredential(phoneAuthCredential);
+
         }
 
         @Override
         public void onVerificationFailed(@NonNull FirebaseException e) {
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
+
     };
 
-    private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
+    private void createAccount(String code) {
 
-        String email = tbemail.getText().toString().trim();
-        String pwd = tbpassword.getText().toString().trim();
-        String name = tbname.getText().toString().trim();
-        String phone = tbphone.getText().toString().trim();
+        String email = tbEmail.getText().toString().trim();
+        String pwd = tbPassword.getText().toString().trim();
+        String name = tbName.getText().toString().trim();
+        String phone = tbPhone.getText().toString().trim();
 
-        mFirebaseAuth.createUserWithEmailAndPassword(email, pwd)
+        mFirebaseAuth.createUserWithEmailAndPassword(email,pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
+                        if (task.isSuccessful())
+                        {
+                            Toast.makeText(MainActivity.this, "Created account", Toast.LENGTH_SHORT).show();
                             // Sign in success, update UI with the signed-in user's information
+                            mFirebaseAuth.getCurrentUser();
+
+                            User user = new User(name, email, phone);
+                            FirebaseDatabase.getInstance().getReference("Users").child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
+                                        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCodeBySystem, code);
+                                        signInWithPhoneAuthCredential(credential);
+                                    }
+                                }
+                            });
                             Log.d(TAG, "createUserWithEmail:success");
-                         //   FirebaseUser user = mAuth.getCurrentUser();
-                            Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).linkWithCredential(phoneAuthCredential)
+                        }
+                        else
+                        {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                            Toast.makeText(MainActivity.this, "Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+    }
+
+    private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
+
+        Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).linkWithCredential(phoneAuthCredential)
                                     .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
                                         @Override
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d(TAG, "Successfully linked emailLink credential!");
-                                                User user = new User(name, email, phone);
-                                                FirebaseDatabase.getInstance().getReference("Users").child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
-                                                    @Override
-                                                    public void onComplete(@NonNull Task<Void> task) {
-                                                        if (task.isSuccessful()) {
-                                                            Toast.makeText(MainActivity.this, "Register success", Toast.LENGTH_SHORT).show();
-                                                        }
-                                                    }
-                                                });
+                                                Toast.makeText(MainActivity.this, "Linked account", Toast.LENGTH_SHORT).show();
 
                                                 Intent intent = new Intent(MainActivity.this, Home.class);
                                                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -246,22 +284,9 @@ public class MainActivity extends AppCompatActivity {
                                             }
                                         }
                                     });
-                        } else {
-                            // If sign in fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(MainActivity.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                           // updateUI(null);
-                        }
-                    }
-                });
 
 
     }
 
-    private void verifyCode(String codeByUser) {
-        PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verifictionCodeBySystem, codeByUser);
-        signInWithPhoneAuthCredential(credential);
-    }
 
 }
