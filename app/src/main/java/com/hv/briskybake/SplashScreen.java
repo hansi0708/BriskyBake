@@ -32,6 +32,8 @@ public class SplashScreen extends AppCompatActivity {
     FirebaseDatabase db;
     DatabaseReference users;
 
+    FirebaseAuth.AuthStateListener mAuthStateListener;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,6 +68,7 @@ public class SplashScreen extends AppCompatActivity {
                     }
                     else
                     {
+
                         assert email != null;
                         if (!email.isEmpty() && !pwd.isEmpty())
                             login(email, pwd);
@@ -86,11 +89,11 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
-
                 mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(SplashScreen.this, new OnCompleteListener<AuthResult>() {
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
+                        User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
+
                         if (!task.isSuccessful()) {
                             Toast.makeText(SplashScreen.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
                         } else {

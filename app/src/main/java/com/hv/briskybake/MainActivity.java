@@ -151,7 +151,7 @@ public class MainActivity extends AppCompatActivity {
                     edtOTP.requestFocus();
                     return;
                 }
-           //     createAccount();
+                //     createAccount();
                 PhoneAuthCredential credential = PhoneAuthProvider.getCredential(verificationCodeBySystem, code);
                 String c=credential.getSmsCode();
                 Toast.makeText(MainActivity.this, ""+c, Toast.LENGTH_SHORT).show();
@@ -159,11 +159,11 @@ public class MainActivity extends AppCompatActivity {
                 {
                     createAccount(code);
 
-                //    signInWithPhoneAuthCredential(credential);
+                    //    signInWithPhoneAuthCredential(credential);
 
                 }
 
-             //   signInWithPhoneAuthCredential(credential);
+                //   signInWithPhoneAuthCredential(credential);
 
             }
         });
@@ -199,7 +199,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, "Code sent "+s, Toast.LENGTH_SHORT).show();
             super.onCodeSent(s, forceResendingToken);
             verificationCodeBySystem = s;
-          //  Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
+            //  Toast.makeText(MainActivity.this, "", Toast.LENGTH_SHORT).show();
         }
 
         @Override
@@ -209,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
 
             //createAccount(code);
 
-        //    signInWithPhoneAuthCredential(phoneAuthCredential);
+            //    signInWithPhoneAuthCredential(phoneAuthCredential);
 
         }
 
@@ -264,26 +264,26 @@ public class MainActivity extends AppCompatActivity {
     private void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential) {
 
         Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).linkWithCredential(phoneAuthCredential)
-                                    .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
-                                        @Override
-                                        public void onComplete(@NonNull Task<AuthResult> task) {
-                                            if (task.isSuccessful()) {
-                                                Log.d(TAG, "Successfully linked emailLink credential!");
-                                                Toast.makeText(MainActivity.this, "Linked account", Toast.LENGTH_SHORT).show();
+                .addOnCompleteListener(new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "Successfully linked emailLink credential!");
+                            Toast.makeText(MainActivity.this, "Linked account", Toast.LENGTH_SHORT).show();
 
-                                                Intent intent = new Intent(MainActivity.this, Home.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                                startActivity(intent);
-                                                // You can access the new user via result.getUser()
-                                                // Additional user info profile *not* available via:
-                                                // result.getAdditionalUserInfo().getProfile() == null
-                                                // You can check if the user is new or existing:
-                                                // result.getAdditionalUserInfo().isNewUser()
-                                            } else {
-                                                Log.e(TAG, "Error linking emailLink credential", task.getException());
-                                            }
-                                        }
-                                    });
+                            Intent intent = new Intent(MainActivity.this, Home.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            // You can access the new user via result.getUser()
+                            // Additional user info profile not available via:
+                            // result.getAdditionalUserInfo().getProfile() == null
+                            // You can check if the user is new or existing:
+                            // result.getAdditionalUserInfo().isNewUser()
+                        } else {
+                            Log.e(TAG, "Error linking emailLink credential", task.getException());
+                        }
+                    }
+                });
 
 
     }

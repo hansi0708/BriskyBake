@@ -79,6 +79,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onClick(View v) {
                 new Database(getBaseContext()).addToCart(new Order(
+                        Common.currentUser.getPhone(),
                         foodId,
                         currentFood.getName(),
                         numberButton.getNumber(),
@@ -90,7 +91,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             }
         });
 
-        btnCart.setCount(new Database(this).getCountCarts());
+        btnCart.setCount(new Database(this).getCountCarts(Common.currentUser.getPhone()));
 
         food_description=findViewById(R.id.food_description);
         food_name=findViewById(R.id.foodname);

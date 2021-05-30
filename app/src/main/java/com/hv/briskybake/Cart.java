@@ -3,7 +3,6 @@ package com.hv.briskybake;
 import android.content.DialogInterface;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,23 +20,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Helper.RecyclerItemTouchHelper;
 import com.hv.briskybake.Interface.RecyclerItemTouchHelperListener;
-import com.hv.briskybake.Model.MyResponse;
-import com.hv.briskybake.Model.Notification;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.Model.Request;
-import com.hv.briskybake.Model.Sender;
-import com.hv.briskybake.Model.Token;
-import com.hv.briskybake.Remote.APIService;
 import com.hv.briskybake.ViewHolder.CartAdapter;
 import com.hv.briskybake.ViewHolder.CartViewHolder;
 
@@ -45,10 +35,6 @@ import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
@@ -64,7 +50,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
 
-    APIService mServices;
 
     RelativeLayout rootLayout;
 
@@ -72,9 +57,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_cart);
-
-        //Init Service
-        mServices=Common.getFCMService();
 
         rootLayout=findViewById(R.id.rootLayout);
         //Firebase
@@ -124,7 +106,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.carticon);
-        alertDialog.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("PLACED", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Create new Request
@@ -144,16 +126,14 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 requests.child(order_number)
                         .setValue(request);
                 //Delete cart
-                new Database(getBaseContext()).cleanCart();
+                new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
 
-                sendNotificationOrder(order_number);
-
-        //        Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
-         //       finish();
+                Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
+                finish();
             }
         });
 
-        alertDialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+        alertDialog.setNegativeButton("CANCEL", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 dialog.dismiss();
@@ -163,54 +143,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
     }
 
-    private void sendNotificationOrder(String order_number) {
-        DatabaseReference tokens=FirebaseDatabase.getInstance().getReference("Tokens");
-        Query data=tokens.orderByChild("isServerToken").equalTo(true);
-        data.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot:snapshot.getChildren())
-                {
-                   Token serverToken=postSnapshot.getValue(Token.class);
-
-                   //Create raw payload to send
-                    Notification notification=new Notification("BriskyBake","You have an order"+order_number);
-                    assert serverToken != null;
-                    Sender content=new Sender(serverToken.getToken(),notification);
-
-                    mServices.sendNotification(content)
-                            .enqueue(new Callback<MyResponse>() {
-                                @Override
-                                public void onResponse(Call<MyResponse> call, Response<MyResponse> response) {
-
-                                    if (response.code() == 200){
-                                        if (response.body().success == 1) {
-                                            Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
-                                            finish();
-                                        } else {
-                                            Toast.makeText(Cart.this, "Failed!!", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                }
-
-                                @Override
-                                public void onFailure(Call<MyResponse> call, Throwable t) {
-                                    Log.e("ERROR",t.getMessage());
-                                }
-                            });
-
-                }
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
-    }
-
     private void loadListFood(){
-        cart = new Database(this).getCarts();
+        cart = new Database(this).getCarts(Common.currentUser.getPhone());
         adapter = new CartAdapter(cart,this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -226,8 +160,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         txtTotalPrice.setText(fmt.format(total));
     }
 
-    //
-
     @Override
     public boolean onContextItemSelected(@NonNull MenuItem item) {
         if(item.getTitle().equals(Common.DELETE))
@@ -237,7 +169,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
     private void deleteCart(int position) {
         cart.remove(position);
-        new Database(this).cleanCart();
+        new Database(this).cleanCart(Common.currentUser.getPhone());
         for(Order item:cart)
             new Database(this).addToCart(item);
         loadListFood();
@@ -248,16 +180,16 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction, int position) {
         if (viewHolder instanceof CartViewHolder)
         {
-            String name=((CartAdapter)recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition()).getProductName();
-            Order deleteItem=((CartAdapter)recyclerView.getAdapter()).getItem(viewHolder.getAdapterPosition());
-            int deleteIndex=viewHolder.getAdapterPosition();
+            String name=((CartAdapter)recyclerView.getAdapter()).getItem(viewHolder.getAbsoluteAdapterPosition()).getProductName();
+            Order deleteItem=((CartAdapter)recyclerView.getAdapter()).getItem(viewHolder.getAbsoluteAdapterPosition());
+            int deleteIndex=viewHolder.getAbsoluteAdapterPosition();
 
             adapter.removeItem(deleteIndex);
             new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(),Common.currentUser.getPhone());
 
             //calculate total price
             int total = 0;
-            List<Order> orders=new Database(getBaseContext()).getCarts();
+            List<Order> orders=new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
             for(Order item:orders)
                 total+=(Integer.parseInt(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
             Locale locale = new Locale("en","IN");
@@ -266,7 +198,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             txtTotalPrice.setText(fmt.format(total));
 
             //Make Snackbar
-            Snackbar snackbar=Snackbar.make(rootLayout,name+"removed from Cart!!",Snackbar.LENGTH_LONG);
+            Snackbar snackbar=Snackbar.make(rootLayout,name+" removed from Cart!!",Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -275,7 +207,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                     //calculate total price
                     int total = 0;
-                    List<Order> orders=new Database(getBaseContext()).getCarts();
+                    List<Order> orders=new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
                     for(Order item:orders)
                         total+=(Integer.parseInt(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
                     Locale locale = new Locale("en","IN");
