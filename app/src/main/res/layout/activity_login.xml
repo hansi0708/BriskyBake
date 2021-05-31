@@ -80,18 +80,6 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <androidx.appcompat.widget.AppCompatCheckBox
-            android:id="@+id/ckbRemember"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/remember_me"
-            android:textColor="@color/black"
-            android:layout_gravity="left"
-            style="@style/Widget.AppCompat.CompoundButton.CheckBox"
-            android:gravity="center_vertical"
-
-            />
-
         <Button
             android:id="@+id/directtofrgpass"
             style="@style/Widget.AppCompat.Button.Borderless"

@@ -58,10 +58,10 @@ public class SplashScreen extends AppCompatActivity {
         String email = Paper.book().read(Common.USER_KEY);
         String pwd = Paper.book().read(Common.PWD_KEY);
 
-        Thread thread = new Thread(){
-            public void run(){
-                try{
-                    sleep(4*1000);
+       // Thread thread = new Thread(){
+       //     public void run(){
+              //  try{
+                  //  sleep(4*1000);
                     if (email == null && pwd == null) {
                         Intent i=new Intent(getBaseContext(),MainActivity.class);
                         startActivity(i);
@@ -111,7 +111,22 @@ public class SplashScreen extends AppCompatActivity {
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
-            }
-        });
+                            }
+                        });
+                    }
+
+                    finish();
+             //   }
+              //  catch(Exception e){
+              //      e.printStackTrace();
+              //  }
+       //     }
+
+      //  };thread.start();
     }
+
+   /// private void login(String email, String pwd) {
+
+
+  //  }
 }

@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -39,7 +38,6 @@ public class Login extends AppCompatActivity {
 
     FirebaseAuth mFirebaseAuth;
 
-    CheckBox ckbRemember;
 
     FirebaseDatabase db;
     DatabaseReference users;
@@ -64,7 +62,6 @@ public class Login extends AppCompatActivity {
         tpassword=findViewById(R.id.TextPasswordsignin);
         btnSignIn=findViewById(R.id.btnsignin);
 
-        ckbRemember=findViewById(R.id.ckbRemember);
 
         Paper.init(this);
 
@@ -93,12 +90,9 @@ public class Login extends AppCompatActivity {
 
                 if(Common.isConnectToInternet(getBaseContext())) {
 
-                    //Save user & password
-                    if(ckbRemember.isChecked())
-                    {
-                        Paper.book().write(Common.USER_KEY,temail.getText().toString());
-                        Paper.book().write(Common.PWD_KEY,tpassword.getText().toString());
-                    }
+                    Paper.book().write(Common.USER_KEY,temail.getText().toString());
+                    Paper.book().write(Common.PWD_KEY,tpassword.getText().toString());
+
 
                     String email = temail.getText().toString().trim();
                     String pwd = tpassword.getText().toString().trim();
@@ -120,10 +114,10 @@ public class Login extends AppCompatActivity {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-
                                 mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(Login.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
+
                                         User user = snapshot.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).getValue(User.class);
 
                                         if (!task.isSuccessful()) {
