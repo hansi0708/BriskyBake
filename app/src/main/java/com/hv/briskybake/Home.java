@@ -27,10 +27,14 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.andremion.counterfab.CounterFab;
 import com.firebase.ui.database.FirebaseRecyclerAdapter;
 import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.navigation.NavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.installations.FirebaseInstallations;
+import com.google.firebase.installations.InstallationTokenResult;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Interface.ItemClickListener;
@@ -42,8 +46,6 @@ import com.squareup.picasso.Picasso;
 import java.util.Objects;
 
 import io.paperdb.Paper;
-
-import static com.hv.briskybake.Common.Common.currentUser;
 
 public class Home extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -74,6 +76,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
+
 
         //View
         swipeRefreshLayout=findViewById(R.id.swipe_layout);
@@ -166,7 +169,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        fab.setCount(new Database(this).getCountCarts(currentUser.getPhone()));
+        fab.setCount(new Database(this).getCountCarts());
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
@@ -181,7 +184,22 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         //Set Name for User
         View headerView=navigationView.getHeaderView(0);
         textfullname=headerView.findViewById(R.id.textFullName);
-        textfullname.setText(currentUser.getName());
+        textfullname.setText(Common.currentUser.getName());
+
+
+
+        FirebaseInstallations.getInstance().getToken(false).addOnCompleteListener(new OnCompleteListener<InstallationTokenResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstallationTokenResult> task) {
+                if(!task.isSuccessful()){
+                    return;
+                }
+                // Get new Instance ID token
+               t = Objects.requireNonNull(task.getResult()).getToken();
+
+            }
+        });
+
 
         //Load Menu
         recycler_menu=findViewById(R.id.recycler_menu);
@@ -194,6 +212,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
      //   recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
 
     }
+
 
     private void loadMenu() {
 
@@ -213,7 +232,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setCount(new Database(this).getCountCarts(currentUser.getPhone()));
+        fab.setCount(new Database(this).getCountCarts());
         if(adapter!=null)
             adapter.startListening();
     }

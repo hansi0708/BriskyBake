@@ -8,6 +8,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -51,7 +52,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     CartAdapter adapter;
 
 
-    RelativeLayout rootLayout;
+    RelativeLayout rootLayout,root_cart,empty_cart_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,28 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         setContentView(R.layout.activity_cart);
 
         rootLayout=findViewById(R.id.rootLayout);
+        root_cart=findViewById(R.id.root_cart);
+        empty_cart_layout=findViewById(R.id.empty_cart_layout);
+
+   //     LayoutInflater inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    //    View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item,null);
+
+        //// LayoutInflater inflater = LayoutInflater
+           //     .from(getApplicationContext());
+    //    @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.empty_cart, null);
+
+        final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
+       // myLayout.addView(hiddenInfo);
+
+        if (cart.size()==0) {
+
+            root_cart.addView(view);
+        }
+        else
+        {
+            empty_cart_layout.removeView(view);
+        }
+
         //Firebase
         database = FirebaseDatabase.getInstance();
         requests=database.getReference("Requests");
@@ -126,7 +149,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 requests.child(order_number)
                         .setValue(request);
                 //Delete cart
-                new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
+                new Database(getBaseContext()).cleanCart();
 
                 Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
                 finish();
@@ -144,7 +167,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     }
 
     private void loadListFood(){
-        cart = new Database(this).getCarts(Common.currentUser.getPhone());
+        cart = new Database(this).getCarts();
         adapter = new CartAdapter(cart,this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -169,7 +192,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
     private void deleteCart(int position) {
         cart.remove(position);
-        new Database(this).cleanCart(Common.currentUser.getPhone());
+        new Database(this).cleanCart();
         for(Order item:cart)
             new Database(this).addToCart(item);
         loadListFood();
@@ -185,11 +208,11 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             int deleteIndex=viewHolder.getAbsoluteAdapterPosition();
 
             adapter.removeItem(deleteIndex);
-            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(),Common.currentUser.getPhone());
+            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId());
 
             //calculate total price
             int total = 0;
-            List<Order> orders=new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
+            List<Order> orders=new Database(getBaseContext()).getCarts();
             for(Order item:orders)
                 total+=(Integer.parseInt(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
             Locale locale = new Locale("en","IN");
@@ -198,7 +221,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             txtTotalPrice.setText(fmt.format(total));
 
             //Make Snackbar
-            Snackbar snackbar=Snackbar.make(rootLayout,name+" removed from Cart!!",Snackbar.LENGTH_LONG);
+            Snackbar snackbar=Snackbar.make(findViewById(android.R.id.content),name+" removed from Cart!!",Snackbar.LENGTH_LONG);
             snackbar.setAction("UNDO", new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -207,7 +230,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                     //calculate total price
                     int total = 0;
-                    List<Order> orders=new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
+                    List<Order> orders=new Database(getBaseContext()).getCarts();
                     for(Order item:orders)
                         total+=(Integer.parseInt(item.getPrice()))*(Integer.parseInt(item.getQuantity()));
                     Locale locale = new Locale("en","IN");

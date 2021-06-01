@@ -32,8 +32,6 @@ public class SplashScreen extends AppCompatActivity {
     FirebaseDatabase db;
     DatabaseReference users;
 
-    FirebaseAuth.AuthStateListener mAuthStateListener;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,48 +66,33 @@ public class SplashScreen extends AppCompatActivity {
                     }
                     else
                     {
+                      //  assert email != null;
+                      //  if (!email.isEmpty() && !pwd.isEmpty())
+                        users.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(@NonNull DataSnapshot snapshot) {
 
-                        assert email != null;
-                        if (!email.isEmpty() && !pwd.isEmpty())
-                            login(email, pwd);
-                    }
+                                mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(SplashScreen.this, new OnCompleteListener<AuthResult>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<AuthResult> task) {
+                                        User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
 
-                    finish();
-                }
-                catch(Exception e){
-                    e.printStackTrace();
-                }
-            }
+                                        if (!task.isSuccessful()) {
+                                            Toast.makeText(SplashScreen.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
+                                        } else {
 
-        };thread.start();
-    }
+                                            Intent i = new Intent(SplashScreen.this, Home.class);
+                                            Common.currentUser =user;
+                                            startActivity(i);
+                                            finish();
+                                        }
+                                    }
+                                });
 
-    private void login(String email, String pwd) {
-        users.addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-
-                mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(SplashScreen.this, new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
-
-                        if (!task.isSuccessful()) {
-                            Toast.makeText(SplashScreen.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
-                        } else {
-
-                            Intent i = new Intent(SplashScreen.this, Home.class);
-                            Common.currentUser =user;
-                            startActivity(i);
-                            finish();
-                        }
-                    }
-                });
-
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
+                       //         login(email, pwd);
+                            }
+                            @Override
+                            public void onCancelled(@NonNull DatabaseError error) {
 
                             }
                         });
