@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:backgroundTint="@color/backgroundcolor"
     android:layout_margin="8dp"
     app:cardElevation="4dp"
     >
@@ -27,7 +28,9 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical|start"
                 android:textAllCaps="true"
+                android:fontFamily="@font/poppins_light"
                 android:textStyle="bold"
+                android:padding="2dp"
                 android:text="#11111"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -37,7 +40,9 @@
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical|start"
                 android:textAllCaps="true"
-                android:textStyle="italic"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins_light"
+                android:padding="2dp"
                 android:text="Status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -47,7 +52,9 @@
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical|start"
                 android:textAllCaps="true"
-                android:textStyle="italic"
+                android:textStyle="bold"
+                android:fontFamily="@font/poppins_light"
+                android:padding="2dp"
                 android:text="123456789"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -57,7 +64,9 @@
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical|start"
                 android:textAllCaps="true"
-                android:textStyle="italic"
+                android:fontFamily="@font/poppins_light"
+                android:padding="2dp"
+                android:textStyle="bold"
                 android:text="Address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

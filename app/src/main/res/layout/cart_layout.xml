@@ -67,6 +67,8 @@
                 android:layout_marginLeft="10dp"
                 android:gravity="center_vertical|start"
                 android:text="Food 01"
+                android:padding="2dp"
+                android:fontFamily="@font/poppins_light"
                 android:textSize="12sp"
                 android:textAllCaps="true"
                 android:textStyle="bold" />
@@ -78,9 +80,11 @@
                 android:layout_gravity="center_vertical|start"
                 android:layout_marginLeft="10dp"
                 android:text="0"
+                android:fontFamily="@font/poppins_light"
+                android:padding="2dp"
                 android:textSize="10sp"
                 android:textAllCaps="true"
-                android:textStyle="italic" />
+                android:textStyle="bold" />
 
         </LinearLayout>
 

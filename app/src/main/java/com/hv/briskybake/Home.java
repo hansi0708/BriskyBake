@@ -286,6 +286,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             logoutIntent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(logoutIntent);
         }
+        else if (id==R.id.nav_profile)
+        {
+            Intent profileIntent=new Intent(Home.this,Profile.class);
+            startActivity(profileIntent);
+        }
 
         DrawerLayout drawer=findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);

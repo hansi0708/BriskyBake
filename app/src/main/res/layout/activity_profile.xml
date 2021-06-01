@@ -1,9 +1,123 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".Profile">
+    android:background="@color/backgroundcolor"
+    tools:context=".Profile"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:gravity="center"
+        android:backgroundTint="@color/backgroundcolor"
+        android:background="@drawable/outline"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <ImageView
+            android:id="@+id/appiconsignin"
+            android:layout_width="150dp"
+            android:layout_height="100dp"
+            android:layout_marginTop="10dp"
+            android:layout_gravity="center"
+            android:src="@drawable/bblogo"
+            android:contentDescription="@string/applogo" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="340dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="30dp"
+        android:backgroundTint="@color/backgroundcolor"
+        android:background="@drawable/outline"
+        android:orientation="vertical"
+        tools:ignore="UselessParent">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nameanother"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_light"
+            android:textStyle="bold"
+            android:layout_marginLeft="8dp"
+            android:textAlignment="textStart"
+            android:gravity="start" />
+
+        <TextView
+            android:id="@+id/name_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="John"
+            android:textSize="18sp"
+            android:fontFamily="@font/poppins_light"
+            android:layout_marginLeft="8dp"
+            android:textColor="@color/black"
+            android:textAlignment="textStart"
+            android:gravity="start" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/emailanother"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:layout_marginTop="2dp"
+            android:fontFamily="@font/poppins_light"
+            android:textStyle="bold"
+            android:layout_marginLeft="8dp"
+            android:textAlignment="textStart"
+            android:gravity="start" />
+
+        <TextView
+            android:id="@+id/email_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="abc@xyz.com"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_light"
+            android:layout_marginLeft="8dp"
+            android:textAlignment="textStart"
+            android:gravity="start" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/phone_number"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_light"
+            android:textStyle="bold"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="2dp"
+            android:textAlignment="textStart"
+            android:gravity="start" />
+
+        <TextView
+            android:id="@+id/phone_user"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="45665433056"
+            android:textSize="18sp"
+            android:textColor="@color/black"
+            android:fontFamily="@font/poppins_light"
+            android:layout_marginLeft="8dp"
+            android:textAlignment="textStart"
+            android:gravity="start" />
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

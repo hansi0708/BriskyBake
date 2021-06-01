@@ -104,7 +104,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
         //Get foodId from intent
         if(getIntent()!=null)
-            foodId=getIntent().getStringExtra("FoodId");
+            foodId=getIntent().getStringExtra("foodId");
         if(!foodId.isEmpty())
         {
             if(Common.isConnectToInternet(getBaseContext()))
@@ -117,7 +117,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 return;
             }
         }
-
     }
 
     private void getRatingFood(String foodId) {
@@ -185,7 +184,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
                 collapsingToolbarLayout.setTitle(currentFood.getName());
 
-                food_price.setText(currentFood.getPrice());
+                food_price.setText(String.format("₹ %s",currentFood.getPrice()));
 
                 food_name.setText(currentFood.getName());
 

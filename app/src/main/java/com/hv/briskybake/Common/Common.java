@@ -4,10 +4,12 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
+import com.hv.briskybake.Model.Request;
 import com.hv.briskybake.Model.User;
 
 public class Common {
     public static User currentUser;
+    public static Request currentRequest;
 
     private static final String BASE_URL="https://fcm.googleapis.com/";
 

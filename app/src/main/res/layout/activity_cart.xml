@@ -18,34 +18,45 @@
     <androidx.cardview.widget.CardView
         android:layout_alignParentBottom="true"
         app:cardBackgroundColor="@color/buttoncolor"
+        android:background="@drawable/btncorners"
         android:layout_width="match_parent"
         android:layout_height="100dp">
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@drawable/btncorners"
+            >
 
             <LinearLayout
                 android:layout_margin="8dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:background="@drawable/btncorners"
+                >
 
                 <TextView
                     android:text="Total: "
                     android:textSize="20sp"
+                    android:fontFamily="@font/poppins_light"
                     android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"/>
 
                 <TextView
                     android:id="@+id/total"
-                    android:text="$10,000"
-                    android:textSize="24sp"
+                    android:text="₹10,000"
+                    android:textSize="20sp"
+                    android:fontFamily="@font/poppins_light"
                     android:textColor="@android:color/white"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="3dp"
+                    android:layout_marginBottom="3dp"/>
 
             </LinearLayout>
 
@@ -58,14 +69,16 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginBottom="8dp"
-                android:text="Place Order"
+                android:text="PLACE ORDER"
+                android:fontFamily="@font/poppins_light"
+                android:textStyle="bold"
                 android:textAllCaps="false"
                 android:layout_gravity="center"
                 android:gravity="center"
-                android:background="@color/backgroundcolor"
+                android:background="@drawable/outline"
                 app:backgroundTint="@color/backgroundcolor"
                 android:textColor="@color/black"
-                android:textSize="12sp"
+                android:textSize="16sp"
                 />
 
         </RelativeLayout>

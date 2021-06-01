@@ -15,21 +15,22 @@
             android:padding="16dp">
 
                 <EditText
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/taddress"
                     android:layout_width="296dp"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginTop="10dp"
                     android:ems="10"
                     android:hint="Address"
-                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/poppins_light"
                     android:inputType="text"
-                    android:paddingLeft="5dp"
                     android:textSize="15sp"
                     tools:ignore="Autofill,RtlSymmetry"
-                    android:paddingStart="5dp" />
+                    />
 
                 <EditText
+                    style="@style/Widget.AppCompat.Button.Borderless"
                     android:id="@+id/tcomment"
                     android:layout_width="296dp"
                     android:layout_height="wrap_content"
@@ -37,9 +38,7 @@
                     android:layout_marginTop="10dp"
                     android:ems="10"
                     android:hint="Comment"
-                    android:layout_marginLeft="10dp"
-                    android:paddingLeft="5dp"
-                    android:paddingStart="5dp"
+                    android:fontFamily="@font/poppins_light"
                     android:inputType="text"
                     android:textSize="15sp"
                     tools:ignore="Autofill,RtlSymmetry"

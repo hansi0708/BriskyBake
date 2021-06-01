@@ -8,7 +8,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -52,7 +51,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     CartAdapter adapter;
 
 
-    RelativeLayout rootLayout,root_cart,empty_cart_layout;
+    RelativeLayout rootLayout;
+    //root_cart,empty_cart_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,8 +60,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         setContentView(R.layout.activity_cart);
 
         rootLayout=findViewById(R.id.rootLayout);
-        root_cart=findViewById(R.id.root_cart);
-        empty_cart_layout=findViewById(R.id.empty_cart_layout);
+      //  root_cart=findViewById(R.id.root_cart);
+      //  empty_cart_layout=findViewById(R.id.empty_cart_layout);
 
    //     LayoutInflater inflater = context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     //    View view= LayoutInflater.from(parent.getContext()).inflate(R.layout.menu_item,null);
@@ -70,17 +70,15 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
            //     .from(getApplicationContext());
     //    @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.empty_cart, null);
 
-        final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
+     //   final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
        // myLayout.addView(hiddenInfo);
 
-        if (cart.size()==0) {
 
-            root_cart.addView(view);
-        }
-        else
-        {
-            empty_cart_layout.removeView(view);
-        }
+     //       root_cart.addView(view);
+
+     //   {
+       //     root_cart.removeView(view);
+        //}
 
         //Firebase
         database = FirebaseDatabase.getInstance();
@@ -112,6 +110,13 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         });
 
         loadListFood();
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
 
     }
 
@@ -167,6 +172,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     }
 
     private void loadListFood(){
+        final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
+
         cart = new Database(this).getCarts();
         adapter = new CartAdapter(cart,this);
         adapter.notifyDataSetChanged();
@@ -242,6 +249,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             });
             snackbar.setActionTextColor(Color.YELLOW);
             snackbar.show();
+
+            loadListFood();
         }
     }
 }

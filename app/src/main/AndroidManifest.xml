@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
-        <activity android:name=".Profile"></activity>
+        <activity android:name=".OrderDetails"></activity>
+        <activity android:name=".Profile" />
         <activity android:name=".MainActivity" />
         <activity android:name=".OrderStatus" />
         <activity

@@ -1,5 +1,6 @@
 package com.hv.briskybake;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,6 +19,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.hv.briskybake.Common.Common;
+import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Request;
 import com.hv.briskybake.ViewHolder.OrderViewHolder;
 
@@ -61,6 +63,16 @@ public class OrderStatus extends AppCompatActivity {
                 holder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 holder.txtOrderAddress.setText(model.getAddress());
                 holder.txtOrderPhone.setText(currentUser.getPhone());
+                holder.setItemClickListener(new ItemClickListener() {
+                    @Override
+                    public void onClick(View view, int position, boolean isLongClick) {
+                        Intent detailIntent=new Intent(OrderStatus.this,OrderDetails.class);
+                        Common.currentRequest=model;
+                        detailIntent.putExtra("OrderId",adapter.getRef(position).getKey());
+                        startActivity(detailIntent);
+                      //  finish();
+                    }
+                });
                 holder.btn_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {

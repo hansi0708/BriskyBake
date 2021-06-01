@@ -19,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@style/CardOutline"
+            android:backgroundTint="@color/backgroundcolor"
             android:layout_alignParentTop="true"
             app:mt_hint="Enter your food"
             app:mt_hintColor="@color/buttoncolor"
