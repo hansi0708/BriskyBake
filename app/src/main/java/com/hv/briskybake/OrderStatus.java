@@ -110,13 +110,9 @@ public class OrderStatus extends AppCompatActivity {
                 Toast.makeText(OrderStatus.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+        loadOrders(currentUser.getPhone());
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        adapter.stopListening();
-    }
 
 
 }

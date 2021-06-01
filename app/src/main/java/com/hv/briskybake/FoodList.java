@@ -198,7 +198,7 @@ public class FoodList extends AppCompatActivity {
                     public void onClick(View view, int position, boolean isLongClick) {
                         //Start new Activity
                         Intent foodDetail=new Intent(FoodList.this,FoodDetail.class);
-                        foodDetail.putExtra("foodId",searchadapter.getRef(position).getKey()); //Send food id to new activity
+                        foodDetail.putExtra("FoodId",searchadapter.getRef(position).getKey()); //Send food id to new activity
                         startActivity(foodDetail);
                     }
                 });
@@ -272,13 +272,13 @@ public class FoodList extends AppCompatActivity {
                         {
                             localDB.addToFavorites(adapter.getRef(position).getKey());
                             holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_24);
-                            Toast.makeText(FoodList.this, ""+model.getName()+"was added to Favorites", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FoodList.this, ""+model.getName()+" was added to Favorites", Toast.LENGTH_SHORT).show();
                         }
                         else
                         {
                             localDB.removeFromFavorites(adapter.getRef(position).getKey());
                             holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_border_24);
-                            Toast.makeText(FoodList.this, ""+model.getName()+"was removed from Favorites", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(FoodList.this, ""+model.getName()+" was removed from Favorites", Toast.LENGTH_SHORT).show();
                         }
                     }
                 });

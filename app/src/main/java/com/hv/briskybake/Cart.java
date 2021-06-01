@@ -116,7 +116,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     @Override
     protected void onResume() {
         super.onResume();
-        final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
+      //  final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
 
     }
 
@@ -172,7 +172,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     }
 
     private void loadListFood(){
-        final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
+      //  final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
 
         cart = new Database(this).getCarts();
         adapter = new CartAdapter(cart,this);

@@ -56,13 +56,18 @@ public class SplashScreen extends AppCompatActivity {
         String email = Paper.book().read(Common.USER_KEY);
         String pwd = Paper.book().read(Common.PWD_KEY);
 
-       // Thread thread = new Thread(){
-       //     public void run(){
-              //  try{
-                  //  sleep(4*1000);
+        Thread thread = new Thread(){
+            public void run(){
                     if (email == null && pwd == null) {
-                        Intent i=new Intent(getBaseContext(),MainActivity.class);
-                        startActivity(i);
+                        try {
+                            sleep(3*1000);
+                            Intent i=new Intent(getBaseContext(),MainActivity.class);
+                            startActivity(i);
+                            finish();
+                        }catch(Exception e){
+                                  e.printStackTrace();
+                        }
+
                     }
                     else
                     {
@@ -98,14 +103,10 @@ public class SplashScreen extends AppCompatActivity {
                         });
                     }
 
-                    finish();
-             //   }
-              //  catch(Exception e){
-              //      e.printStackTrace();
-              //  }
-       //     }
 
-      //  };thread.start();
+            }
+
+        };thread.start();
     }
 
    /// private void login(String email, String pwd) {
