@@ -15,30 +15,48 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
-        <activity android:name=".OrderDetails"></activity>
-        <activity android:name=".Profile" />
-        <activity android:name=".MainActivity" />
-        <activity android:name=".OrderStatus" />
+        <activity
+            android:name=".OrderDetails"
+            android:label="Order Details"/>
+
+        <activity android:name=".Profile"
+            android:label="User Profile"/>
+
+        <activity android:name=".MainActivity"
+            android:label="Sign Up"
+            />
+
+        <activity android:name=".OrderStatus"
+            android:label="Order Status"/>
+
         <activity
             android:name=".ForgetPassword"
             android:label="@string/forget_password" />
-        <activity android:name=".FoodDetail" />
-        <activity android:name=".FoodList" />
-        <activity android:name=".Cart" />
+
+        <activity android:name=".FoodDetail"
+            android:label="Details"/>
+
+        <activity android:name=".FoodList"
+            android:label="List"/>
+
+        <activity android:name=".Cart"
+            android:label="Cart"/>
+
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
             android:theme="@style/Theme.BriskyBake.NoActionBar" />
+
         <activity android:name=".SplashScreen">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".Login"
-            android:label="@string/log_in" />
+            android:label="Log In" />
 
         <meta-data
             android:name="preloaded_fonts"

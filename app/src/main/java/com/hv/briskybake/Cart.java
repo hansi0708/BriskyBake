@@ -134,7 +134,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
         alertDialog.setView(order_address_comment);
         alertDialog.setIcon(R.drawable.carticon);
-        alertDialog.setPositiveButton("PLACED", new DialogInterface.OnClickListener() {
+        alertDialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Create new Request
