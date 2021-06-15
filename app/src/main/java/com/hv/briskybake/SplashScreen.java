@@ -71,8 +71,7 @@ public class SplashScreen extends AppCompatActivity {
                     }
                     else
                     {
-                      //  assert email != null;
-                      //  if (!email.isEmpty() && !pwd.isEmpty())
+
                         users.addValueEventListener(new ValueEventListener() {
                             @Override
                             public void onDataChange(@NonNull DataSnapshot snapshot) {
@@ -80,11 +79,12 @@ public class SplashScreen extends AppCompatActivity {
                                 mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(SplashScreen.this, new OnCompleteListener<AuthResult>() {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
-                                        User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
 
                                         if (!task.isSuccessful()) {
                                             Toast.makeText(SplashScreen.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
                                         } else {
+
+                                            User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
 
                                             Intent i = new Intent(SplashScreen.this, Home.class);
                                             Common.currentUser =user;
@@ -94,7 +94,7 @@ public class SplashScreen extends AppCompatActivity {
                                     }
                                 });
 
-                       //         login(email, pwd);
+
                             }
                             @Override
                             public void onCancelled(@NonNull DatabaseError error) {

@@ -252,14 +252,6 @@ public class MainActivity extends AppCompatActivity {
                                                     }
                                                 });
 
-                                      //          Intent intent = new Intent(MainActivity.this, Home.class);
-                                        //        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                          //      startActivity(intent);
-                                                // You can access the new user via result.getUser()
-                                                // Additional user info profile *not* available via:
-                                                // result.getAdditionalUserInfo().getProfile() == null
-                                                // You can check if the user is new or existing:
-                                                // result.getAdditionalUserInfo().isNewUser()
                                             } else {
                                                 Log.e(TAG, "Error linking emailLink credential", task.getException());
                                             }
@@ -287,11 +279,11 @@ public class MainActivity extends AppCompatActivity {
                     mFirebaseAuth.signInWithEmailAndPassword(email, pwd).addOnCompleteListener(MainActivity.this, new OnCompleteListener<AuthResult>() {
                         @Override
                         public void onComplete(@NonNull Task<AuthResult> task) {
-                            User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
 
                             if (!task.isSuccessful()) {
                                 Toast.makeText(MainActivity.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
                             } else {
+                                User user = snapshot.child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).getValue(User.class);
 
                                 Intent i = new Intent(MainActivity.this, Home.class);
                                 Common.currentUser =user;

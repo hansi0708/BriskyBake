@@ -7,6 +7,9 @@ import android.net.NetworkInfo;
 import com.hv.briskybake.Model.Request;
 import com.hv.briskybake.Model.User;
 
+import java.util.Calendar;
+import java.util.Locale;
+
 public class Common {
     public static User currentUser;
     public static Request currentRequest;
@@ -43,5 +46,17 @@ public class Common {
             }
         }
         return false;
+    }
+
+    public static String getDate(long time)
+    {
+        Calendar calendar=Calendar.getInstance(Locale.ENGLISH);
+        calendar.setTimeInMillis(time);
+        StringBuilder date=new StringBuilder(
+                android.text.format.DateFormat.format("dd-MM-yyyy HH:mm"
+                ,calendar)
+                .toString()
+        );
+        return date.toString();
     }
 }

@@ -36,7 +36,7 @@ import java.util.Arrays;
 
 public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
 
-    TextView food_name,food_price,food_description;
+    TextView food_price,food_description;
     ImageView foodimage;
     CollapsingToolbarLayout collapsingToolbarLayout;
     CounterFab btnCart;
@@ -87,13 +87,13 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                         currentFood.getImage()
                 ));
                 Toast.makeText(FoodDetail.this,"Added to Cart", Toast.LENGTH_SHORT).show();
+                btnCart.setCount(new Database(FoodDetail.this).getCountCarts());
+
             }
         });
 
-        btnCart.setCount(new Database(this).getCountCarts());
 
         food_description=findViewById(R.id.food_description);
-        food_name=findViewById(R.id.foodname);
         food_price=findViewById(R.id.food_price);
 
         foodimage=findViewById(R.id.img_food);
@@ -185,8 +185,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 collapsingToolbarLayout.setTitle(currentFood.getName());
 
                 food_price.setText(String.format("₹ %s",currentFood.getPrice()));
-
-                food_name.setText(currentFood.getName());
 
                 food_description.setText(currentFood.getDescription());
             }

@@ -23,6 +23,8 @@ import com.hv.briskybake.Interface.ItemClickListener;
 import com.hv.briskybake.Model.Request;
 import com.hv.briskybake.ViewHolder.OrderViewHolder;
 
+import java.util.Objects;
+
 import static com.hv.briskybake.Common.Common.currentUser;
 
 public class OrderStatus extends AppCompatActivity {
@@ -62,7 +64,8 @@ public class OrderStatus extends AppCompatActivity {
                 holder.txtOrderId.setText(adapter.getRef(position).getKey());
                 holder.txtOrderStatus.setText(Common.convertCodeToStatus(model.getStatus()));
                 holder.txtOrderAddress.setText(model.getAddress());
-                holder.txtOrderPhone.setText(currentUser.getPhone());
+                holder.txtOrderPhone.setText(model.getPhone());
+                holder.txtOrderDate.setText(Common.getDate(Long.parseLong(Objects.requireNonNull(adapter.getRef(position).getKey()))));
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
                     public void onClick(View view, int position, boolean isLongClick) {

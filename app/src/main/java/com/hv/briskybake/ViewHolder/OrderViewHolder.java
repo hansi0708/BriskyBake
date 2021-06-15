@@ -12,7 +12,7 @@ import com.hv.briskybake.R;
 
 public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView txtOrderId, txtOrderStatus, txtOrderPhone, txtOrderAddress;
+    public TextView txtOrderId, txtOrderStatus, txtOrderPhone, txtOrderAddress,txtOrderDate;
 
     private ItemClickListener itemClickListener;
 
@@ -25,6 +25,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         txtOrderStatus=itemView.findViewById(R.id.order_status);
         txtOrderPhone=itemView.findViewById(R.id.order_phone);
         txtOrderAddress=itemView.findViewById(R.id.order_address);
+        txtOrderDate=itemView.findViewById(R.id.order_date);
         btn_delete=itemView.findViewById(R.id.btn_delete);
 
         itemView.setOnClickListener(this);

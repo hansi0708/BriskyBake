@@ -90,6 +90,9 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
+//        Checkout.preload(getApplicationContext());
+  //      Checkout.setKeyID("rzp_test_HCFAKIoVPEq0lb");
+
         //Swipe to delete
         ItemTouchHelper.SimpleCallback itemTouchHelperCallback=new RecyclerItemTouchHelper(0,ItemTouchHelper.LEFT,this);
         new ItemTouchHelper(itemTouchHelperCallback).attachToRecyclerView(recyclerView);
@@ -133,8 +136,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         EditText tbcomment=order_address_comment.findViewById(R.id.tcomment);
 
         alertDialog.setView(order_address_comment);
-        alertDialog.setIcon(R.drawable.carticon);
-        alertDialog.setPositiveButton("CONFIRM", new DialogInterface.OnClickListener() {
+
+        alertDialog.setPositiveButton("PROCEED", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 //Create new Request

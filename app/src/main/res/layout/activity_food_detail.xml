@@ -26,7 +26,7 @@
             <ImageView
                 android:id="@+id/img_food"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="290dp"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
                 app:layout_collapseMode="parallax"/>
@@ -93,56 +93,40 @@
                 app:cardUseCompatPadding="true">
 
                 <LinearLayout
-                    android:orientation="vertical"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@color/backgroundcolor">
+                    android:background="@color/backgroundcolor"
+                    android:orientation="vertical">
 
                     <TextView
-                        android:id="@+id/foodname"
-                        android:layout_marginTop="8dp"
-                        android:padding="12dp"
-                        android:text="@string/food_name"
-                        android:textColor="@color/black"
-                        android:fontFamily="@font/poppins_light"
-                        android:textSize="20sp"
-                        android:textStyle="bold"
+                        android:id="@+id/food_price"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
+                        android:layout_weight="9"
+                        android:fontFamily="@font/poppins_light"
+                        android:padding="12dp"
+                        android:text="@string/_100"
+                        android:textColor="@color/black"
+                        android:textSize="20sp"
+                        android:textStyle="bold" />
 
-                    <LinearLayout
-                        android:id="@+id/layout_price"
-                        android:orientation="horizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            android:id="@+id/food_price"
-                            android:text="@string/_100"
-                            android:textColor="@color/black"
-                            android:textSize="18sp"
-                            android:textStyle="bold"
-                            android:layout_marginLeft="8dp"
-                            android:fontFamily="@font/poppins_light"
-                            android:layout_width="0dp"
-                            android:layout_weight="9"
-                            android:layout_height="wrap_content"/>
-
-                    </LinearLayout>
 
                     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                         android:id="@+id/number_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginLeft="8dp"
                         android:layout_marginStart="8dp"
+                        android:layout_marginLeft="8dp"
+                        android:layout_marginTop="8dp"
                         android:layout_marginBottom="18dp"
-                        app:textSize="8sp"
-                        tools:ignore="SmallSp"
+                        android:baselineAligned="false"
                         app:backGroundColor="@color/buttoncolor"
+                        app:finalNumber="50"
                         app:initialNumber="1"
-                        app:finalNumber="50"/>
+                        app:textSize="8sp"
+                        tools:ignore="SmallSp" />
 
                 </LinearLayout>
 

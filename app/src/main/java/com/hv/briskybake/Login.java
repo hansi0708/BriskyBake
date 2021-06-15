@@ -118,11 +118,12 @@ public class Login extends AppCompatActivity {
                                     @Override
                                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                                        User user = snapshot.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).getValue(User.class);
 
                                         if (!task.isSuccessful()) {
                                             Toast.makeText(Login.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
                                         } else {
+
+                                            User user = snapshot.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).getValue(User.class);
 
                                             Intent i = new Intent(Login.this, Home.class);
                                             Common.currentUser =user;

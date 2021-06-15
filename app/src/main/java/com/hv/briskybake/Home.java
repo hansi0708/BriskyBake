@@ -209,13 +209,11 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         LayoutAnimationController controller= AnimationUtils.loadLayoutAnimation(recycler_menu.getContext(),
                 R.anim.layout_fall_down);
         recycler_menu.setLayoutAnimation(controller);
-     //   recycler_menu.setLayoutManager(new GridLayoutManager(this,2));
 
     }
 
 
     private void loadMenu() {
-
 
         GridLayoutManager gridLayoutManager=new GridLayoutManager(getApplicationContext(),1);
         recycler_menu.setLayoutManager(gridLayoutManager);
@@ -259,19 +257,17 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
 
-        if(id==R.id.nav_refresh) {
-            loadMenu();
+        if(id==R.id.menu_search) {
+            startActivity(new Intent(Home.this,SearchActivity.class));
         }
         return super.onOptionsItemSelected(item);
     }
-
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id=item.getItemId();
 
-        if(id==R.id.nav_menu){
-        }else if(id==R.id.nav_orders){
+        if(id==R.id.nav_orders){
             Intent orderIntent=new Intent(Home.this,OrderStatus.class);
             startActivity(orderIntent);
         }else if(id==R.id.nav_cart){
@@ -296,4 +292,5 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
