@@ -317,6 +317,7 @@ public class FoodList extends AppCompatActivity {
         if(adapter!=null)
             adapter.startListening();
     }
+
 }
 
 

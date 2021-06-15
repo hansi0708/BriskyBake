@@ -116,7 +116,7 @@ public class SearchActivity extends AppCompatActivity {
             }
         });
 
-        recyclerView=findViewById(R.id.recycler_list);
+        recyclerView=findViewById(R.id.recycler_search);
         recyclerView.setHasFixedSize(true);
         layoutManager=new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
