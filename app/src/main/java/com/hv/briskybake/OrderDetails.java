@@ -23,6 +23,11 @@ public class OrderDetails extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_order_details);
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         order_id=findViewById(R.id.order_id);
         order_phone=findViewById(R.id.order_phone);
@@ -50,5 +55,10 @@ public class OrderDetails extends AppCompatActivity {
         adapter.notifyDataSetChanged();
         listFoods.setAdapter(adapter);
 
+    }
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

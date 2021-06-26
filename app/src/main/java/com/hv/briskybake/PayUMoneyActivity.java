@@ -38,8 +38,6 @@ import java.util.Random;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import cn.pedant.SweetAlert.SweetAlertDialog;
-
 public class PayUMoneyActivity extends AppCompatActivity {
 
     WebView webView;
@@ -66,6 +64,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
     int mId;
     private String mMerchantKey = "0OYLyc";//For merchant and salt key you need to contact payu money tech support otherwise you get error
     private String mSalt = "8h6JU9Ac";//copy and paste works fine
+//    private String mBaseURL = "https://secure.payu.in/";
     private String mBaseURL = "https://secure.payu.in/";
     private String mAction = ""; // For Final URL
     private String mTXNId; // This will create below randomly
@@ -76,8 +75,7 @@ public class PayUMoneyActivity extends AppCompatActivity {
     private double mAmount; // From Previous Activity
     private String mPhone; // From Previous Activity
     private String mServiceProvider = "payu_paisa";
-    private String mSuccessUrl = ApplicationConstants.INSTANCE.SUCCESS_URL;
-    private String mFailedUrl = ApplicationConstants.INSTANCE.FAILED_URL;
+
 
 
     boolean isFromOrder;
@@ -168,13 +166,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
                 }
 
                 @Override
-                public void onReceivedSslError(WebView view,
-                                               SslErrorHandler handler, SslError error) {
-                    Toast.makeText(activity, "SSL Error! " + error, Toast.LENGTH_SHORT).show();
-                    handler.proceed();
-                }
-
-                @Override
                 public boolean shouldOverrideUrlLoading(WebView view, String url) {
                     return super.shouldOverrideUrlLoading(view, url);
                 }
@@ -187,27 +178,20 @@ public class PayUMoneyActivity extends AppCompatActivity {
                 @Override
                 public void onPageFinished(WebView view, String url) {
 
-                    if (url.equals(mSuccessUrl)) {
-                        new SweetAlertDialog(PayUMoneyActivity.this, SweetAlertDialog.SUCCESS_TYPE)
-                                .setTitleText("!")
-                                .setContentText("Your txid "+mTXNId)
-                                .show();
+                    if (url.equals("mSuccessUrl")) {
                         Intent intent = new Intent();
                         intent.putExtra("MESSAGE","success");
                         intent.putExtra("oid", mTXNId);
                         setResult(1234,intent);
                         finish();
-                    } else if (url.equals(mFailedUrl)) {
-                        new SweetAlertDialog(PayUMoneyActivity.this, SweetAlertDialog.ERROR_TYPE)
-                                .setTitleText("!")
-                                .setContentText("Your txid "+mTXNId)
-                                .show();
+                    } else if (url.equals("mFailedUrl")) {
                         Intent intent = new Intent();
                         intent.putExtra("MESSAGE","failed");
                         intent.putExtra("oid", mTXNId);
                         setResult(1234,intent);
                         finish();
                     }
+
                     /**
                      * wait 10 seconds to dismiss payu money processing dialog in my case
                      */
@@ -217,7 +201,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
                             progressBarVisibilityPayuChrome(View.GONE);
                         }
                     }, 10000);
-
                     super.onPageFinished(view, url);
                 }
             });
@@ -245,8 +228,8 @@ public class PayUMoneyActivity extends AppCompatActivity {
             mapParams.put("firstname", mFirstName);
             mapParams.put("email", mEmailId);
             mapParams.put("phone", mPhone);
-            mapParams.put("surl", mSuccessUrl);
-            mapParams.put("furl", mFailedUrl);
+            mapParams.put("surl", "mSuccessUrl");
+            mapParams.put("furl", "mFailedUrl");
             mapParams.put("hash", mHash);
             mapParams.put("service_provider", mServiceProvider);
 

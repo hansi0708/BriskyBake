@@ -51,20 +51,13 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
 
     FirebaseDatabase database;
     DatabaseReference category;
-
     TextView textfullname;
-
     RecyclerView recycler_menu;
     RecyclerView.LayoutManager layoutManager;
-
     FirebaseRecyclerAdapter<Category,MenuViewHolder> adapter;
-
     SwipeRefreshLayout swipeRefreshLayout;
-
     CounterFab fab;
-
     FirebaseAuth mAuth;
-
     String t;
 
     @SuppressLint("ResourceAsColor")
@@ -76,6 +69,12 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("Menu");
         setSupportActionBar(toolbar);
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null){
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
 
 
         //View
@@ -292,5 +291,9 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
-
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
+    }
 }

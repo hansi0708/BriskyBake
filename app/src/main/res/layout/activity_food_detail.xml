@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,17 +10,17 @@
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.BriskyBake.NoActionBar"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:theme="@style/Theme.BriskyBake.NoActionBar">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
             android:id="@+id/collapsing"
             android:layout_width="match_parent"
             android:layout_height="350dp"
             android:fitsSystemWindows="true"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:contentScrim="@color/backgroundcolor"
-            app:expandedTitleTextAppearance="@style/Theme.BriskyBake.NoActionBar">
+            app:expandedTitleTextAppearance="@style/Theme.BriskyBake.NoActionBar"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <ImageView
                 android:id="@+id/img_food"
@@ -29,15 +28,15 @@
                 android:layout_height="290dp"
                 android:contentDescription="@null"
                 android:scaleType="centerCrop"
-                app:layout_collapseMode="parallax"/>
+                app:layout_collapseMode="parallax" />
 
             <androidx.appcompat.widget.Toolbar
                 android:id="@+id/toolbar"
-                app:title=""
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_collapseMode="parallax"
                 app:popupTheme="@style/Theme.AppCompat.Light"
-                app:layout_collapseMode="parallax">
+                app:title="">
 
             </androidx.appcompat.widget.Toolbar>
 
@@ -56,8 +55,8 @@
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|end"
         app:pressedTranslationZ="12dp"
-        tools:ignore="UnusedAttribute"
-        app:useCompatPadding="true"/>
+        app:useCompatPadding="true"
+        tools:ignore="UnusedAttribute" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btn_rating"
@@ -70,21 +69,21 @@
         app:layout_anchor="@id/app_bar_layout"
         app:layout_anchorGravity="bottom|right|start"
         app:pressedTranslationZ="12dp"
-        tools:ignore="UnusedAttribute"
-        app:useCompatPadding="true"/>
+        app:useCompatPadding="true"
+        tools:ignore="UnusedAttribute" />
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
-        android:clipToPadding="false"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/backgroundcolor"
+        android:clipToPadding="false"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
@@ -112,6 +111,13 @@
                         android:textSize="20sp"
                         android:textStyle="bold" />
 
+                    <Spinner
+                        android:id="@+id/unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="8dp"
+                        android:spinnerMode="dialog" />
 
                     <com.cepheuen.elegantnumberbutton.view.ElegantNumberButton
                         android:id="@+id/number_button"
@@ -127,43 +133,41 @@
                         app:initialNumber="1"
                         app:textSize="8sp"
                         tools:ignore="SmallSp" />
-
                 </LinearLayout>
-
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
-                app:cardElevation="5dp"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                app:cardElevation="5dp">
 
-               <LinearLayout
-                   android:orientation="vertical"
-                   android:layout_width="match_parent"
-                   android:layout_height="wrap_content"
-                   android:background="@color/backgroundcolor">
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundcolor"
+                    android:orientation="vertical">
 
-                   <RatingBar
-                       android:id="@+id/ratingBar"
-                       android:rating="0"
-                       android:max="5"
-                       android:isIndicator="true"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"/>
+                    <RatingBar
+                        android:id="@+id/ratingBar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:isIndicator="true"
+                        android:max="5"
+                        android:rating="0" />
 
-                   <TextView
-                       android:id="@+id/food_description"
-                       android:layout_marginTop="12dp"
-                       android:lineSpacingMultiplier="1.5"
-                       android:padding="12dp"
-                       android:text="@string/description"
-                       android:fontFamily="@font/poppins_light"
-                       android:textColor="@color/black"
-                       android:textSize="18sp"
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"/>
+                    <TextView
+                        android:id="@+id/food_description"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:fontFamily="@font/poppins_light"
+                        android:lineSpacingMultiplier="1.5"
+                        android:padding="12dp"
+                        android:text="@string/description"
+                        android:textColor="@color/black"
+                        android:textSize="18sp" />
 
-               </LinearLayout>
+                </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
