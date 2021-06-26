@@ -1,20 +1,25 @@
 package com.hv.briskybake;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +33,7 @@ import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Model.Food;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.Model.Rating;
+import com.hv.briskybake.ViewHolder.ShowCommentViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
@@ -39,7 +45,7 @@ import java.util.Arrays;
 
 public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
 
-    TextView food_price, food_description;
+    TextView food_price,food_description;
     ImageView foodimage;
     CollapsingToolbarLayout collapsingToolbarLayout;
     CounterFab btnCart;
@@ -47,14 +53,25 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     ElegantNumberButton numberButton;
     RatingBar ratingBar;
 
-    String foodId = "";
+    String foodId="";
+
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
 
     FirebaseDatabase database;
     DatabaseReference foods;
     DatabaseReference ratingTbl;
 
+    FirebaseRecyclerAdapter<Rating, ShowCommentViewHolder> adapter;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter!=null)
+            adapter.stopListening();
+    }
+
     Food currentFood;
-    Spinner units;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,34 +79,15 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         setContentView(R.layout.activity_food_detail);
 
         //Firebase
-        database = FirebaseDatabase.getInstance();
-        foods = database.getReference("Food");
-        ratingTbl = database.getReference("Rating");
+        database=FirebaseDatabase.getInstance();
+        foods=database.getReference("Food");
+        ratingTbl=database.getReference("Rating");
 
         //Init view
-        numberButton = findViewById(R.id.number_button);
-        btnCart = findViewById(R.id.btnCart);
-        btnRating = findViewById(R.id.btn_rating);
-        ratingBar = findViewById(R.id.ratingBar);
-        units = findViewById(R.id.unit);
-        String[] unit = {"0.5 Kg", "1KG", "2 Kg"};
-        ArrayAdapter aa = new ArrayAdapter(
-                FoodDetail.this,
-                android.R.layout.simple_spinner_item,
-                unit);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//Setting the ArrayAdapter data on the Spinner
-        units.setAdapter(aa);
-        units.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
+        numberButton=findViewById(R.id.number_button);
+        btnCart=findViewById(R.id.btnCart);
+        btnRating=findViewById(R.id.btn_rating);
+        ratingBar=findViewById(R.id.ratingBar);
 
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -109,53 +107,92 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                         currentFood.getDiscount(),
                         currentFood.getImage()
                 ));
-                Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
+                Toast.makeText(FoodDetail.this,"Added to Cart", Toast.LENGTH_SHORT).show();
                 btnCart.setCount(new Database(FoodDetail.this).getCountCarts());
 
             }
         });
 
 
-        food_description = findViewById(R.id.food_description);
-        food_price = findViewById(R.id.food_price);
+        food_description=findViewById(R.id.food_description);
+        food_price=findViewById(R.id.food_price);
 
-        foodimage = findViewById(R.id.img_food);
+        foodimage=findViewById(R.id.img_food);
 
-        collapsingToolbarLayout = findViewById(R.id.collapsing);
+        collapsingToolbarLayout=findViewById(R.id.collapsing);
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
+        recyclerView=findViewById(R.id.recycler_comment);
+        layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         //Get foodId from intent
-        if (getIntent() != null)
-            foodId = getIntent().getStringExtra("FoodId");
-        if (!foodId.isEmpty()) {
-            if (Common.isConnectToInternet(getBaseContext())) {
+        if(getIntent()!=null)
+            foodId=getIntent().getStringExtra("FoodId");
+        if(!foodId.isEmpty())
+        {
+            if(Common.isConnectToInternet(getBaseContext()))
+            {
                 getDetailFood(foodId);
                 getRatingFood(foodId);
-            } else {
+                listComment(foodId);
+            }
+            else{
                 Toast.makeText(FoodDetail.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
     }
 
+    private void listComment(String foodId) {
+        Query query=ratingTbl.orderByChild("foodId").equalTo(foodId);
+
+        FirebaseRecyclerOptions<Rating> options=new FirebaseRecyclerOptions.Builder<Rating>()
+                .setQuery(query,Rating.class)
+                .build();
+
+        adapter=new FirebaseRecyclerAdapter<Rating, ShowCommentViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull @NotNull ShowCommentViewHolder holder, int position, @NonNull @NotNull Rating model) {
+                holder.rating_Bar.setRating(Float.parseFloat(model.getRateValue()));
+                holder.txtComment.setText(model.getComment());
+                holder.txtName.setText(model.getName());
+            }
+
+            @NonNull
+            @NotNull
+            @Override
+            public ShowCommentViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+                View view= LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.show_comment_layout,parent,false);
+                return new ShowCommentViewHolder(view);
+            }
+        };
+
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
+    }
+
     private void getRatingFood(String foodId) {
-        Query foodRating = ratingTbl.orderByChild("foodId").equalTo(foodId);
+        Query foodRating=ratingTbl.orderByChild("foodId").equalTo(foodId);
 
         foodRating.addValueEventListener(new ValueEventListener() {
-            int count = 0, sum = 0;
+            int count=0,sum=0;
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                for (DataSnapshot postSnapshot : snapshot.getChildren()) {
-                    Rating item = postSnapshot.getValue(Rating.class);
-                    sum += Integer.parseInt(item.getRateValue());
+                for (DataSnapshot postSnapshot:snapshot.getChildren())
+                {
+                    Rating item=postSnapshot.getValue(Rating.class);
+                    sum+=Integer.parseInt(item.getRateValue());
                     count++;
                 }
-                if (count != 0) {
-                    float average = sum / count;
-                    ratingBar.setRating(average);
-                }
+               if (count!=0)
+               {
+                   float average=sum/count;
+                   ratingBar.setRating(average);
+               }
             }
 
             @Override
@@ -169,7 +206,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         new AppRatingDialog.Builder()
                 .setPositiveButtonText("Submit")
                 .setNegativeButtonText("Cancel")
-                .setNoteDescriptions(Arrays.asList("Very bad", "Not good", "Quite okay", "Very good", "Excellent"))
+                .setNoteDescriptions(Arrays.asList("Very bad","Not good","Quite okay","Very good","Excellent"))
                 .setDefaultRating(1)
                 .setTitle("Rate this Food")
                 .setDescription("Give your feedback")
@@ -188,7 +225,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         foods.child(foodId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                currentFood = snapshot.getValue(Food.class);
+                currentFood=snapshot.getValue(Food.class);
 
                 Picasso.get().load(currentFood.getImage()).into(foodimage, new Callback() {
                     @Override
@@ -204,7 +241,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
                 collapsingToolbarLayout.setTitle(currentFood.getName());
 
-                food_price.setText(String.format("₹ %s", currentFood.getPrice()));
+                food_price.setText(String.format("₹ %s",currentFood.getPrice()));
 
                 food_description.setText(currentFood.getDescription());
             }
@@ -225,30 +262,44 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String comments) {
 
-        Rating rating = new Rating(Common.currentUser.getPhone(),
+        Rating rating=new Rating(
+                Common.currentUser.getPhone(),
+                Common.currentUser.getName(),
                 foodId,
                 String.valueOf(i),
                 comments);
-        ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
+
+        ratingTbl.push()
+                .setValue(rating)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        Toast.makeText(FoodDetail.this, "Thanks",Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+      /*  ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child(Common.currentUser.getPhone()).exists()) {
+                if (snapshot.child(Common.currentUser.getPhone()).exists())
+                {
                     //Remove previous value
                     ratingTbl.child(Common.currentUser.getPhone()).removeValue();
                     //Update value
                     ratingTbl.child(Common.currentUser.getPhone()).setValue(rating);
-                } else {
+                }
+                else
+                {
                     //Update value
                     ratingTbl.child(Common.currentUser.getPhone()).setValue(rating);
                 }
-                Toast.makeText(FoodDetail.this, "Thanks", Toast.LENGTH_SHORT).show();
-            }
+                Toast.makeText(FoodDetail.this, "Thanks",Toast.LENGTH_SHORT).show();}
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        });*/
 
     }
 

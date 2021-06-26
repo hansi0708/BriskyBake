@@ -19,9 +19,33 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:text="Name"
+                android:textStyle="bold"
+                android:id="@+id/txtName"/>
+
+            <RatingBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/rating_bar"
+                android:rating="3"
+                style="@style/Widget.AppCompat.RatingBar.Small"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"/>
 
 
         </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="Comment"
+            android:textStyle="bold"
+            android:id="@+id/txtComment"/>
         
     </LinearLayout>
 
