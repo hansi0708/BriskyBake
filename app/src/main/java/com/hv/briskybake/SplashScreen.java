@@ -44,6 +44,10 @@ public class SplashScreen extends AppCompatActivity {
 
         setContentView(R.layout.splash_screen);
 
+        if(Common.isConnectToInternet(getBaseContext())) {
+
+        }
+
         //Init Firebase
         db = FirebaseDatabase.getInstance();
         users = db.getReference("Users");

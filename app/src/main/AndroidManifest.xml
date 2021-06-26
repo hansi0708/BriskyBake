@@ -15,7 +15,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BriskyBake"
         tools:replace="android:theme">
-        <activity android:name=".SearchActivity"></activity>
+        <activity
+            android:name=".SearchActivity"/>
         <activity
             android:name=".OrderDetails"
             android:label="Order Details" />
@@ -40,6 +41,10 @@
         <activity
             android:name=".Cart"
             android:label="Cart" />
+        <activity
+            android:theme="@style/Theme.AppCompat.NoActionBar"
+            android:name=".PayUMoneyActivity"
+            android:label="PayMent" />
         <activity
             android:name=".Home"
             android:label="@string/title_activity_home"
