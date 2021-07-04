@@ -172,8 +172,6 @@ public class FoodList extends AppCompatActivity {
         recyclerView.setHasFixedSize(true);
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-
-
     }
 
     private void startSearch(CharSequence text) {
@@ -267,7 +265,8 @@ public class FoodList extends AppCompatActivity {
                 });
 
                 //Add Favorites
-                if (localDB.isFavorites(adapter.getRef(position).getKey(), Common.currentUser.getPhone()))
+//                if (localDB.isFavorites(adapter.getRef(position).getKey(), "Common.currentUser.getPhone()"))
+                if (localDB.isFavorites(adapter.getRef(position).getKey(), "9369995787"))
                     holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_24);
 
                 //Click to change state of favorites

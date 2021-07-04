@@ -58,6 +58,9 @@ public class OrderStatus extends AppCompatActivity {
 
         loadOrders(currentUser.getPhone());
     }
+    public void showmap(View view){
+        startActivity(new Intent(OrderStatus.this,MapsActivity.class));
+    }
 
     private void loadOrders(String phoneNumber) {
         FirebaseRecyclerOptions<Request> options=new FirebaseRecyclerOptions.Builder<Request>()

@@ -8,27 +8,30 @@ public class Order {
     private String Price;
     private String Discount;
     private String Image;
+    private String Unit;
 
     public Order() {
     }
 
-    public Order(String productId, String productName, String quantity, String price, String discount,String image) {
+    public Order(String productId, String productName, String quantity, String price, String discount, String image, String unit) {
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         Price = price;
         Discount = discount;
-        Image=image;
+        Image = image;
+        Unit = unit;
     }
 
-    public Order(int ID, String productId, String productName, String quantity, String price, String discount,String image) {
+    public Order(int ID, String productId, String productName, String quantity, String price, String discount, String image, String unit) {
         this.ID = ID;
         ProductId = productId;
         ProductName = productName;
         Quantity = quantity;
         Price = price;
         Discount = discount;
-        Image=image;
+        Image = image;
+        Unit = unit;
     }
 
     public void setID(int ID) {
@@ -86,4 +89,13 @@ public class Order {
     public void setImage(String image) {
         Image = image;
     }
+
+    public String getUnit() {
+        return Unit;
+    }
+
+    public void setUnit(String unit) {
+        Unit = unit;
+    }
+
 }

@@ -122,7 +122,6 @@ public class Login extends AppCompatActivity {
                                         if (!task.isSuccessful()) {
                                             Toast.makeText(Login.this, "Login error. Please login again", Toast.LENGTH_SHORT).show();
                                         } else {
-
                                             User user = snapshot.child(Objects.requireNonNull(FirebaseAuth.getInstance().getCurrentUser()).getUid()).getValue(User.class);
 
                                             Intent i = new Intent(Login.this, Home.class);
@@ -173,12 +172,8 @@ public class Login extends AppCompatActivity {
     public void onStart() {
         super.onStart();
         // Check if user is signed in (non-null) and update UI accordingly.
-        FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
-        if(currentUser != null){
-            reload();
-        }
-    }
+      //  FirebaseUser currentUser = mFirebaseAuth.getCurrentUser();
 
-    private void reload() { }
+    }
 
 }
