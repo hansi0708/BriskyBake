@@ -110,6 +110,13 @@
                         android:textColor="@color/black"
                         android:textSize="20sp"
                         android:textStyle="bold" />
+                    <Spinner
+                        android:id="@+id/unit"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginLeft="8dp"
+                        android:spinnerMode="dialog" />
 
                     <Spinner
                         android:id="@+id/unit"
@@ -171,7 +178,20 @@
 
             </androidx.cardview.widget.CardView>
 
+            <LinearLayout
+                android:layout_marginTop="10dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/recycler_comment"/>
+
+            </LinearLayout>
+
         </LinearLayout>
+
 
     </androidx.core.widget.NestedScrollView>
 
