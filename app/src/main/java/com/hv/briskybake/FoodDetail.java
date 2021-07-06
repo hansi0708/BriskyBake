@@ -55,7 +55,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
     Food currentFood;
     Spinner units;
-    String unit_count,price_count;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +71,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         btnCart = findViewById(R.id.btnCart);
         btnRating = findViewById(R.id.btn_rating);
         ratingBar = findViewById(R.id.ratingBar);
-        units = findViewById(R.id.unit);
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -87,10 +85,9 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                         foodId,
                         currentFood.getName(),
                         numberButton.getNumber(),
-                        price_count/*currentFood.getPrice()*/,
+                        currentFood.getPrice(),
                         currentFood.getDiscount(),
-                        currentFood.getImage(),
-                        unit_count
+                        currentFood.getImage()
                 ));
                 Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
                 btnCart.setCount(new Database(FoodDetail.this).getCountCarts());
@@ -187,7 +184,7 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 collapsingToolbarLayout.setTitle(currentFood.getName());
 
                 food_description.setText(currentFood.getDescription());
-                set_unit(currentFood.getUnit(), currentFood.getPrice());
+                food_price.setText(currentFood.getPrice());
             }
 
             @Override
@@ -195,36 +192,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
             }
         });
-    }
-    String[] units_list,price_list;
-    private void set_unit(String unit,String price) {
-        units_list = unit.split(",");
-        price_list = price.split(",");
-
-        food_price.setText(String.format("₹ %s", price_list[0]));
-        price_count=price_list[0];
-        ArrayAdapter aa = new ArrayAdapter(
-                FoodDetail.this,
-                android.R.layout.simple_spinner_item,
-                units_list);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//Setting the ArrayAdapter data on the Spinner
-        units.setAdapter(aa);
-        units.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                unit_count=units_list[position];
-                food_price.setText(String.format("₹ %s", price_list[position]));
-                price_count=price_list[position];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
-
-
-
     }
 
     @Override
