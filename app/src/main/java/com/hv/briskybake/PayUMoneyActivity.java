@@ -64,8 +64,8 @@ public class PayUMoneyActivity extends AppCompatActivity {
     int mId;
     private String mMerchantKey = "0OYLyc";//For merchant and salt key you need to contact payu money tech support otherwise you get error
     private String mSalt = "8h6JU9Ac";//copy and paste works fine
-//    private String mBaseURL = "https://secure.payu.in/";
-    private String mBaseURL = "https://secure.payu.in/";
+    //    private String mBaseURL = "https://secure.payu.in/";
+    private String mBaseURL = "https://sandboxsecure.payu.in/";
     private String mAction = ""; // For Final URL
     private String mTXNId; // This will create below randomly
     private String mHash; // This will create below randomly

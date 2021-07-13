@@ -1,20 +1,19 @@
 package com.hv.briskybake.Model;
 
 public class Food {
-    private String Name,Image,Description,Price,Discount,MenuId, Unit;
+    private String Name,Image,Description,Price,Discount,MenuId;
 
     public Food()
     {
 
     }
-    public Food(String name, String image, String description, String price, String discount, String menuId, String unit) {
+    public Food(String name, String image, String description, String price, String discount, String menuId) {
         Name = name;
         Image = image;
         Description = description;
         Price = price;
         Discount = discount;
         MenuId = menuId;
-        Unit= unit;
     }
 
     public String getName() {
@@ -64,8 +63,4 @@ public class Food {
     public void setMenuId(String menuId) {
         MenuId = menuId;
     }
-
-    public String getUnit() { return Unit; }
-
-    public void setUnit(String unit) { Unit = unit; }
 }

@@ -3,7 +3,6 @@ package com.hv.briskybake.Model;
 public class Rating {
 
     private String userPhone;
-    private String name;
     private String foodId;
     private String rateValue;
     private String comment;
@@ -11,27 +10,11 @@ public class Rating {
     public Rating() {
     }
 
-    public Rating(String userPhone, String name, String foodId, String rateValue, String comment) {
-        this.userPhone = userPhone;
-        this.name = name;
-        this.foodId = foodId;
-        this.rateValue = rateValue;
-        this.comment = comment;
-    }
-
     public Rating(String userPhone, String foodId, String rateValue, String comment) {
         this.userPhone = userPhone;
         this.foodId = foodId;
         this.rateValue = rateValue;
         this.comment = comment;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getUserPhone() {
