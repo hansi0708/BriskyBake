@@ -84,6 +84,7 @@ public class OrderStatus extends AppCompatActivity {
                       //  finish();
                     }
                 });
+
                 holder.btn_delete.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -93,6 +94,7 @@ public class OrderStatus extends AppCompatActivity {
                             Toast.makeText(OrderStatus.this, "Order cannot be deleted", Toast.LENGTH_SHORT).show();
                     }
                 });
+
             }
 
             @NonNull

@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 
+import com.hv.briskybake.Model.Favourite;
 import com.hv.briskybake.Model.Order;
 
 import java.util.ArrayList;
@@ -21,14 +22,14 @@ public class Database extends SQLiteOpenHelper {
     private static final int DB_VER=7;  // Database Version
     private static final String TABLE_NAME = "OrderDetail";   // Table Name
 
-    private static final String UID="ID"; // Column I (Primary Key)
+    private static final String USERPHONE="UserPhone"; // Column I (Primary Key)
     private static final String ProductNAME = "ProductName";
     private static final String ProductID = "ProductId";
     private static final String QUANTITY= "Quantity";
     private static final String PRICE= "Price";
     private static final String DISCOUNT= "Discount";
     private static final String IMAGE="Image";
-    private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+ " ( "+UID+" INTEGER PRIMARY KEY AUTOINCREMENT,"+ProductID+" TEXT, "+ProductNAME+" TEXT, "+QUANTITY+" TEXT, "+PRICE+" TEXT, "+DISCOUNT+" TEXT, "+IMAGE+" );";
+    private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+ " ( "+USERPHONE+" TEXT PRIMARY KEY NOT NULL UNIQUE,"+ProductID+" TEXT NOT NULL UNIQUE, "+ProductNAME+" TEXT, "+QUANTITY+" TEXT, "+PRICE+" TEXT, "+DISCOUNT+" TEXT, "+IMAGE+" TEXT );";
     private static final String DROP_TABLE="DROP TABLE IF EXISTS "+TABLE_NAME;
     private Context context;
 
@@ -37,11 +38,28 @@ public class Database extends SQLiteOpenHelper {
         this.context=context;
     }
 
+    public boolean checkFoodExists(String foodId,String userPhone)
+    {
+        boolean flag=false;
+        SQLiteDatabase db=getReadableDatabase();
+        Cursor cursor=null;
+        String SQLQuery=String.format("SELECT * FROM OrderDetail WHERE UserPhone='%s' AND ProductId='%s'",userPhone,foodId);
+        cursor=db.rawQuery(SQLQuery,null);
+        if(cursor.getCount()>0)
+        {
+            flag=true;
+        }
+        else
+            flag=false;
+        cursor.close();
+        return flag;
+    }
+
     @Override
     public void onCreate(SQLiteDatabase db) {
         try {
             db.execSQL(CREATE_TABLE);
-            db.execSQL("CREATE TABLE Favorites ( FoodId TEXT NOT NULL , UserPhone TEXT NOT NULL );" );
+            db.execSQL("CREATE TABLE Favorites ( FoodId TEXT NOT NULL UNIQUE , UserPhone TEXT NOT NULL , FoodName TEXT , FoodPrice TEXT , FoodMenuId TEXT , FoodImage TEXT , FoodDiscount TEXT , FoodDescription TEXT );" );
         } catch (Exception e) {
             Toast.makeText(context, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -58,22 +76,22 @@ public class Database extends SQLiteOpenHelper {
         }
     }
 
-    public List<Order> getCarts()
+    public List<Order> getCarts(String userPhone)
     {
         SQLiteDatabase db=getReadableDatabase();
         SQLiteQueryBuilder qb =new SQLiteQueryBuilder();
 
-        String[] sqlSelect={"ID","ProductName","ProductId","Quantity","Price","Discount","Image"};
+        String[] sqlSelect={"UserPhone","ProductName","ProductId","Quantity","Price","Discount","Image"};
         String sqlTable="OrderDetail";
 
         qb.setTables(sqlTable);
-        Cursor c=qb.query(db,sqlSelect,null,null,null,null,null);
+        Cursor c=qb.query(db,sqlSelect,"UserPhone=?",new String[]{userPhone},null,null,null);
 
         final List<Order> result=new ArrayList<>();
         if(c.moveToFirst()){
             do {
                 result.add(new Order(
-                        c.getInt(c.getColumnIndex("ID")),
+                        c.getString(c.getColumnIndex("UserPhone")),
                         c.getString(c.getColumnIndex("ProductId")),
                         c.getString(c.getColumnIndex("ProductName")),
                         c.getString(c.getColumnIndex("Quantity")),
@@ -88,7 +106,8 @@ public class Database extends SQLiteOpenHelper {
 
     public void addToCart(Order order){
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("INSERT INTO OrderDetail(ProductId,ProductName,Quantity,Price,Discount,Image)VALUES('%s','%s','%s','%s','%s','%s');",
+        String query=String.format("INSERT OR REPLACE INTO OrderDetail(UserPhone,ProductId,ProductName,Quantity,Price,Discount,Image)VALUES('%s','%s','%s','%s','%s','%s','%s');",
+                order.getUserPhone(),
                 order.getProductId(),
                 order.getProductName(),
                 order.getQuantity(),
@@ -97,17 +116,32 @@ public class Database extends SQLiteOpenHelper {
                 order.getImage());
         db.execSQL(query);
     }
-    public void cleanCart(){
+
+    public void cleanCart(String userPhone){
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("DELETE FROM OrderDetail");
+        String query=String.format("DELETE FROM OrderDetail WHERE UserPhone='%s'",userPhone);
+        db.execSQL(query);
+    }
+
+    public void incCart(String userPhone,String foodId) {
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("UPDATE OrderDetail SET Quantity= Quantity+1 WHERE UserPhone= '%s' AND ProductId= '%s'",userPhone,foodId);
         db.execSQL(query);
     }
 
     //Favorites
-    public void addToFavorites(String foodId,String userPhone)
+    public void addToFavorites(Favourite food)
     {
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("INSERT INTO Favorites(FoodId,UserPhone) VALUES('%s','%s');",foodId,userPhone);
+        String query=String.format("INSERT INTO Favorites(FoodId,FoodName,FoodPrice,FoodMenuId,FoodImage,FoodDiscount,FoodDescription,UserPhone) VALUES('%s','%s','%s','%s','%s','%s','%s','%s');",
+                food.getFoodId(),
+                food.getFoodName(),
+                food.getFoodPrice(),
+                food.getFoodMenuId(),
+                food.getFoodImage(),
+                food.getFoodDiscount(),
+                food.getFoodDescription(),
+                food.getUserPhone());
         db.execSQL(query);
     }
 
@@ -131,10 +165,10 @@ public class Database extends SQLiteOpenHelper {
         return true;
     }
 
-    public int getCountCarts() {
+    public int getCountCarts(String userPhone) {
         int count=0;
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("SELECT COUNT(*) FROM OrderDetail");
+        String query=String.format("SELECT COUNT(*) FROM OrderDetail WHERE UserPhone='%s'",userPhone);
         Cursor cursor=db.rawQuery(query,null);
         if(cursor.moveToFirst())
         {
@@ -147,7 +181,7 @@ public class Database extends SQLiteOpenHelper {
 
     public void updateCart(Order order) {
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("UPDATE OrderDetail SET Quantity= %s WHERE ID= %d",order.getQuantity(),order.getID());
+        String query=String.format("UPDATE OrderDetail SET Quantity= '%s' WHERE UserPhone= '%s' AND ProductId= '%s'",order.getQuantity(),order.getUserPhone(),order.getProductId());
         db.execSQL(query);
     }
 
@@ -156,4 +190,34 @@ public class Database extends SQLiteOpenHelper {
         String query=String.format("DELETE FROM OrderDetail WHERE ProductId='%s'",productId);
         db.execSQL(query);
     }
+
+    public List<Favourite> getAllFavorites(String userPhone)
+    {
+        SQLiteDatabase db=getReadableDatabase();
+        SQLiteQueryBuilder qb =new SQLiteQueryBuilder();
+
+        String[] sqlSelect={"UserPhone","FoodId","FoodName","FoodPrice","FoodMenuId","FoodImage","FoodDiscount","FoodDescription"};
+        String sqlTable="Favorites";
+
+        qb.setTables(sqlTable);
+        Cursor c=qb.query(db,sqlSelect,"UserPhone=?",new String[]{userPhone},null,null,null);
+
+        final List<Favourite> result=new ArrayList<>();
+        if(c.moveToFirst()){
+            do {
+                result.add(new Favourite(
+                        c.getString(c.getColumnIndex("FoodId")),
+                        c.getString(c.getColumnIndex("FoodName")),
+                        c.getString(c.getColumnIndex("FoodPrice")),
+                        c.getString(c.getColumnIndex("FoodMenuId")),
+                        c.getString(c.getColumnIndex("FoodImage")),
+                        c.getString(c.getColumnIndex("FoodDiscount")),
+                        c.getString(c.getColumnIndex("FoodDescription")),
+                        c.getString(c.getColumnIndex("UserPhone"))
+                ));
+            }while (c.moveToNext());
+        }
+        return result;
+    }
+
 }

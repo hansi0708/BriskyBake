@@ -78,7 +78,7 @@
                 android:textAllCaps="true"
                 android:fontFamily="@font/poppins_light"
                 android:padding="2dp"
-                android:textSātyle="bold"
+                android:textStyle="bold"
                 android:text="Address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>

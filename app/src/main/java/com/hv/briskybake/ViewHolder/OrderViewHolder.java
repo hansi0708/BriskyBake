@@ -1,6 +1,7 @@
 package com.hv.briskybake.ViewHolder;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,6 +18,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
     private ItemClickListener itemClickListener;
 
     public ImageView btn_delete;
+    Button track;
 
     public OrderViewHolder(@NonNull View itemView) {
         super(itemView);
@@ -27,6 +29,7 @@ public class OrderViewHolder extends RecyclerView.ViewHolder implements View.OnC
         txtOrderAddress=itemView.findViewById(R.id.order_address);
         txtOrderDate=itemView.findViewById(R.id.order_date);
         btn_delete=itemView.findViewById(R.id.btn_delete);
+        track=itemView.findViewById(R.id.map);
 
         itemView.setOnClickListener(this);
     }

@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
 import com.hv.briskybake.Cart;
+import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.R;
@@ -70,7 +71,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
                 //calculate total price
                 int total = 0;
-                List<Order> orders=new Database(cart).getCarts();
+                List<Order> orders=new Database(cart).getCarts(Common.currentUser.getPhone());
                 for(Order item:orders)
                     total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(item.getQuantity()));
                 Locale locale = new Locale("en","IN");
@@ -85,7 +86,6 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         int price = (Integer.parseInt(listData.get(position).getPrice()))*(Integer.parseInt(listData.get(position).getQuantity()));
         holder.txt_price.setText(fmt.format(price));
         holder.txt_cart_name.setText(listData.get(position).getProductName());
-
     }
 
     @Override
