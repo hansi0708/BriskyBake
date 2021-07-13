@@ -71,24 +71,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         btnCart = findViewById(R.id.btnCart);
         btnRating = findViewById(R.id.btn_rating);
         ratingBar = findViewById(R.id.ratingBar);
-        units = findViewById(R.id.unit);
-        String[] unit = {"0.5 Kg", "1KG", "2 Kg"};
-        ArrayAdapter aa = new ArrayAdapter(
-                FoodDetail.this,
-                android.R.layout.simple_spinner_item,
-                unit);
-        aa.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//Setting the ArrayAdapter data on the Spinner
-        units.setAdapter(aa);
-        units.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-            }
-        });
 
 
         btnRating.setOnClickListener(new View.OnClickListener() {
