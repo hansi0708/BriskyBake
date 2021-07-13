@@ -1,9 +1,9 @@
 package com.hv.briskybake;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -12,9 +12,15 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.andremion.counterfab.CounterFab;
 import com.cepheuen.elegantnumberbutton.view.ElegantNumberButton;
+import com.firebase.ui.database.FirebaseRecyclerAdapter;
+import com.firebase.ui.database.FirebaseRecyclerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.appbar.CollapsingToolbarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.database.DataSnapshot;
@@ -28,6 +34,7 @@ import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Model.Food;
 import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.Model.Rating;
+import com.hv.briskybake.ViewHolder.ShowCommentViewHolder;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.stepstone.apprating.AppRatingDialog;
@@ -47,11 +54,23 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     ElegantNumberButton numberButton;
     RatingBar ratingBar;
 
+    RecyclerView recyclerView;
+    RecyclerView.LayoutManager layoutManager;
+
     String foodId = "";
 
     FirebaseDatabase database;
     DatabaseReference foods;
     DatabaseReference ratingTbl;
+
+    FirebaseRecyclerAdapter<Rating, ShowCommentViewHolder> adapter;
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (adapter!=null)
+            adapter.stopListening();
+    }
 
     Food currentFood;
     Spinner units;
@@ -81,16 +100,24 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         btnCart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                new Database(getBaseContext()).addToCart(new Order(
-                        foodId,
-                        currentFood.getName(),
-                        numberButton.getNumber(),
-                        currentFood.getPrice(),
-                        currentFood.getDiscount(),
-                        currentFood.getImage()
-                ));
+
+                boolean isExists=new Database(getBaseContext()).checkFoodExists(foodId,Common.currentUser.getPhone());
+                if(!isExists) {
+                    new Database(getBaseContext()).addToCart(new Order(
+                            Common.currentUser.getPhone(),
+                            foodId,
+                            currentFood.getName(),
+                            numberButton.getNumber(),
+                            currentFood.getPrice(),
+                            currentFood.getDiscount(),
+                            currentFood.getImage()
+                    ));
+                }
+                else {
+                    new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),foodId);
+                }
                 Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
-                btnCart.setCount(new Database(FoodDetail.this).getCountCarts());
+                btnCart.setCount(new Database(FoodDetail.this).getCountCarts(Common.currentUser.getPhone()));
             }
         });
 
@@ -104,6 +131,10 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
         collapsingToolbarLayout.setExpandedTitleTextAppearance(R.style.ExpandedAppBar);
         collapsingToolbarLayout.setCollapsedTitleTextAppearance(R.style.CollapsedAppBar);
 
+        recyclerView=findViewById(R.id.recycler_comment);
+        layoutManager=new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+
         //Get foodId from intent
         if (getIntent() != null)
             foodId = getIntent().getStringExtra("FoodId");
@@ -111,11 +142,41 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             if (Common.isConnectToInternet(getBaseContext())) {
                 getDetailFood(foodId);
                 getRatingFood(foodId);
+                listComment(foodId);
             } else {
                 Toast.makeText(FoodDetail.this, "Please check your connection", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
+    }
+
+    private void listComment(String foodId) {
+        Query query=ratingTbl.orderByChild("foodId").equalTo(foodId);
+
+        FirebaseRecyclerOptions<Rating> options=new FirebaseRecyclerOptions.Builder<Rating>()
+                .setQuery(query,Rating.class)
+                .build();
+
+        adapter=new FirebaseRecyclerAdapter<Rating, ShowCommentViewHolder>(options) {
+            @Override
+            protected void onBindViewHolder(@NonNull @NotNull ShowCommentViewHolder holder, int position, @NonNull @NotNull Rating model) {
+                holder.rating_Bar.setRating(Float.parseFloat(model.getRateValue()));
+                holder.txtComment.setText(model.getComment());
+                holder.txtName.setText(model.getName());
+            }
+
+            @NonNull
+            @NotNull
+            @Override
+            public ShowCommentViewHolder onCreateViewHolder(@NonNull @NotNull ViewGroup parent, int viewType) {
+                View view= LayoutInflater.from(parent.getContext())
+                        .inflate(R.layout.show_comment_layout,parent,false);
+                return new ShowCommentViewHolder(view);
+            }
+        };
+
+        adapter.startListening();
+        recyclerView.setAdapter(adapter);
     }
 
     private void getRatingFood(String foodId) {
@@ -184,8 +245,9 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 collapsingToolbarLayout.setTitle(currentFood.getName());
 
                 food_description.setText(currentFood.getDescription());
-                food_price.setText(currentFood.getPrice());
+                food_price.setText(String.format("₹ %s",currentFood.getPrice()));
             }
+
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
@@ -203,30 +265,20 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     @Override
     public void onPositiveButtonClicked(int i, @NotNull String comments) {
 
-        Rating rating = new Rating(Common.currentUser.getPhone(),
+        Rating rating=new Rating(
+                Common.currentUser.getPhone(),
+                Common.currentUser.getName(),
                 foodId,
                 String.valueOf(i),
                 comments);
-        ratingTbl.child(Common.currentUser.getPhone()).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
-                if (snapshot.child(Common.currentUser.getPhone()).exists()) {
-                    //Remove previous value
-                    ratingTbl.child(Common.currentUser.getPhone()).removeValue();
-                    //Update value
-                    ratingTbl.child(Common.currentUser.getPhone()).setValue(rating);
-                } else {
-                    //Update value
-                    ratingTbl.child(Common.currentUser.getPhone()).setValue(rating);
-                }
-                Toast.makeText(FoodDetail.this, "Thanks", Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onCancelled(@NonNull DatabaseError error) {
-
-            }
-        });
+        ratingTbl.push()
+                .setValue(rating)
+                .addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull @NotNull Task<Void> task) {
+                        Toast.makeText(FoodDetail.this, "Thanks",Toast.LENGTH_SHORT).show();
+                    }
+                });
 
     }
 

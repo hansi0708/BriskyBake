@@ -25,7 +25,9 @@ import com.google.firebase.database.ValueEventListener;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Database.Database;
 import com.hv.briskybake.Interface.ItemClickListener;
+import com.hv.briskybake.Model.Favourite;
 import com.hv.briskybake.Model.Food;
+import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.ViewHolder.FoodViewHolder;
 import com.mancj.materialsearchbar.MaterialSearchBar;
 import com.squareup.picasso.Callback;
@@ -33,6 +35,8 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.hv.briskybake.Common.Common.currentUser;
 
 public class SearchActivity extends AppCompatActivity {
 
@@ -151,6 +155,30 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
 
+                holder.cart_quick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                        if(!isExists) {
+                            new Database(getBaseContext()).addToCart(new Order(
+                                    currentUser.getPhone(),
+                                    adapter.getRef(position).getKey(),
+                                    model.getName(),
+                                    "1",
+                                    model.getPrice(),
+                                    model.getDiscount(),
+                                    model.getImage()
+                            ));
+
+                        }
+                        else {
+                            new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),adapter.getRef(position).getKey());
+                        }
+                        Toast.makeText(SearchActivity.this, "Added to cart!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
                 //Add Favorites
                 if (localDB.isFavorites(adapter.getRef(position).getKey(), Common.currentUser.getPhone()))
                     holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_24);
@@ -159,9 +187,19 @@ public class SearchActivity extends AppCompatActivity {
                 holder.fav_image.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
+
+                        Favourite favourite=new Favourite();
+                        favourite.setFoodId(adapter.getRef(position).getKey());
+                        favourite.setFoodName(model.getName());
+                        favourite.setFoodPrice(model.getPrice());
+                        favourite.setFoodDescription(model.getDescription());
+                        favourite.setFoodDiscount(model.getDiscount());
+                        favourite.setFoodImage(model.getImage());
+                        favourite.setFoodMenuId(model.getMenuId());
+                        favourite.setUserPhone(currentUser.getPhone());
                         if (!localDB.isFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone()))
                         {
-                            localDB.addToFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                            localDB.addToFavorites(favourite);
                             holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_24);
                             Toast.makeText(SearchActivity.this, ""+model.getName()+" was added to Favorites", Toast.LENGTH_SHORT).show();
                         }

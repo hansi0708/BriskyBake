@@ -28,15 +28,15 @@
            android:layout_margin="8dp"
            android:layout_gravity="bottom"
            android:background="@drawable/cardoutline"
-        android:backgroundTint="@color/backgroundcolor">
+           android:backgroundTint="@color/backgroundcolor">
 
         <LinearLayout
-        android:layout_width="270dp"
-        android:orientation="vertical"
-        android:layout_height="wrap_content"
+            android:layout_width="250dp"
+            android:orientation="vertical"
+            android:layout_height="wrap_content"
             android:padding="5dp">
 
-           <TextView
+            <TextView
                android:id="@+id/item_name"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
@@ -47,9 +47,7 @@
                android:textColor="@color/black"
                android:textStyle="bold"
                android:textSize="16sp" />
-
-
-        <TextView
+            <TextView
             android:id="@+id/item_price"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -66,6 +64,15 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/quick_cart"
+                android:src="@drawable/carticon"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_marginEnd="2dp"
+                android:layout_gravity="center_vertical"
+                app:tint="@color/black" />
 
             <ImageView
                 android:id="@+id/fav"

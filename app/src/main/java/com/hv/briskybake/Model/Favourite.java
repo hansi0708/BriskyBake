@@ -2,19 +2,19 @@ package com.hv.briskybake.Model;
 
 public class Favourite {
 
-    private String FoodId,FoodName,FoodImage,FoodDescription,FoodPrice,FoodDiscount,FoodMenuId,UserPhone;
+    private String FoodId,FoodName,FoodPrice,FoodMenuId,FoodImage,FoodDiscount,FoodDescription,UserPhone;
 
     public Favourite() {
     }
 
-    public Favourite(String foodId, String foodName, String foodImage, String foodDescription, String foodPrice, String foodDiscount, String foodMenuId, String userPhone) {
+    public Favourite(String foodId, String foodName, String foodPrice, String foodMenuId, String foodImage, String foodDiscount, String foodDescription, String userPhone) {
         FoodId = foodId;
         FoodName = foodName;
-        FoodImage = foodImage;
-        FoodDescription = foodDescription;
         FoodPrice = foodPrice;
-        FoodDiscount = foodDiscount;
         FoodMenuId = foodMenuId;
+        FoodImage = foodImage;
+        FoodDiscount = foodDiscount;
+        FoodDescription = foodDescription;
         UserPhone = userPhone;
     }
 

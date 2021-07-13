@@ -194,7 +194,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     private void loadListFood() {
         //  final View view = getLayoutInflater().inflate(R.layout.empty_cart,null);
 
-        cart = new Database(this).getCarts();
+        cart = new Database(this).getCarts(Common.currentUser.getPhone());
         adapter = new CartAdapter(cart, this);
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
@@ -219,7 +219,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
     private void deleteCart(int position) {
         cart.remove(position);
-        new Database(this).cleanCart();
+        new Database(this).cleanCart(Common.currentUser.getPhone());
         for (Order item : cart)
             new Database(this).addToCart(item);
         loadListFood();
@@ -238,7 +238,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
             //calculate total price
             total = 0;
-            List<Order> orders = new Database(getBaseContext()).getCarts();
+            List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
             for (Order item : orders)
                 total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
             Locale locale = new Locale("en", "IN");
@@ -256,7 +256,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
                     //calculate total price
                     total = 0;
-                    List<Order> orders = new Database(getBaseContext()).getCarts();
+                    List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
                     for (Order item : orders)
                         total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
                     Locale locale = new Locale("en", "IN");
@@ -305,7 +305,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                                     }
                                 })
                                 .show();
-                        new Database(getBaseContext()).cleanCart();
+                        new Database(getBaseContext()).cleanCart(Common.currentUser.getPhone());
 
                         Toast.makeText(Cart.this, "Thank you, Order Place", Toast.LENGTH_SHORT).show();
                         finish();
