@@ -78,7 +78,7 @@
                 android:textAllCaps="true"
                 android:fontFamily="@font/poppins_light"
                 android:padding="2dp"
-                android:textStyle="bold"
+                android:textSātyle="bold"
                 android:text="Address"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
@@ -87,7 +87,7 @@
                 android:onClick="showmap"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Track Order on Map"
+                android:text="Show Location on Map"
                 android:layout_gravity="right"
                 android:layout_marginRight="10dp"/>
         </LinearLayout>
