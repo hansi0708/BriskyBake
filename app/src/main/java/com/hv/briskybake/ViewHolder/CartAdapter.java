@@ -84,7 +84,8 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
         int price = (Integer.parseInt(listData.get(position).getPrice()))*(Integer.parseInt(listData.get(position).getQuantity()));
         holder.txt_price.setText(fmt.format(price));
-        holder.txt_cart_name.setText(listData.get(position).getProductName()+"\n"+listData.get(position).getUnit());
+        holder.txt_cart_name.setText(listData.get(position).getProductName());
+
     }
 
     @Override

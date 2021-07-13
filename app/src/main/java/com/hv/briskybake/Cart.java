@@ -178,6 +178,10 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 //      bundle.putString("amount", "1");
                 intent.putExtras(bundle);
                 startActivityForResult(intent, 1234);
+                Log.e("TAG", "onClick: "+ Common.currentUser.getName()+",\n"
+                       +"email"+ Common.currentUser.getEmail()
+                +"productInfo phone" +Common.currentUser.getPhone()
+                +"amount"+ total+"");
             }
         });
 
@@ -253,7 +257,6 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 public void onClick(View v) {
                     adapter.restoreItem(deleteItem, deleteIndex);
                     new Database(getBaseContext()).addToCart(deleteItem);
-
                     //calculate total price
                     total = 0;
                     List<Order> orders = new Database(getBaseContext()).getCarts();
