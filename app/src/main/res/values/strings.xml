@@ -43,4 +43,6 @@
     <string name="emailanother">Email:</string>
     <string name="nameanother">Name:</string>
     <string name="title_activity_maps">Map</string>
+    <string name="profile">Profile</string>
+    <string name="favorites">Favorites</string>
 </resources>

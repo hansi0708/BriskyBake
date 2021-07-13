@@ -22,13 +22,30 @@
         tools:ignore="UselessParent">
 
         <ImageView
-            android:id="@+id/appiconsignin"
-            android:layout_width="150dp"
+            android:id="@+id/user_pic"
+            android:layout_width="120dp"
             android:layout_height="100dp"
             android:layout_marginTop="10dp"
             android:layout_gravity="center"
+            android:scaleType="centerCrop"
             android:src="@drawable/bblogo"
             android:contentDescription="@string/applogo" />
+
+        <Button
+            android:id="@+id/edit_profile"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="10dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/btncorners"
+            android:text="EDIT PROFILE PICTURE"
+            android:fontFamily="@font/poppins_light"
+            android:textStyle="bold"
+            android:textSize="10sp"
+            android:textAllCaps="false"
+            app:backgroundTint="@color/buttoncolor" />
+
 
     </LinearLayout>
 

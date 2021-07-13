@@ -60,6 +60,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     FirebaseAuth mAuth;
     String t;
 
+    int fav;
+
     @SuppressLint("ResourceAsColor")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -168,7 +170,8 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
             }
         });
 
-        fab.setCount(new Database(this).getCountCarts());
+        fav = new Database(this).getCountCarts(Common.currentUser.getPhone());
+        fab.setCount(fav);
 
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle=new ActionBarDrawerToggle(this,drawer,toolbar,R.string.navigation_drawer_open,R.string.navigation_drawer_close);
@@ -229,7 +232,7 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
     @Override
     protected void onResume() {
         super.onResume();
-        fab.setCount(new Database(this).getCountCarts());
+        fab.setCount(new Database(this).getCountCarts(Common.currentUser.getPhone()));
         if(adapter!=null)
             adapter.startListening();
     }
@@ -272,6 +275,10 @@ public class Home extends AppCompatActivity implements NavigationView.OnNavigati
         }else if(id==R.id.nav_cart){
             Intent cartIntent=new Intent(Home.this,Cart.class);
             startActivity(cartIntent);
+        }
+        else if (id==R.id.nav_fav) {
+            Intent favIntent=new Intent(Home.this,FavoriteActivity.class);
+            startActivity(favIntent);
         }else if(id==R.id.nav_logout){
             //Delete Remember user & pwd
             Paper.book().destroy();
