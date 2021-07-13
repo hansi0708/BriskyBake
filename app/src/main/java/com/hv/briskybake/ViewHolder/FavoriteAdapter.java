@@ -44,8 +44,6 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteViewHolder>{
                 holder.textItemName.setText(favoritesList.get(position).getFoodName());
                 holder.textItemPrice.setText(String.format("₹ %s", favoritesList.get(position).getFoodPrice()));
 
-
-
                 Picasso.get().load(favoritesList.get(position).getFoodImage()).into(holder.imageViewItem, new Callback() {
                     @Override
                     public void onSuccess() {
@@ -57,6 +55,17 @@ public class FavoriteAdapter extends RecyclerView.Adapter<FavoriteViewHolder>{
 
                     }
                 });
+
+        if (favoritesList.get(position).getFoodDiscount()==null|| favoritesList.get(position).getFoodDiscount().equals("0")) {
+            holder.dis.setVisibility(View.GONE);
+            holder.off.setVisibility(View.GONE);
+
+        }
+        else {
+            holder.dis.setText(String.format("₹ %s", favoritesList.get(position).getFoodDiscount()));
+            holder.dis.setVisibility(View.VISIBLE);
+            holder.off.setVisibility(View.VISIBLE);
+        }
 
                 final Favourite local = favoritesList.get(position);
                 holder.setItemClickListener(new ItemClickListener() {

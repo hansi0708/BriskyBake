@@ -66,6 +66,12 @@ public class FoodList extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list);
 
+        // add back arrow to toolbar
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
+
         //Firebase
         database=FirebaseDatabase.getInstance();
         list=database.getReference("Food");
@@ -193,6 +199,18 @@ public class FoodList extends AppCompatActivity {
 
                     }
                 });
+
+                if (model.getDiscount()==null|| model.getDiscount().equals("0")) {
+                    holder.dis.setVisibility(View.GONE);
+                    holder.off.setVisibility(View.GONE);
+
+                }
+                else {
+                    holder.dis.setText(String.format("₹ %s", model.getDiscount()));
+                    holder.dis.setVisibility(View.VISIBLE);
+                    holder.off.setVisibility(View.VISIBLE);
+                }
+
                 final Food local=model;
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
@@ -318,7 +336,16 @@ public class FoodList extends AppCompatActivity {
                         }
                     }
                 });
+                if (model.getDiscount()==null|| model.getDiscount().equals("0")) {
+                    holder.dis.setVisibility(View.GONE);
+                    holder.off.setVisibility(View.GONE);
 
+                }
+                else {
+                    holder.dis.setText(String.format("₹ %s", model.getDiscount()));
+                    holder.dis.setVisibility(View.VISIBLE);
+                    holder.off.setVisibility(View.VISIBLE);
+                }
 
                 final Food local=model;
                 holder.setItemClickListener(new ItemClickListener() {

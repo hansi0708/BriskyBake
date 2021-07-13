@@ -14,8 +14,8 @@ import com.hv.briskybake.R;
 
 public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView textItemName, textItemPrice;
-    public ImageView imageViewItem, fav_image;
+    public TextView textItemName, textItemPrice,dis,off;
+    public ImageView imageViewItem;
     private ItemClickListener itemClickListener;
 
     public RelativeLayout view_background;
@@ -26,7 +26,8 @@ public class FavoriteViewHolder extends RecyclerView.ViewHolder implements View.
         textItemName = itemView.findViewById(R.id.item_name);
         imageViewItem = itemView.findViewById(R.id.item_image);
         textItemPrice = itemView.findViewById(R.id.item_price);
-        fav_image = itemView.findViewById(R.id.fav);
+        dis=itemView.findViewById(R.id.discount);
+        off=itemView.findViewById(R.id.off);
 
         view_background=itemView.findViewById(R.id.view_background);
         view_foreground=itemView.findViewById(R.id.view_foreground);

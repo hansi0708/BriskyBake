@@ -19,4 +19,5 @@
     <color name="active_icon_color">#8A000000</color>
     <color name="cards_and_dialogs_color">@android:color/white</color>
     <color name="quantum_grey_600">#757575</color>
+    <color name="discount_color">#00B526</color>
 </resources>
