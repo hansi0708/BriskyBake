@@ -54,9 +54,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     List<Order> cart = new ArrayList<>();
     CartAdapter adapter;
 
-
     RelativeLayout rootLayout;
-    //root_cart,empty_cart_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,7 +201,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         //calculate total price
         total = 0;
         for (Order order : cart)
-            total += (Integer.parseInt(order.getPrice())) * (Integer.parseInt(order.getQuantity()));
+            total += ((Integer.parseInt(order.getPrice()))-(Integer.parseInt(order.getDiscount()))) * (Integer.parseInt(order.getQuantity()));
         Locale locale = new Locale("en", "IN");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
@@ -240,7 +238,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             total = 0;
             List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
             for (Order item : orders)
-                total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+                total += ((Integer.parseInt(item.getPrice()))-(Integer.parseInt(item.getDiscount()))) * (Integer.parseInt(item.getQuantity()));
             Locale locale = new Locale("en", "IN");
             NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 

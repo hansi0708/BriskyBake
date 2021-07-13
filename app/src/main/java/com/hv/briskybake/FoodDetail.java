@@ -46,7 +46,7 @@ import java.util.Arrays;
 
 public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
 
-    TextView food_price, food_description;
+    TextView food_price, food_description,food_dis,discount_txt;
     ImageView foodimage;
     CollapsingToolbarLayout collapsingToolbarLayout;
     CounterFab btnCart;
@@ -124,6 +124,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
         food_description = findViewById(R.id.food_description);
         food_price = findViewById(R.id.food_price);
+        food_dis=findViewById(R.id.food_discount);
+        discount_txt=findViewById(R.id.food_dis);
 
         foodimage = findViewById(R.id.img_food);
 
@@ -243,7 +245,16 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 });
 
                 collapsingToolbarLayout.setTitle(currentFood.getName());
+                if (currentFood.getDiscount()==null|| currentFood.getDiscount().equals("0")) {
+                    food_dis.setVisibility(View.GONE);
+                    discount_txt.setVisibility(View.GONE);
 
+                }
+                else {
+                    food_dis.setText(String.format("₹ %s", currentFood.getDiscount()));
+                    food_dis.setVisibility(View.VISIBLE);
+                    discount_txt.setVisibility(View.VISIBLE);
+                }
                 food_description.setText(currentFood.getDescription());
                 food_price.setText(String.format("₹ %s",currentFood.getPrice()));
             }

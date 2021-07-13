@@ -12,7 +12,7 @@ import com.hv.briskybake.R;
 
 public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
-    public TextView textItemName, textItemPrice;
+    public TextView textItemName, textItemPrice,dis,off;
     public ImageView imageViewItem, fav_image,cart_quick;
     private ItemClickListener itemClickListener;
 
@@ -23,6 +23,8 @@ public class FoodViewHolder extends RecyclerView.ViewHolder implements View.OnCl
         textItemPrice = itemView.findViewById(R.id.item_price);
         fav_image = itemView.findViewById(R.id.fav);
         cart_quick=itemView.findViewById(R.id.quick_cart);
+        dis=itemView.findViewById(R.id.discount);
+        off=itemView.findViewById(R.id.off);
 
         itemView.setOnClickListener(this);
     }

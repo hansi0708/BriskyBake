@@ -102,10 +102,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="8dp"
-                        android:layout_marginTop="8dp"
+                        android:layout_marginTop="20dp"
                         android:layout_weight="9"
                         android:fontFamily="@font/poppins_light"
-                        android:padding="12dp"
+                        android:padding="5dp"
                         android:text="@string/_100"
                         android:textColor="@color/black"
                         android:textSize="20sp"
@@ -118,13 +118,48 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginLeft="8dp"
                         android:layout_marginTop="8dp"
-                        android:layout_marginBottom="18dp"
+                        android:layout_marginBottom="5dp"
                         android:baselineAligned="false"
                         app:backGroundColor="@color/buttoncolor"
                         app:finalNumber="50"
                         app:initialNumber="1"
                         app:textSize="8sp"
                         tools:ignore="SmallSp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@color/backgroundcolor"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/food_dis"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_light"
+                        android:padding="6dp"
+                        android:text="Discount Applied:"
+                        android:textColor="@color/discount_color"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/food_discount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        android:fontFamily="@font/poppins_light"
+                        android:padding="6dp"
+                        android:text="@string/_100"
+                        android:textColor="@color/discount_color"
+                        android:textSize="14sp"
+                        android:visibility="gone"
+                        android:textStyle="bold" />
+
+                </LinearLayout>
+
                 </LinearLayout>
             </androidx.cardview.widget.CardView>
 
