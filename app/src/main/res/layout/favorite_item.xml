@@ -129,23 +129,6 @@
 
             </LinearLayout>
 
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent">
-
-                <ImageView
-                    android:id="@+id/quick_cart"
-                    android:src="@drawable/carticon"
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:layout_marginEnd="2dp"
-                    android:layout_gravity="center_vertical"
-                    app:tint="@color/black" />
-
-
-            </LinearLayout>
-
-
         </LinearLayout>
 
     </LinearLayout>

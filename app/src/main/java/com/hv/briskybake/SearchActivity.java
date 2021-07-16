@@ -159,7 +159,7 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone(),model.getUnit().get(0));
                         if(!isExists) {
                             new Database(getBaseContext()).addToCart(new Order(
                                     currentUser.getPhone(),
@@ -168,12 +168,14 @@ public class SearchActivity extends AppCompatActivity {
                                     "1",
                                     model.getPrice(),
                                     model.getDiscount(),
-                                    model.getImage()
+                                    model.getImage(),
+                                    model.getUnit().get(0),
+                                    model.getMenuValue()
                             ));
 
                         }
                         else {
-                            new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),adapter.getRef(position).getKey());
+                            new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),adapter.getRef(position).getKey(),model.getUnit().get(0));
                         }
                         Toast.makeText(SearchActivity.this, "Added to cart!", Toast.LENGTH_SHORT).show();
                     }
@@ -275,7 +277,7 @@ public class SearchActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone(),model.getUnit().get(0));
                         if(!isExists) {
                             new Database(getBaseContext()).addToCart(new Order(
                                     currentUser.getPhone(),
@@ -284,12 +286,14 @@ public class SearchActivity extends AppCompatActivity {
                                     "1",
                                     model.getPrice(),
                                     model.getDiscount(),
-                                    model.getImage()
+                                    model.getImage(),
+                                    model.getUnit().get(0),
+                                    model.getMenuValue()
                             ));
 
                         }
                         else {
-                            new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),adapter.getRef(position).getKey());
+                            new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),adapter.getRef(position).getKey(),model.getUnit().get(0));
                         }
                         Toast.makeText(SearchActivity.this, "Added to cart!", Toast.LENGTH_SHORT).show();
                     }
@@ -359,7 +363,6 @@ public class SearchActivity extends AppCompatActivity {
             }
         };
 
-        //GridLayoutManager gridLayoutManager=new GridLayoutManager(getApplicationContext(),1);
         RecyclerView.LayoutManager layout = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layout);
         searchadapter.startListening();
@@ -393,9 +396,5 @@ public class SearchActivity extends AppCompatActivity {
                     }
                 });
     }
-    @Override
-    public boolean onSupportNavigateUp() {
-        onBackPressed();
-        return true;
-    }
+
 }

@@ -29,7 +29,9 @@ public class Database extends SQLiteOpenHelper {
     private static final String PRICE= "Price";
     private static final String DISCOUNT= "Discount";
     private static final String IMAGE="Image";
-    private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+ " ( "+USERPHONE+" TEXT PRIMARY KEY NOT NULL UNIQUE,"+ProductID+" TEXT NOT NULL UNIQUE, "+ProductNAME+" TEXT, "+QUANTITY+" TEXT, "+PRICE+" TEXT, "+DISCOUNT+" TEXT, "+IMAGE+" TEXT );";
+    private static final String UNIT="Unit";
+    private static final String VALUE="Value";
+    private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+ " ( "+USERPHONE+" TEXT PRIMARY KEY NOT NULL,"+ProductID+" TEXT NOT NULL, "+ProductNAME+" TEXT, "+QUANTITY+" TEXT, "+PRICE+" TEXT, "+DISCOUNT+" TEXT, "+IMAGE+" TEXT, "+UNIT+" TEXT, "+VALUE+" TEXT );";
     private static final String DROP_TABLE="DROP TABLE IF EXISTS "+TABLE_NAME;
     private Context context;
 
@@ -38,12 +40,12 @@ public class Database extends SQLiteOpenHelper {
         this.context=context;
     }
 
-    public boolean checkFoodExists(String foodId,String userPhone)
+    public boolean checkFoodExists(String foodId,String userPhone,String orderUnit)
     {
         boolean flag=false;
         SQLiteDatabase db=getReadableDatabase();
         Cursor cursor=null;
-        String SQLQuery=String.format("SELECT * FROM OrderDetail WHERE UserPhone='%s' AND ProductId='%s'",userPhone,foodId);
+        String SQLQuery=String.format("SELECT * FROM OrderDetail WHERE UserPhone='%s' AND Unit='%s' AND ProductId='%s'",userPhone,orderUnit,foodId);
         cursor=db.rawQuery(SQLQuery,null);
         if(cursor.getCount()>0)
         {
@@ -81,7 +83,7 @@ public class Database extends SQLiteOpenHelper {
         SQLiteDatabase db=getReadableDatabase();
         SQLiteQueryBuilder qb =new SQLiteQueryBuilder();
 
-        String[] sqlSelect={"UserPhone","ProductName","ProductId","Quantity","Price","Discount","Image"};
+        String[] sqlSelect={"UserPhone","ProductName","ProductId","Quantity","Price","Discount","Image","Unit","Value"};
         String sqlTable="OrderDetail";
 
         qb.setTables(sqlTable);
@@ -97,7 +99,9 @@ public class Database extends SQLiteOpenHelper {
                         c.getString(c.getColumnIndex("Quantity")),
                         c.getString(c.getColumnIndex("Price")),
                         c.getString(c.getColumnIndex("Discount")),
-                        c.getString(c.getColumnIndex("Image"))
+                        c.getString(c.getColumnIndex("Image")),
+                        c.getString(c.getColumnIndex("Unit")),
+                        c.getString(c.getColumnIndex("Value"))
                 ));
             }while (c.moveToNext());
         }
@@ -106,14 +110,16 @@ public class Database extends SQLiteOpenHelper {
 
     public void addToCart(Order order){
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("INSERT OR REPLACE INTO OrderDetail(UserPhone,ProductId,ProductName,Quantity,Price,Discount,Image)VALUES('%s','%s','%s','%s','%s','%s','%s');",
+        String query=String.format("INSERT OR REPLACE INTO OrderDetail(UserPhone,ProductId,ProductName,Quantity,Price,Discount,Image,Unit,Value)VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s');",
                 order.getUserPhone(),
                 order.getProductId(),
                 order.getProductName(),
                 order.getQuantity(),
                 order.getPrice(),
                 order.getDiscount(),
-                order.getImage());
+                order.getImage(),
+                order.getOrderUnit(),
+                order.getOrderValue());
         db.execSQL(query);
     }
 
@@ -123,9 +129,9 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void incCart(String userPhone,String foodId) {
+    public void incCart(String userPhone,String foodId,String unitOrder) {
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("UPDATE OrderDetail SET Quantity= Quantity+1 WHERE UserPhone= '%s' AND ProductId= '%s'",userPhone,foodId);
+        String query=String.format("UPDATE OrderDetail SET Quantity= Quantity+1 WHERE UserPhone= '%s' AND Unit= '%s' AND ProductId= '%s'",userPhone,unitOrder,foodId);
         db.execSQL(query);
     }
 

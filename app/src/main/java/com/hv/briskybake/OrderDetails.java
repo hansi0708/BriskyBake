@@ -1,8 +1,6 @@
 package com.hv.briskybake;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.hv.briskybake.Common.Common;
-import com.hv.briskybake.Model.Order;
 import com.hv.briskybake.ViewHolder.OrderDetailAdapter;
 
 

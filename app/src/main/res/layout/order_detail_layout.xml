@@ -62,11 +62,23 @@
 
                 <TextView
                     android:id="@+id/product_discount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|start"
+                    android:layout_marginLeft="10dp"
+                    android:fontFamily="@font/poppins_light"
+                    android:padding="2dp"
+                    android:text="Product Discount"
+                    android:textAllCaps="true"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/product_unit"
                     android:layout_marginLeft="10dp"
                     android:layout_gravity="center_vertical|start"
                     android:textAllCaps="true"
                     android:textStyle="bold"
-                    android:text="Product Discount"
+                    android:text="Product Unit"
                     android:padding="2dp"
                     android:fontFamily="@font/poppins_light"
                     android:layout_width="wrap_content"

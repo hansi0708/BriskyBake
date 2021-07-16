@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.Spinner;
@@ -42,11 +43,13 @@ import com.stepstone.apprating.listener.RatingDialogListener;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 public class FoodDetail extends AppCompatActivity implements RatingDialogListener {
 
-    TextView food_price, food_description,food_dis,discount_txt;
+    TextView food_price, food_description,food_dis,discount_txt,food_val;
     ImageView foodimage;
     CollapsingToolbarLayout collapsingToolbarLayout;
     CounterFab btnCart;
@@ -63,6 +66,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     DatabaseReference foods;
     DatabaseReference ratingTbl;
 
+    String foodUnit;
+
     FirebaseRecyclerAdapter<Rating, ShowCommentViewHolder> adapter;
 
     @Override
@@ -73,7 +78,9 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
     }
 
     Food currentFood;
-    Spinner units;
+    Spinner spinnerUnit;
+
+   // List<String> food_Unit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,9 +94,12 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
         //Init view
         numberButton = findViewById(R.id.number_button);
+        spinnerUnit=findViewById(R.id.unitSpinner);
         btnCart = findViewById(R.id.btnCart);
         btnRating = findViewById(R.id.btn_rating);
         ratingBar = findViewById(R.id.ratingBar);
+;
+
         btnRating.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,34 +107,13 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             }
         });
 
-        btnCart.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                boolean isExists=new Database(getBaseContext()).checkFoodExists(foodId,Common.currentUser.getPhone());
-                if(!isExists) {
-                    new Database(getBaseContext()).addToCart(new Order(
-                            Common.currentUser.getPhone(),
-                            foodId,
-                            currentFood.getName(),
-                            numberButton.getNumber(),
-                            currentFood.getPrice(),
-                            currentFood.getDiscount(),
-                            currentFood.getImage()
-                    ));
-                }
-                else {
-                    new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),foodId);
-                }
-                Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
-                btnCart.setCount(new Database(FoodDetail.this).getCountCarts(Common.currentUser.getPhone()));
-            }
-        });
+     //   food_Unit=currentFood.getUnit().get();
 
 
         food_description = findViewById(R.id.food_description);
         food_price = findViewById(R.id.food_price);
         food_dis=findViewById(R.id.food_discount);
+        food_val=findViewById(R.id.food_value);
         discount_txt=findViewById(R.id.food_dis);
 
         foodimage = findViewById(R.id.img_food);
@@ -150,6 +139,33 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 return;
             }
         }
+
+        btnCart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                boolean isExists=new Database(getBaseContext()).checkFoodExists(foodId,Common.currentUser.getPhone(),foodUnit);
+                if(!isExists) {
+                    new Database(getBaseContext()).addToCart(new Order(
+                            Common.currentUser.getPhone(),
+                            foodId,
+                            currentFood.getName(),
+                            numberButton.getNumber(),
+                            currentFood.getPrice(),
+                            currentFood.getDiscount(),
+                            currentFood.getImage(),
+                            foodUnit,
+                            currentFood.getMenuValue()
+                    ));
+                }
+                else {
+                    new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),foodId,foodUnit);
+                }
+                Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
+                btnCart.setCount(new Database(FoodDetail.this).getCountCarts(Common.currentUser.getPhone()));
+            }
+        });
+
     }
 
     private void listComment(String foodId) {
@@ -251,25 +267,31 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
 
                 }
                 else {
-                    food_dis.setText(String.format("₹ %s", currentFood.getDiscount()));
+                    food_dis.setText(String.format("%s ", currentFood.getDiscount(),"% OFF"));
                     food_dis.setVisibility(View.VISIBLE);
                     discount_txt.setVisibility(View.VISIBLE);
                 }
+                food_val.setText(currentFood.getMenuValue());
                 food_description.setText(currentFood.getDescription());
-                food_price.setText(String.format("₹ %s",currentFood.getPrice()));
+                List<String> food_Unit=new ArrayList<String>(currentFood.getUnit());
+                ArrayAdapter<String> arrayAdapter=new ArrayAdapter<String>(getBaseContext(),android.R.layout.simple_spinner_dropdown_item,food_Unit);
+                //  spinnerUnit.se(food_Unit);
+                arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                spinnerUnit.setAdapter(arrayAdapter);
+                foodUnit=spinnerUnit.getSelectedItem().toString();
+                Double actualPrice=Double.parseDouble(currentFood.getPrice())*Double.parseDouble(foodUnit);
+                food_price.setText(String.format("₹ %s",actualPrice));
+
+
             }
-
-
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
-
             }
         });
     }
 
     @Override
     public void onNegativeButtonClicked() {
-
     }
 
 

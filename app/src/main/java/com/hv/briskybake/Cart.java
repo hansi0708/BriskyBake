@@ -22,6 +22,10 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
+import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -44,7 +48,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
     public TextView txtTotalPrice;
-    int total=0;
+    Double total,d,p,u,td,grandTotal=0.0;
     RecyclerView recyclerView;
     RecyclerView.LayoutManager layoutManager;
     FirebaseDatabase database;
@@ -55,6 +59,8 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
     CartAdapter adapter;
 
     RelativeLayout rootLayout;
+
+    Place shippingAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -140,7 +146,25 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         LayoutInflater inflater = this.getLayoutInflater();
         View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
 
-        EditText tbaddress = order_address_comment.findViewById(R.id.taddress);
+        PlaceAutocompleteFragment tbaddress = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
+        tbaddress.getView().findViewById(R.id.place_autocomplete_search_button).setVisibility(View.GONE);
+        ((EditText)tbaddress.getView().findViewById(R.id.place_autocomplete_search_input))
+                .setHint("Enter your address");
+        ((EditText)tbaddress.getView().findViewById(R.id.place_autocomplete_search_input))
+                .setTextSize(14);
+
+        tbaddress.setOnPlaceSelectedListener(new PlaceSelectionListener() {
+            @Override
+            public void onPlaceSelected(Place place) {
+                shippingAddress=place;
+            }
+
+            @Override
+            public void onError(Status status) {
+                Log.e("ERROR",status.getStatusMessage());
+            }
+        });
+
         EditText tbcomment = order_address_comment.findViewById(R.id.tcomment);
 
         alertDialog.setView(order_address_comment);
@@ -152,10 +176,11 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        tbaddress.getText().toString(),
+                        shippingAddress.getAddress().toString(),
                         txtTotalPrice.getText().toString(),
                         "0",
                         tbcomment.getText().toString(),
+                        String.format("%s,%s",shippingAddress.getLatLng().latitude,shippingAddress.getLatLng().longitude),
                         cart
                 );
 
@@ -203,13 +228,20 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
 
         //calculate total price
-        total = 0;
-        for (Order order : cart)
-            total += ((Integer.parseInt(order.getPrice()))-(Integer.parseInt(order.getDiscount()))) * (Integer.parseInt(order.getQuantity()));
+        grandTotal = 0.00;
+        for (Order order : cart){
+
+            d=Double.parseDouble(order.getDiscount());
+            p=Double.parseDouble(order.getPrice());
+            u=Double.parseDouble(order.getOrderUnit());
+            td=(d*p*u)/100;
+            total=p*u;
+            grandTotal +=total-td;
+        }
         Locale locale = new Locale("en", "IN");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
-        txtTotalPrice.setText(fmt.format(total));
+        txtTotalPrice.setText(fmt.format(grandTotal));
     }
 
     @Override
@@ -239,14 +271,21 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             new Database(getBaseContext()).removeFromCart(deleteItem.getProductId());
 
             //calculate total price
-            total = 0;
+            grandTotal = 0.00;
             List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
             for (Order item : orders)
-                total += ((Integer.parseInt(item.getPrice()))-(Integer.parseInt(item.getDiscount()))) * (Integer.parseInt(item.getQuantity()));
+            {
+                d=Double.parseDouble(item.getDiscount());
+                p=Double.parseDouble(item.getPrice());
+                u=Double.parseDouble(item.getOrderUnit());
+                td=(d*p*u)/100;
+                total=p*u;
+                grandTotal +=total-td;
+            }
             Locale locale = new Locale("en", "IN");
             NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
-            txtTotalPrice.setText(fmt.format(total));
+            txtTotalPrice.setText(fmt.format(grandTotal));
 
             //Make Snackbar
             Snackbar snackbar = Snackbar.make(findViewById(android.R.id.content), name + " removed from Cart!!", Snackbar.LENGTH_LONG);
@@ -256,14 +295,21 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                     adapter.restoreItem(deleteItem, deleteIndex);
                     new Database(getBaseContext()).addToCart(deleteItem);
                     //calculate total price
-                    total = 0;
+                    grandTotal = 0.00;
                     List<Order> orders = new Database(getBaseContext()).getCarts(Common.currentUser.getPhone());
                     for (Order item : orders)
-                        total += (Integer.parseInt(item.getPrice())) * (Integer.parseInt(item.getQuantity()));
+                    {
+                        d=Double.parseDouble(item.getDiscount());
+                        p=Double.parseDouble(item.getPrice());
+                        u=Double.parseDouble(item.getOrderUnit());
+                        td=(d*p*u)/100;
+                        total=p*u;
+                        grandTotal +=total-td;
+                    }
                     Locale locale = new Locale("en", "IN");
                     NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
-                    txtTotalPrice.setText(fmt.format(total));
+                    txtTotalPrice.setText(fmt.format(grandTotal));
 
                 }
             });
