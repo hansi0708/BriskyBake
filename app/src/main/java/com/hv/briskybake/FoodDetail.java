@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RatingBar;
@@ -144,8 +145,40 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
             @Override
             public void onClick(View v) {
 
-                boolean isExists=new Database(getBaseContext()).checkFoodExists(foodId,Common.currentUser.getPhone(),foodUnit);
-                if(!isExists) {
+                boolean isExists=new Database(getBaseContext()).checkFoodExists(foodId,Common.currentUser.getPhone());
+                if(isExists) {
+                    boolean isUnitExists=new Database(getBaseContext()).checkUnitFoodExists(foodId,Common.currentUser.getPhone(),foodUnit);
+                    if (isUnitExists)
+                    {
+                        new Database(getBaseContext()).updateIncreaseCart(new Order(
+                                Common.currentUser.getPhone(),
+                                foodId,
+                                currentFood.getName(),
+                                numberButton.getNumber(),
+                                currentFood.getPrice(),
+                                currentFood.getDiscount(),
+                                currentFood.getImage(),
+                                foodUnit,
+                                currentFood.getMenuValue()
+                                )
+                        );
+                    }
+                    else
+                    {
+                        new Database(getBaseContext()).addToCart(new Order(
+                                Common.currentUser.getPhone(),
+                                foodId,
+                                currentFood.getName(),
+                                numberButton.getNumber(),
+                                currentFood.getPrice(),
+                                currentFood.getDiscount(),
+                                currentFood.getImage(),
+                                foodUnit,
+                                currentFood.getMenuValue()
+                        ));
+                    }
+                }
+                else {
                     new Database(getBaseContext()).addToCart(new Order(
                             Common.currentUser.getPhone(),
                             foodId,
@@ -157,9 +190,6 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                             foodUnit,
                             currentFood.getMenuValue()
                     ));
-                }
-                else {
-                    new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),foodId,foodUnit);
                 }
                 Toast.makeText(FoodDetail.this, "Added to Cart", Toast.LENGTH_SHORT).show();
                 btnCart.setCount(new Database(FoodDetail.this).getCountCarts(Common.currentUser.getPhone()));
@@ -278,7 +308,21 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                 //  spinnerUnit.se(food_Unit);
                 arrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 spinnerUnit.setAdapter(arrayAdapter);
-                foodUnit=spinnerUnit.getSelectedItem().toString();
+                foodUnit=currentFood.getUnit().get(0);
+                spinnerUnit.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                    @Override
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                        foodUnit=spinnerUnit.getSelectedItem().toString();
+                    }
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+                        //.toString();
+                      //  foodUnit=parent.getItemAtPosition(0).toString();
+                     //   foodUnit=arrayAdapter.getItem(0);
+                    }
+                });
+
                 Double actualPrice=Double.parseDouble(currentFood.getPrice())*Double.parseDouble(foodUnit);
                 food_price.setText(String.format("₹ %s",actualPrice));
 

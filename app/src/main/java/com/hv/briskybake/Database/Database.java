@@ -31,7 +31,7 @@ public class Database extends SQLiteOpenHelper {
     private static final String IMAGE="Image";
     private static final String UNIT="Unit";
     private static final String VALUE="Value";
-    private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+ " ( "+USERPHONE+" TEXT PRIMARY KEY NOT NULL,"+ProductID+" TEXT NOT NULL, "+ProductNAME+" TEXT, "+QUANTITY+" TEXT, "+PRICE+" TEXT, "+DISCOUNT+" TEXT, "+IMAGE+" TEXT, "+UNIT+" TEXT, "+VALUE+" TEXT );";
+    private static final String CREATE_TABLE = "CREATE TABLE "+TABLE_NAME+ " ( "+USERPHONE+" TEXT NOT NULL,"+ProductID+" TEXT NOT NULL, "+ProductNAME+" TEXT, "+QUANTITY+" TEXT, "+PRICE+" TEXT, "+DISCOUNT+" TEXT, "+IMAGE+" TEXT, "+UNIT+" TEXT, "+VALUE+" TEXT );";
     private static final String DROP_TABLE="DROP TABLE IF EXISTS "+TABLE_NAME;
     private Context context;
 
@@ -40,12 +40,29 @@ public class Database extends SQLiteOpenHelper {
         this.context=context;
     }
 
-    public boolean checkFoodExists(String foodId,String userPhone,String orderUnit)
+    public boolean checkUnitFoodExists(String foodId,String userPhone,String orderUnit)
     {
         boolean flag=false;
         SQLiteDatabase db=getReadableDatabase();
         Cursor cursor=null;
         String SQLQuery=String.format("SELECT * FROM OrderDetail WHERE UserPhone='%s' AND Unit='%s' AND ProductId='%s'",userPhone,orderUnit,foodId);
+        cursor=db.rawQuery(SQLQuery,null);
+        if(cursor.getCount()>0)
+        {
+            flag=true;
+        }
+        else
+            flag=false;
+        cursor.close();
+        return flag;
+    }
+
+    public boolean checkFoodExists(String foodId,String userPhone)
+    {
+        boolean flag=false;
+        SQLiteDatabase db=getReadableDatabase();
+        Cursor cursor=null;
+        String SQLQuery=String.format("SELECT * FROM OrderDetail WHERE UserPhone='%s' AND ProductId='%s'",userPhone,foodId);
         cursor=db.rawQuery(SQLQuery,null);
         if(cursor.getCount()>0)
         {
@@ -110,7 +127,7 @@ public class Database extends SQLiteOpenHelper {
 
     public void addToCart(Order order){
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("INSERT OR REPLACE INTO OrderDetail(UserPhone,ProductId,ProductName,Quantity,Price,Discount,Image,Unit,Value)VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s');",
+        String query=String.format("INSERT INTO OrderDetail(UserPhone,ProductId,ProductName,Quantity,Price,Discount,Image,Unit,Value)VALUES('%s','%s','%s','%s','%s','%s','%s','%s','%s');",
                 order.getUserPhone(),
                 order.getProductId(),
                 order.getProductName(),
@@ -129,7 +146,13 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void incCart(String userPhone,String foodId,String unitOrder) {
+    public void incCart(String userPhone,String foodId) {
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("UPDATE OrderDetail SET Quantity= Quantity+1 WHERE UserPhone= '%s' AND ProductId= '%s'",userPhone,foodId);
+        db.execSQL(query);
+    }
+
+    public void incUpdateCart(String userPhone,String foodId,String unitOrder) {
         SQLiteDatabase db=getReadableDatabase();
         String query=String.format("UPDATE OrderDetail SET Quantity= Quantity+1 WHERE UserPhone= '%s' AND Unit= '%s' AND ProductId= '%s'",userPhone,unitOrder,foodId);
         db.execSQL(query);
@@ -191,9 +214,15 @@ public class Database extends SQLiteOpenHelper {
         db.execSQL(query);
     }
 
-    public void removeFromCart(String productId) {
+    public void updateIncreaseCart(Order order) {
         SQLiteDatabase db=getReadableDatabase();
-        String query=String.format("DELETE FROM OrderDetail WHERE ProductId='%s'",productId);
+        String query=String.format("UPDATE OrderDetail SET Quantity=Quantity + '%s' WHERE UserPhone= '%s' AND ProductId= '%s' AND Unit= '%s'",order.getQuantity(),order.getUserPhone(),order.getProductId(),order.getOrderUnit());
+        db.execSQL(query);
+    }
+
+    public void removeFromCart(String productId,String productUnit) {
+        SQLiteDatabase db=getReadableDatabase();
+        String query=String.format("DELETE FROM OrderDetail WHERE ProductId='%s' AND Unit='%s'",productId,productUnit);
         db.execSQL(query);
     }
 

@@ -21,6 +21,9 @@ public class Common {
     public static final String PWD_KEY="Password";
     public static final int PICK_IMAGE_REQUEST = 71;
 
+    public static final double server_latitude=26.79866;
+    public static final double server_longitude= 80.909712;
+
     public static String convertCodeToStatus(String status) {
         if (status.equals("0"))
             return "Placed";

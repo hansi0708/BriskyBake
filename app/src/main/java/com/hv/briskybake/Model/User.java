@@ -2,6 +2,8 @@ package com.hv.briskybake.Model;
 
 public class User {
     public String name,email,phone,image;
+    public String zlongitude;
+    public String zlatitude;
 
     public User ()
     {
@@ -11,6 +13,31 @@ public class User {
     public User(String name, String email) {
         this.name = name;
         this.email = email;
+    }
+
+    public String getZlongitude() {
+        return zlongitude;
+    }
+
+    public void setZlongitude(String zlongitude) {
+        this.zlongitude = zlongitude;
+    }
+
+    public String getZlatitude() {
+        return zlatitude;
+    }
+
+    public void setZlatitude(String zlatitude) {
+        this.zlatitude = zlatitude;
+    }
+
+    public User(String name, String email, String phone, String image, String zlongitude, String zlatitude) {
+        this.name = name;
+        this.email = email;
+        this.phone = phone;
+        this.image = image;
+        this.zlongitude = zlongitude;
+        this.zlatitude = zlatitude;
     }
 
     public User(String name, String email, String phone) {

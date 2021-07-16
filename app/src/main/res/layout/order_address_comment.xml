@@ -8,17 +8,27 @@
     android:background="@drawable/outline"
     app:cardElevation="4dp">
 
+
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp">
 
-                <fragment
-                    android:id="@+id/place_autocomplete"
-                    android:name="com.google.android.gms.location.places.ui.PlaceAutocompleteFragment"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"/>
+                <EditText
+                    style="@style/Widget.AppCompat.Button.Borderless"
+                    android:id="@+id/taddress"
+                    android:layout_width="296dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10dp"
+                    android:ems="10"
+                    android:hint="Address"
+                    android:fontFamily="@font/poppins_light"
+                    android:inputType="text"
+                    android:textSize="20sp"
+                    tools:ignore="Autofill,RtlSymmetry"
+                    />
 
                 <EditText
                     style="@style/Widget.AppCompat.Button.Borderless"

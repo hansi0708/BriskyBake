@@ -22,10 +22,6 @@ import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.places.Place;
-import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
-import com.google.android.gms.location.places.ui.PlaceSelectionListener;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -47,6 +43,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperListener {
 
+    private static final String TAG ="Address" ;
     public TextView txtTotalPrice;
     Double total,d,p,u,td,grandTotal=0.0;
     RecyclerView recyclerView;
@@ -60,7 +57,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
 
     RelativeLayout rootLayout;
 
-    Place shippingAddress;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +68,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
 
 
         rootLayout = findViewById(R.id.rootLayout);
@@ -146,24 +144,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         LayoutInflater inflater = this.getLayoutInflater();
         View order_address_comment = inflater.inflate(R.layout.order_address_comment, null);
 
-        PlaceAutocompleteFragment tbaddress = (PlaceAutocompleteFragment) getFragmentManager().findFragmentById(R.id.place_autocomplete);
-        tbaddress.getView().findViewById(R.id.place_autocomplete_search_button).setVisibility(View.GONE);
-        ((EditText)tbaddress.getView().findViewById(R.id.place_autocomplete_search_input))
-                .setHint("Enter your address");
-        ((EditText)tbaddress.getView().findViewById(R.id.place_autocomplete_search_input))
-                .setTextSize(14);
-
-        tbaddress.setOnPlaceSelectedListener(new PlaceSelectionListener() {
-            @Override
-            public void onPlaceSelected(Place place) {
-                shippingAddress=place;
-            }
-
-            @Override
-            public void onError(Status status) {
-                Log.e("ERROR",status.getStatusMessage());
-            }
-        });
+        EditText tbaddress = order_address_comment.findViewById(R.id.taddress);
 
         EditText tbcomment = order_address_comment.findViewById(R.id.tcomment);
 
@@ -176,11 +157,10 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 Request request = new Request(
                         Common.currentUser.getPhone(),
                         Common.currentUser.getName(),
-                        shippingAddress.getAddress().toString(),
+                        tbaddress.getText().toString(),
                         txtTotalPrice.getText().toString(),
                         "0",
                         tbcomment.getText().toString(),
-                        String.format("%s,%s",shippingAddress.getLatLng().latitude,shippingAddress.getLatLng().longitude),
                         cart
                 );
 
@@ -226,17 +206,15 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
         adapter.notifyDataSetChanged();
         recyclerView.setAdapter(adapter);
 
-
         //calculate total price
         grandTotal = 0.00;
         for (Order order : cart){
-
             d=Double.parseDouble(order.getDiscount());
             p=Double.parseDouble(order.getPrice());
             u=Double.parseDouble(order.getOrderUnit());
             td=(d*p*u)/100;
             total=p*u;
-            grandTotal +=total-td;
+            grandTotal +=((Double.parseDouble(order.getQuantity()))*(total-td));
         }
         Locale locale = new Locale("en", "IN");
         NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
@@ -268,7 +246,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
             int deleteIndex = viewHolder.getAbsoluteAdapterPosition();
 
             adapter.removeItem(deleteIndex);
-            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId());
+            new Database(getBaseContext()).removeFromCart(deleteItem.getProductId(),deleteItem.getOrderUnit());
 
             //calculate total price
             grandTotal = 0.00;
@@ -280,7 +258,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                 u=Double.parseDouble(item.getOrderUnit());
                 td=(d*p*u)/100;
                 total=p*u;
-                grandTotal +=total-td;
+                grandTotal +=((Double.parseDouble(item.getQuantity()))*(total-td));
             }
             Locale locale = new Locale("en", "IN");
             NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
@@ -304,7 +282,7 @@ public class Cart extends AppCompatActivity implements RecyclerItemTouchHelperLi
                         u=Double.parseDouble(item.getOrderUnit());
                         td=(d*p*u)/100;
                         total=p*u;
-                        grandTotal +=total-td;
+                        grandTotal +=((Double.parseDouble(item.getQuantity()))*(total-td));
                     }
                     Locale locale = new Locale("en", "IN");
                     NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);

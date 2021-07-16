@@ -27,6 +27,7 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
 
     private List<Order> listData = new ArrayList<>();
     private Cart cart;
+    Double total,d,p,u,td,grandTotal=0.0;
 
     public CartAdapter(List<Order> listData,Cart cart) {
         this.listData = listData;
@@ -70,14 +71,21 @@ public class CartAdapter extends RecyclerView.Adapter<CartViewHolder> {
                 new Database(cart).updateCart(order);
 
                 //calculate total price
-                int total = 0;
+                grandTotal = 0.00;
                 List<Order> orders=new Database(cart).getCarts(Common.currentUser.getPhone());
-                for(Order item:orders)
-                    total+=(Integer.parseInt(order.getPrice()))*(Integer.parseInt(item.getQuantity()));
-                Locale locale = new Locale("en","IN");
+                for (Order item : orders)
+                {
+                    d=Double.parseDouble(item.getDiscount());
+                    p=Double.parseDouble(item.getPrice());
+                    u=Double.parseDouble(item.getOrderUnit());
+                    td=(d*p*u)/100;
+                    total=p*u;
+                    grandTotal +=((Double.parseDouble(item.getQuantity()))*(total-td));
+                }
+                Locale locale = new Locale("en", "IN");
                 NumberFormat fmt = NumberFormat.getCurrencyInstance(locale);
 
-                cart.txtTotalPrice.setText(fmt.format(total));
+                cart.txtTotalPrice.setText(fmt.format(grandTotal));
             }
         });
 

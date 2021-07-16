@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
 
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.FragmentActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -14,18 +15,20 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.databinding.ActivityMapsBinding;
 import com.hv.briskybake.directionhelper.FetchURL;
 import com.hv.briskybake.directionhelper.TaskLoadedCallback;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
-    private GoogleMap mMap;
-    private ActivityMapsBinding binding;
     MarkerOptions place1, place2;
     Polyline currentPolyline;
     Button getDirection;
     LatLng latLng_user, latLng_server;
+
+    private GoogleMap mMap;
+    private ActivityMapsBinding binding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,8 +36,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         binding = ActivityMapsBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        latLng_user = new LatLng(26.805964, 80.886396);
-        latLng_server = new LatLng(26.795656599999997, 80.90077099999999);
+
+        Toolbar toolbar = binding.getRoot().findViewById(R.id.toolbar);
+        toolbar.setTitle("Live Map");
+        double userlat = Double.parseDouble(Common.currentUser.zlatitude);
+        double userlong = Double.parseDouble(Common.currentUser.zlongitude);
+        latLng_user = new LatLng(userlat, userlong);
+        latLng_server = new LatLng(Common.server_latitude, Common.server_longitude);
 
 /*
 
@@ -67,8 +75,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         place1 = new MarkerOptions().position(latLng_user).title("User");
         place2 = new MarkerOptions().position(latLng_server).title("Server");
 
-        String url = getUrl(place1.getPosition(), place2.getPosition(), "driving");
-        new FetchURL(MapsActivity.this).execute(url, "driving");
+        String url = getUrl(place1.getPosition(), place2.getPosition(), "walking");
+        new FetchURL(MapsActivity.this).execute(url, "walking");
     }
 
     /**
@@ -91,6 +99,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         Log.d("mylog", "Added Markers");
         mMap.addMarker(place1);
         mMap.addMarker(place2);
@@ -98,38 +107,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng_user));
         mMap.animateCamera(CameraUpdateFactory.zoomTo(15));
 
-
-//        LocationManager locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-//        Criteria criteria = new Criteria();
-//
-//        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-//            // TODO: Consider calling
-//            //    ActivityCompat#requestPermissions
-//            // here to request the missing permissions, and then overriding
-//            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-//            //                                          int[] grantResults)
-//            // to handle the case where the user grants the permission. See the documentation
-//            // for ActivityCompat#requestPermissions for more details.
-//            return;
-//        }
-//        Location location = locationManager.getLastKnownLocation(locationManager.getBestProvider(criteria, false));
-//        if (location != null)
-//        {
-//            mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(location.getLatitude(), location.getLongitude()), 13));
-//
-//            CameraPosition cameraPosition = new CameraPosition.Builder()
-//                    .target(new LatLng(location.getLatitude(), location.getLongitude()))      // Sets the center of the map to location user
-//                    .zoom(17)                   // Sets the zoom
-//                    .bearing(90)                // Sets the orientation of the camera to east
-//                    .tilt(40)                   // Sets the tilt of the camera to 30 degrees
-//                    .build();                   // Creates a CameraPosition from the builder
-//            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
-//        }
     }
 
 
-    private String getUrl(LatLng origin,LatLng destination,String directionMode)
-    {
+    private String getUrl(LatLng origin, LatLng destination, String directionMode) {
         String str_origin = "origin=" + origin.latitude + "," + origin.longitude;
         // Destination of route
         String str_dest = "destination=" + destination.latitude + "," + destination.longitude;
@@ -141,14 +122,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         String output = "json";
         // Building the url to the web service
         String url = "https://maps.googleapis.com/maps/api/directions/" + output + "?" + parameters + "&key=" + getString(R.string.google_maps_key);
-        Log.e("MapsActivity", "getUrl: "+url);
+        Log.e("MapsActivity", "getUrl: " + url);
         return url;
     }
 
     @Override
     public void onTaskDone(Object... values) {
-        if (currentPolyline!=null)
+        if (currentPolyline != null)
             currentPolyline.remove();
         currentPolyline = mMap.addPolyline((PolylineOptions) values[0]);
     }
+
 }

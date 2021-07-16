@@ -211,6 +211,92 @@ public class FoodList extends AppCompatActivity {
                     holder.off.setVisibility(View.VISIBLE);
                 }
 
+                holder.cart_quick.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                        if(isExists) {
+                            boolean isUnitExists = new Database(getBaseContext()).checkUnitFoodExists(adapter.getRef(position).getKey(), Common.currentUser.getPhone(), model.getUnit().get(0));
+                            if (isUnitExists) {
+                                new Database(getBaseContext()).incUpdateCart(Common.currentUser.getPhone(), adapter.getRef(position).getKey(), model.getUnit().get(0));
+                            } else {
+                                new Database(getBaseContext()).addToCart(new Order(
+                                        currentUser.getPhone(),
+                                        adapter.getRef(position).getKey(),
+                                        model.getName(),
+                                        "1",
+                                        model.getPrice(),
+                                        model.getDiscount(),
+                                        model.getImage(),
+                                        model.getUnit().get(0),
+                                        model.getMenuValue()));
+                            }
+                        }
+                        else
+                        {
+                            new Database(getBaseContext()).addToCart(new Order(
+                                    currentUser.getPhone(),
+                                    adapter.getRef(position).getKey(),
+                                    model.getName(),
+                                    "1",
+                                    model.getPrice(),
+                                    model.getDiscount(),
+                                    model.getImage(),
+                                    model.getUnit().get(0),
+                                    model.getMenuValue()
+                            ));
+
+                        }
+                        Toast.makeText(FoodList.this, "Added to cart!", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+                //Add Favorites
+                if (localDB.isFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone()))
+                    holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_24);
+
+                //Click to change state of favorites
+                holder.fav_image.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                        Favourite favourite=new Favourite();
+                        favourite.setFoodId(adapter.getRef(position).getKey());
+                        favourite.setFoodName(model.getName());
+                        favourite.setFoodPrice(model.getPrice());
+                        favourite.setFoodDescription(model.getDescription());
+                        favourite.setFoodDiscount(model.getDiscount());
+                        favourite.setFoodImage(model.getImage());
+                        favourite.setFoodMenuId(model.getMenuId());
+                        favourite.setUserPhone(currentUser.getPhone());
+
+                        if (!localDB.isFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone()))
+                        {
+                            localDB.addToFavorites(favourite);
+                            holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_24);
+                            Toast.makeText(FoodList.this, ""+model.getName()+" was added to Favorites", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            localDB.removeFromFavorites(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                            holder.fav_image.setImageResource(R.drawable.ic_baseline_favorite_border_24);
+                            Toast.makeText(FoodList.this, ""+model.getName()+" was removed from Favorites", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+
+                if (model.getDiscount()==null|| model.getDiscount().equals("0")) {
+                    holder.dis.setVisibility(View.GONE);
+                    holder.off.setVisibility(View.GONE);
+
+                }
+                else {
+                    holder.dis.setText(String.format("₹ %s", model.getDiscount()));
+                    holder.dis.setVisibility(View.VISIBLE);
+                    holder.off.setVisibility(View.VISIBLE);
+                }
+
                 final Food local=model;
                 holder.setItemClickListener(new ItemClickListener() {
                     @Override
@@ -283,8 +369,26 @@ public class FoodList extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
 
-                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone(),model.getUnit().get(0));
-                        if(!isExists) {
+                        boolean isExists=new Database(getBaseContext()).checkFoodExists(adapter.getRef(position).getKey(),Common.currentUser.getPhone());
+                        if(isExists) {
+                            boolean isUnitExists = new Database(getBaseContext()).checkUnitFoodExists(adapter.getRef(position).getKey(), Common.currentUser.getPhone(), model.getUnit().get(0));
+                            if (isUnitExists) {
+                                new Database(getBaseContext()).incUpdateCart(Common.currentUser.getPhone(), adapter.getRef(position).getKey(), model.getUnit().get(0));
+                            } else {
+                                new Database(getBaseContext()).addToCart(new Order(
+                                        currentUser.getPhone(),
+                                        adapter.getRef(position).getKey(),
+                                        model.getName(),
+                                        "1",
+                                        model.getPrice(),
+                                        model.getDiscount(),
+                                        model.getImage(),
+                                        model.getUnit().get(0),
+                                        model.getMenuValue()));
+                            }
+                        }
+                        else
+                        {
                             new Database(getBaseContext()).addToCart(new Order(
                                     currentUser.getPhone(),
                                     adapter.getRef(position).getKey(),
@@ -297,9 +401,6 @@ public class FoodList extends AppCompatActivity {
                                     model.getMenuValue()
                             ));
 
-                        }
-                        else {
-                            new Database(getBaseContext()).incCart(Common.currentUser.getPhone(),adapter.getRef(position).getKey(),model.getUnit().get(0));
                         }
                         Toast.makeText(FoodList.this, "Added to cart!", Toast.LENGTH_SHORT).show();
                     }
@@ -338,6 +439,7 @@ public class FoodList extends AppCompatActivity {
                         }
                     }
                 });
+
                 if (model.getDiscount()==null|| model.getDiscount().equals("0")) {
                     holder.dis.setVisibility(View.GONE);
                     holder.off.setVisibility(View.GONE);

@@ -45,4 +45,6 @@
     <string name="title_activity_maps">Map</string>
     <string name="profile">Profile</string>
     <string name="favorites">Favorites</string>
+    <string name="ApiKey">AIzaSyC6uH40vNo_-g6Qkm1U9HERf3N9Mm2twkc</string>
+
 </resources>

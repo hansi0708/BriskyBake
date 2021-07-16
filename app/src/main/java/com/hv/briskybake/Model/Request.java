@@ -9,7 +9,6 @@ public class Request {
     private String total;
     private String status;
     private String comment;
-    private String latLng;
     private List<Order> foods;  //list of food ordered
 
     public Request() {
@@ -23,25 +22,6 @@ public class Request {
         this.status = status;
         this.comment = comment;
         this.foods = foods;
-    }
-
-    public Request(String phone, String name, String address, String total, String status, String comment, String latLng, List<Order> foods) {
-        this.phone = phone;
-        this.name = name;
-        this.address = address;
-        this.total = total;
-        this.status = status;
-        this.comment = comment;
-        this.latLng = latLng;
-        this.foods = foods;
-    }
-
-    public String getLatLng() {
-        return latLng;
-    }
-
-    public void setLatLng(String latLng) {
-        this.latLng = latLng;
     }
 
     public String getPhone() {
