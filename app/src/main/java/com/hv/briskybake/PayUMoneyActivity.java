@@ -8,14 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.SslErrorHandler;
 import android.webkit.WebResourceError;
 import android.webkit.WebResourceRequest;
 import android.webkit.WebSettings;
@@ -45,27 +43,34 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
 
     /**
-     *
-     *   Intent intent = new Intent(DeliveryOptionActivity.this, PayUMoneyActivity.class);
-     *         Bundle bundle = new Bundle();
-     *         bundle.putString("name", preferences.getLoginUserName());
-     *         bundle.putString("email", preferences.getLoginEmail());
-     *         bundle.putString("productInfo", "Payment for "+ getString(R.string.app_name));
-     *         bundle.putString("phone", preferences.getLoginMobile());
-     *         bundle.putString("amount", amount);
+     * Intent intent = new Intent(DeliveryOptionActivity.this, PayUMoneyActivity.class);
+     * Bundle bundle = new Bundle();
+     * bundle.putString("name", preferences.getLoginUserName());
+     * bundle.putString("email", preferences.getLoginEmail());
+     * bundle.putString("productInfo", "Payment for "+ getString(R.string.app_name));
+     * bundle.putString("phone", preferences.getLoginMobile());
+     * bundle.putString("amount", amount);
      * //        bundle.putString("amount", "1");
-     *
-     *         intent.putExtras(bundle);
-     *         startActivityForResult(intent, 1234);\
-     *
+     * <p>
+     * intent.putExtras(bundle);
+     * startActivityForResult(intent, 1234);\
+     * <p>
      * Order Id
      * To Request for Updating Payment Status if Payment Successfully Done
      */
     int mId;
-    private String mMerchantKey = "0OYLyc";//For merchant and salt key you need to contact payu money tech support otherwise you get error
-    private String mSalt = "8h6JU9Ac";//copy and paste works fine
-    //    private String mBaseURL = "https://secure.payu.in/";
-    private String mBaseURL = "https://sandboxsecure.payu.in/";
+    boolean isFromOrder;
+    /**
+     * Handler os handler
+     */
+    Handler mHandler = new Handler();
+    // private String mMerchantKey = "0OYLyc";//For merchant and salt key you need to contact payu money tech support otherwise you get error
+    //private String mSalt = "8h6JU9Ac";//copy and paste works fine
+    private String mMerchantKey = "gtKFFx";//test
+    private String mSalt = "eCwWELxi";//test
+    private String mBaseURL = "https://secure.payu.in/";
+
+    //     private String mBaseURL = "https://sandboxsecure.payu.in/";
     private String mAction = ""; // For Final URL
     private String mTXNId; // This will create below randomly
     private String mHash; // This will create below randomly
@@ -74,15 +79,8 @@ public class PayUMoneyActivity extends AppCompatActivity {
     private String mEmailId; // From Previous Activity
     private double mAmount; // From Previous Activity
     private String mPhone; // From Previous Activity
-    private String mServiceProvider = "payu_paisa";
-
-
-
-    boolean isFromOrder;
-    /**
-     * Handler os handler
-     */
-    Handler mHandler = new Handler();
+    //private String mServiceProvider = "payu_paisa";
+    private String mServiceProvider = "";
     private String TAG = "User info";
     private ProgressDialog progressDialog;
 
@@ -180,15 +178,15 @@ public class PayUMoneyActivity extends AppCompatActivity {
 
                     if (url.equals("mSuccessUrl")) {
                         Intent intent = new Intent();
-                        intent.putExtra("MESSAGE","success");
+                        intent.putExtra("MESSAGE", "success");
                         intent.putExtra("oid", mTXNId);
-                        setResult(1234,intent);
+                        setResult(1234, intent);
                         finish();
                     } else if (url.equals("mFailedUrl")) {
                         Intent intent = new Intent();
-                        intent.putExtra("MESSAGE","failed");
+                        intent.putExtra("MESSAGE", "failed");
                         intent.putExtra("oid", mTXNId);
-                        setResult(1234,intent);
+                        setResult(1234, intent);
                         finish();
                     }
 
@@ -306,9 +304,9 @@ public class PayUMoneyActivity extends AppCompatActivity {
      * Giving Alert...
      */
     private void onPressingBack() {
-        Intent intent=new Intent();
-        intent.putExtra("MESSAGE","Payment Declined");
-        setResult(1234,intent);
+        Intent intent = new Intent();
+        intent.putExtra("MESSAGE", "Payment Declined");
+        setResult(1234, intent);
 
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(PayUMoneyActivity.this);
         alertDialog.setTitle("Warning");
@@ -325,36 +323,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
         });
         alertDialog.show();
     }
-
-    public class PayUJavaScriptInterface {
-        Context mContext;
-
-        PayUJavaScriptInterface(Context c) {
-            mContext = c;
-        }
-
-        public void success(long id, final String paymentId) {
-
-            mHandler.post(new Runnable() {
-
-                public void run() {
-
-                    mHandler = null;
-                    Toast.makeText(PayUMoneyActivity.this, "Payment Successfully.", Toast.LENGTH_SHORT).show();
-
-                    Intent intent=new Intent();
-                    intent.putExtra("MESSAGE","success");
-                    intent.putExtra("oid", paymentId);
-                    setResult(1234,intent);
-                    finish();
-
-                }
-
-            });
-
-        }
-    }
-
 
     public void progressBarVisibilityPayuChrome(int visibility) {
         if (getApplicationContext() != null && !isFinishing()) {
@@ -417,5 +385,34 @@ public class PayUMoneyActivity extends AppCompatActivity {
             return progDialog;
         }
         return null;
+    }
+
+    public class PayUJavaScriptInterface {
+        Context mContext;
+
+        PayUJavaScriptInterface(Context c) {
+            mContext = c;
+        }
+
+        public void success(long id, final String paymentId) {
+
+            mHandler.post(new Runnable() {
+
+                public void run() {
+
+                    mHandler = null;
+                    Toast.makeText(PayUMoneyActivity.this, "Payment Successfully.", Toast.LENGTH_SHORT).show();
+
+                    Intent intent = new Intent();
+                    intent.putExtra("MESSAGE", "success");
+                    intent.putExtra("oid", paymentId);
+                    setResult(1234, intent);
+                    finish();
+
+                }
+
+            });
+
+        }
     }
 }
