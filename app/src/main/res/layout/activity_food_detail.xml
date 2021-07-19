@@ -133,11 +133,11 @@
 
                         <Spinner
                             android:id="@+id/unitSpinner"
-                            android:layout_width="wrap_content"
-                            android:layout_marginTop="8dp"
+                            android:layout_width="75dp"
+                            android:layout_marginTop="10dp"
                             android:layout_marginLeft="8dp"
                             android:backgroundTint="@color/backgroundcolor"
-                            android:layout_height="50dp"
+                            android:layout_height="wrap_content"
                             android:textSize="20sp"/>
 
                         <TextView
@@ -188,6 +188,9 @@
                         android:textSize="14sp"
                         android:visibility="gone"
                         android:textStyle="bold" />
+
+
+
 
                 </LinearLayout>
 

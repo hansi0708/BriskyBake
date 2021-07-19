@@ -323,8 +323,8 @@ public class FoodDetail extends AppCompatActivity implements RatingDialogListene
                     }
                 });
 
-                Double actualPrice=Double.parseDouble(currentFood.getPrice())*Double.parseDouble(foodUnit);
-                food_price.setText(String.format("₹ %s",actualPrice));
+               // Double actualPrice=Double.parseDouble(currentFood.getPrice())*Double.parseDouble(foodUnit);
+                food_price.setText(String.format("₹ %s of 1 %s",currentFood.getPrice(),currentFood.getMenuValue()));
 
 
             }

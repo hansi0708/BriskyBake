@@ -50,7 +50,7 @@ public class OrderDetailAdapter extends RecyclerView.Adapter<MyViewHolder>{
         holder.quantity.setText(String.format("Quantity : %s",order.getQuantity()));
         holder.price.setText(String.format("Price : %s",order.getPrice()));
         holder.discount.setText(String.format("Discount : %s",order.getDiscount()));
-        holder.orderUnit.setText(String.format("Unit: %s %s",order.getOrderUnit(),order.getOrderValue()));
+        holder.orderUnit.setText(String.format("%s (%s)",order.getOrderUnit(),order.getOrderValue()));
     }
 
     @Override

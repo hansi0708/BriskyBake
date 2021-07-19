@@ -235,7 +235,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 }
                 else {
-                    holder.dis.setText(String.format("₹ %s", model.getDiscount()));
+                    holder.dis.setText(String.format("%s", model.getDiscount()));
                     holder.dis.setVisibility(View.VISIBLE);
                     holder.off.setVisibility(View.VISIBLE);
                 }
@@ -368,7 +368,7 @@ public class SearchActivity extends AppCompatActivity {
 
                 }
                 else {
-                    holder.dis.setText(String.format("₹ %s", model.getDiscount()));
+                    holder.dis.setText(String.format("%s", model.getDiscount()));
                     holder.dis.setVisibility(View.VISIBLE);
                     holder.off.setVisibility(View.VISIBLE);
                 }

@@ -86,7 +86,7 @@
                     android:layout_marginStart="5dp"
                     android:gravity="center"
                     android:fontFamily="@font/poppins_light"
-                    android:text="OFF"
+                    android:text="% OFF"
                     android:textStyle="bold"
                     android:visibility="gone"
                     android:textColor="@color/discount_color"

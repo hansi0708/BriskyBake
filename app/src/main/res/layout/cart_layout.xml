@@ -58,7 +58,6 @@
             android:orientation="vertical"
             tools:ignore="InefficientWeight">
 
-
             <TextView
                 android:id="@+id/cart_item_name"
                 android:layout_width="wrap_content"
@@ -69,7 +68,7 @@
                 android:text="Food 01"
                 android:padding="2dp"
                 android:fontFamily="@font/poppins_light"
-                android:textSize="12sp"
+                android:textSize="9sp"
                 android:textAllCaps="true"
                 android:textStyle="bold" />
 
@@ -82,7 +81,20 @@
                 android:text="0"
                 android:fontFamily="@font/poppins_light"
                 android:padding="2dp"
-                android:textSize="10sp"
+                android:textSize="8sp"
+                android:textAllCaps="true"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/cart_item_Unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical|start"
+                android:layout_marginLeft="10dp"
+                android:text="Unit"
+                android:fontFamily="@font/poppins_light"
+                android:padding="2dp"
+                android:textSize="8sp"
                 android:textAllCaps="true"
                 android:textStyle="bold" />
 
