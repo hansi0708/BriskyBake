@@ -1,7 +1,12 @@
 package com.hv.briskybake;
 
+import android.Manifest;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -14,6 +19,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -31,7 +37,13 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.hv.briskybake.Common.Common;
 import com.hv.briskybake.Model.User;
+import com.karumi.dexter.Dexter;
+import com.karumi.dexter.MultiplePermissionsReport;
+import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 
+import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
@@ -46,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
 
     FirebaseAuth mFirebaseAuth;
 
+    private String getLatitude="";
+    private String getLongitude="";
+
     private static final String TAG = "EmailPassword";
 
     FirebaseDatabase db;
@@ -55,6 +70,18 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        Dexter.withContext(this)
+                .withPermissions(
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ).withListener(new MultiplePermissionsListener() {
+            @Override
+            public void onPermissionsChecked(MultiplePermissionsReport report) {/* ... */}
+
+            @Override
+            public void onPermissionRationaleShouldBeShown(List<PermissionRequest> permissions, PermissionToken token) {/* ... */}
+        }).check();
 
         mFirebaseAuth = FirebaseAuth.getInstance();
 
@@ -129,6 +156,48 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    private void getlocation() {
+        boolean gps_enabled = false;
+        boolean network_enabled = false;
+
+        LocationManager lm = (LocationManager) getApplicationContext().getSystemService(Context.LOCATION_SERVICE);
+
+        gps_enabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER);
+        network_enabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
+
+        Location net_loc = null, gps_loc = null, finalLoc = null;
+
+        if (gps_enabled)
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }gps_loc = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+        if (network_enabled)
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }net_loc = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+
+        if (gps_loc != null && net_loc != null) {
+
+            //smaller the number more accurate result will
+            if (gps_loc.getAccuracy() > net_loc.getAccuracy())
+                finalLoc = net_loc;
+            else
+                finalLoc = gps_loc;
+            Log.e("MainActivity", "getlocation: "+ net_loc.getLatitude()+" | "+net_loc.getLongitude());
+            // I used this just to get an idea (if both avail, its upto you which you want to take as I've taken location with more accuracy)
+        } else {
+
+            if (gps_loc != null) {
+                finalLoc = gps_loc;
+            } else if (net_loc != null) {
+                finalLoc = net_loc;
+            }
+        }
+
+        getLatitude=finalLoc.getLatitude()+"";
+        getLongitude=finalLoc.getLongitude()+"";
     }
 
     private void reload() {
@@ -227,6 +296,9 @@ public class MainActivity extends AppCompatActivity {
         String name = tbname.getText().toString().trim();
         String phone = tbphone.getText().toString().trim();
 
+        getlocation();
+        Log.e(TAG, "signInWithPhoneAuthCredential: getLongitude:"+getLongitude+", getLatitude:"+getLatitude );
+
         mFirebaseAuth.createUserWithEmailAndPassword(email, pwd)
                 .addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
                     @Override
@@ -241,7 +313,7 @@ public class MainActivity extends AppCompatActivity {
                                         public void onComplete(@NonNull Task<AuthResult> task) {
                                             if (task.isSuccessful()) {
                                                 Log.d(TAG, "Successfully linked emailLink credential!");
-                                                User user = new User(name, email, phone);
+                                                User user = new User(name, email, phone,getLatitude,getLongitude);
 
                                                 FirebaseDatabase.getInstance().getReference("Users").child(Objects.requireNonNull(mFirebaseAuth.getCurrentUser()).getUid()).setValue(user).addOnCompleteListener(new OnCompleteListener<Void>() {
                                                     @Override

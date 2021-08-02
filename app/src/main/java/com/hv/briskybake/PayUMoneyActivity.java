@@ -41,7 +41,6 @@ public class PayUMoneyActivity extends AppCompatActivity {
     WebView webView;
     Context activity;
 
-
     /**
      * Intent intent = new Intent(DeliveryOptionActivity.this, PayUMoneyActivity.class);
      * Bundle bundle = new Bundle();
@@ -64,12 +63,14 @@ public class PayUMoneyActivity extends AppCompatActivity {
      * Handler os handler
      */
     Handler mHandler = new Handler();
-    // private String mMerchantKey = "0OYLyc";//For merchant and salt key you need to contact payu money tech support otherwise you get error
-    //private String mSalt = "8h6JU9Ac";//copy and paste works fine
-    private String mMerchantKey = "gtKFFx";//test
-    private String mSalt = "eCwWELxi";//test
-    private String mBaseURL = "https://secure.payu.in/";
-
+    private String mMerchantKey="oZ7oo9";
+    private String mSalt="UkojH5TS";
+   // private String mMerchantKey = "0OYLyc";//For merchant and salt key you need to contact payu money tech support otherwise you get error
+  //  private String mSalt = "8h6JU9Ac";//copy and paste works fine
+    //    private String mMerchantKey = "gtKFFx";//test
+//    private String mSalt = "eCwWELxi";//test
+   // private String mBaseURL = "https://secure.payu.in/";
+private String mBaseURL="https://test.payu.in/_payment";
     //     private String mBaseURL = "https://sandboxsecure.payu.in/";
     private String mAction = ""; // For Final URL
     private String mTXNId; // This will create below randomly
@@ -79,8 +80,9 @@ public class PayUMoneyActivity extends AppCompatActivity {
     private String mEmailId; // From Previous Activity
     private double mAmount; // From Previous Activity
     private String mPhone; // From Previous Activity
-    //private String mServiceProvider = "payu_paisa";
-    private String mServiceProvider = "";
+    private String mServiceProvider = "payu_paisa";
+
+    //    private String mServiceProvider = "";
     private String TAG = "User info";
     private ProgressDialog progressDialog;
 

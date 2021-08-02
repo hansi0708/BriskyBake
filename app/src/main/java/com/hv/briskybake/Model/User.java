@@ -15,6 +15,7 @@ public class User {
         this.email = email;
     }
 
+
     public String getZlongitude() {
         return zlongitude;
     }
@@ -31,11 +32,10 @@ public class User {
         this.zlatitude = zlatitude;
     }
 
-    public User(String name, String email, String phone, String image, String zlongitude, String zlatitude) {
+    public User(String name, String email, String phone, String zlongitude, String zlatitude) {
         this.name = name;
         this.email = email;
         this.phone = phone;
-        this.image = image;
         this.zlongitude = zlongitude;
         this.zlatitude = zlatitude;
     }

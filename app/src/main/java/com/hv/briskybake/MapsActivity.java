@@ -13,10 +13,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentActivity;
 
-import com.hv.briskybake.Common.Common;
-import com.hv.briskybake.databinding.ActivityMapsBinding;
-import com.hv.briskybake.directionhelper.FetchURL;
-import com.hv.briskybake.directionhelper.TaskLoadedCallback;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -27,6 +23,10 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.hv.briskybake.Common.Common;
+import com.hv.briskybake.databinding.ActivityMapsBinding;
+import com.hv.briskybake.directionhelper.FetchURL;
+import com.hv.briskybake.directionhelper.TaskLoadedCallback;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, TaskLoadedCallback {
 
@@ -46,7 +46,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
         Toolbar toolbar = binding.getRoot().findViewById(R.id.toolbar);
-     //   toolbar.setTitle("Live Map");
+        toolbar.setTitle("Live Map");
+
         double userlat = Double.parseDouble(Common.currentUser.zlatitude);
         double userlong = Double.parseDouble(Common.currentUser.zlongitude);
         latLng_user = new LatLng(userlat, userlong);
